@@ -1,14 +1,20 @@
 package quick.SMS
 
-import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.v7.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import android.Manifest
-import android.preference.PreferenceManager
-import android.support.v4.app.ActivityCompat
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
+import android.preference.PreferenceManager
+import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.ActivityCompat
+import android.support.v7.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_main.*
+import android.content.Context
+import android.database.Cursor
+import android.provider.ContactsContract
+import org.jetbrains.anko.db.MapRowParser
+import org.jetbrains.anko.db.parseList
+
 /*
  * https://antonioleiva.com/databases-anko-kotlin/
  * The above link is to do database's, which I think we will need to save and retain each contacts
@@ -33,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         // Request required permissions
-        requestPermissions(arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE))
+        requestPermissions(arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS))
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         tile_1.setOnClickListener {
@@ -66,7 +72,29 @@ class MainActivity : AppCompatActivity() {
         tile_10.setOnClickListener {
             onClick(10)
         }
+    }
 
+    fun getContacts(ctx : Context) : List<Contact> {
+        // Query into one of androids internal databases, returns a cursor which is a R/W view into
+        // the returned rows
+        val contacts = ctx.contentResolver.query(ContactsContract.Contacts.CONTENT_URI
+                , null, null, null, null)
+
+        // The row parser gets each row in turn from the cursor and can turn it into an object, the
+        // result is then a list of these objects (I'm not sure why but it only works when the
+        // parameter is called object)
+        val parsedContacts = contacts.parseList(object : MapRowParser<NullableContact> {
+            override fun parseRow(columns: Map<String, Any?>): NullableContact {
+                return NullableContact(columns[ContactsContract.Contacts.DISPLAY_NAME] as? String,
+                                       columns[ContactsContract.Contacts.PHOTO_URI] as? String)
+            }
+        })
+
+        // Remove Contacts with null names, sort by name and convert to null safe Contacts
+        return parsedContacts
+                .filter { it.name != null }
+                .sortedBy { it.name }
+                .map { Contact(it.name!!, it.image) }
     }
 
     fun callNumber(phoneNumber: String) {
@@ -124,4 +152,15 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+
+    // nullableImage is inaccessable, image == nullableImage if nullableImage != null
+    // else image == "NONE", the else part can be changed as appropriate to produce a default image
+    class Contact(val name: String, private val nullableImage: String?) {
+        // Abusing lazy for a neat way of producing a Delegate
+        val image by lazy { nullableImage ?: "NONE" } // Generate default image URI here
+        override fun toString() : String = "Contact(name=$name, image=$image)"
+    }
+    
+    data private class NullableContact(val name: String?, val image: String?)
+
 }
