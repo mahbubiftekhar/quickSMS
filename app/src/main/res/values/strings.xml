@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">quickSMS</string>
+    <string name="title_home">SMS</string>
+    <string name="title_dashboard">CALL</string>
+    <string name="title_notifications">LOG</string>
+    <string name="title_activity_settings">HOME</string>
+</resources>
