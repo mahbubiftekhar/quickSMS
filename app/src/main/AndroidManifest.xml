@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="quick.SMS">
-    <uses-permission android:name="android.permission.SEND_SMS"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,8 +23,15 @@
         </activity>
         <activity
             android:name=".settingsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".textMessageActivity"
+            android:label="@string/title_activity_text_message"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".contacts"
+            android:label="@string/title_activity_contacts"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
-
 
 </manifest>

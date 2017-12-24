@@ -9,7 +9,6 @@ import android.preference.PreferenceManager
 import android.support.v4.app.ActivityCompat
 import android.content.Intent
 import android.net.Uri
-
 /*
 * https://antonioleiva.com/databases-anko-kotlin/
 * The above link is to do database's, which I think we will need to save and retain each contacts
@@ -24,11 +23,15 @@ import android.net.Uri
 *
 *I have already inserted compile 'org.jetbrains.anko:anko-sqlite:0.10.0' and synced
 *Alex, I think you'll have to upgrade to at least android studio 3.0 to support Kotlin,
-* I apologise I remember you telling me this is very difficult to do on your computer
+*I apologise I remember you telling me this is very difficult to do on your computer
+*
+* http://www.vogella.com/tutorials/AndroidDragAndDrop/article.html
+* Drap and drop link above
 *
 * */
 class MainActivity : AppCompatActivity() {
-    /*The reason I use a var is so it can be changed later, it is good practise to make everything val in Kotlin
+    /*The reason I use a var is so it can be changed later,
+    it is good practise to make everything val in Kotlin
     * unless it needs to be var*/
     private var TAG = "SMS" /*The idea to this one was to keep track easily of which tab is selected*/
 
@@ -38,15 +41,16 @@ class MainActivity : AppCompatActivity() {
         try{startActivity(callIntent)}
         catch(e:SecurityException){
             requestPermission(Manifest.permission.CALL_PHONE)
+
         }
     }
-    fun LoadString(key: String): String {
+    fun loadString(key: String): String {
         /*Function to load a shared preference String*/
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val savedValue = sharedPreferences.getString(key, "UNKNOWN") /*DEFAULT AS UNKNOWN*/
         return savedValue
     }
-    fun SaveInt(key: String, value: String) {
+    fun saveString(key: String, value: String) {
         /*Function to save a shared preference String*/
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val editor = sharedPreferences.edit()
@@ -69,21 +73,30 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.SMS -> {
                 TAG = "SMS" /*Setting tag parameter appropriately*/
-                /*QUICK SMS*/
+                /* QUICK SMS*/
                 return@OnNavigationItemSelectedListener true
             }
             R.id.CALL -> {
                 TAG = "CALL" /*Setting tag parameter appropriately*/
-                /*QUICK CALL */
+                /* QUICK CALL */
                 return@OnNavigationItemSelectedListener true
             }
 
         }
         false
     }
+
     fun onClick(tileNumber: Int){
         /*The idea for this function is to do the bulk of the work when the user clicks the tile
         * just using a function to reduce the amount of code */
+
+        if(TAG=="SMS"){
+
+        } else {
+
+
+        }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
