@@ -12,8 +12,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Context
 import android.database.Cursor
 import android.provider.ContactsContract
+import org.jetbrains.anko.ctx
 import org.jetbrains.anko.db.MapRowParser
 import org.jetbrains.anko.db.parseList
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.doAsyncResult
+import org.jetbrains.anko.uiThread
 
 /*
  * https://antonioleiva.com/databases-anko-kotlin/
@@ -72,29 +76,47 @@ class MainActivity : AppCompatActivity() {
         tile_10.setOnClickListener {
             onClick(10)
         }
+
+        println("Starting Async Lookup")
+
+        getContacts(ctx) { contacts ->
+            // Callback function goes here
+            println(contacts)
+        }
+
+        println("onCreate continues in the meantime")
+
     }
 
-    fun getContacts(ctx : Context) : List<Contact> {
-        // Query into one of androids internal databases, returns a cursor which is a R/W view into
-        // the returned rows
-        val contacts = ctx.contentResolver.query(ContactsContract.Contacts.CONTENT_URI
-                , null, null, null, null)
+    fun getContacts(ctx: Context, then: (List<Contact>)->Unit) {
+        doAsync {
+            // TODO: REMOVE THIS: Manually delay lookup to simulate bad case
+            Thread.sleep(5_000)
+            // Query into one of androids internal databases, returns a cursor which is a R/W view into
+            // the returned rows
+            val result = ctx.contentResolver.query(ContactsContract.Contacts.CONTENT_URI
+                    , null, null, null, null)
 
-        // The row parser gets each row in turn from the cursor and can turn it into an object, the
-        // result is then a list of these objects (I'm not sure why but it only works when the
-        // parameter is called object)
-        val parsedContacts = contacts.parseList(object : MapRowParser<NullableContact> {
-            override fun parseRow(columns: Map<String, Any?>): NullableContact {
-                return NullableContact(columns[ContactsContract.Contacts.DISPLAY_NAME] as? String,
-                                       columns[ContactsContract.Contacts.PHOTO_URI] as? String)
+            // The row parser gets each row in turn from the cursor and can turn it into an object, the
+            // result is then a list of these objects (I'm not sure why but it only works when the
+            // parameter is called object)
+            val parsed = result.parseList(object : MapRowParser<NullableContact> {
+                override fun parseRow(columns: Map<String, Any?>): NullableContact {
+                    return NullableContact(
+                            columns[ContactsContract.Contacts.DISPLAY_NAME] as? String,
+                            columns[ContactsContract.Contacts.PHOTO_URI] as? String)
+                }
+            })
+
+            // Remove Contacts with null names, sort by name and convert to null safe Contacts
+            val contacts = parsed
+                           .filter { it.name != null }
+                           .sortedBy { it.name }
+                           .map { Contact(it.name!!, it.image) }
+            uiThread {
+                then(contacts)
             }
-        })
-
-        // Remove Contacts with null names, sort by name and convert to null safe Contacts
-        return parsedContacts
-                .filter { it.name != null }
-                .sortedBy { it.name }
-                .map { Contact(it.name!!, it.image) }
+        }
     }
 
     fun callNumber(phoneNumber: String) {
@@ -110,7 +132,7 @@ class MainActivity : AppCompatActivity() {
     fun loadString(key: String): String {
         /* Loads a String from Shared Preferences */
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val savedValue = sharedPreferences.getString(key, "UNKNOWN") /*DEFAULT AS UNKNOWN*/
+        val savedValue = sharedPreferences.getString(key, "UNKNOWN") /* DEFAULT AS UNKNOWN */
         return savedValue
     }
     fun saveString(key: String, value: String) {
@@ -153,14 +175,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // nullableImage is inaccessable, image == nullableImage if nullableImage != null
-    // else image == "NONE", the else part can be changed as appropriate to produce a default image
-    class Contact(val name: String, private val nullableImage: String?) {
-        // Abusing lazy for a neat way of producing a Delegate
-        val image by lazy { nullableImage ?: "NONE" } // Generate default image URI here
-        override fun toString() : String = "Contact(name=$name, image=$image)"
-    }
-    
     data private class NullableContact(val name: String?, val image: String?)
 
 }
