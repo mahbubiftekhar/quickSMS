@@ -3,7 +3,6 @@ package quick.SMS
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_text_message.*
 
 
@@ -21,16 +20,16 @@ class textMessageActivity : AppCompatActivity() {
 
 
         butongoster.setOnClickListener {
-            addData("1","test1")
-            addData("1","test2")
-            addData("1","test3")
-            addData("2","should not get this")
-            val messages = helper.returnAll("1")
+            addData(1.toLong(),"test1")
+            addData(1.toLong(),"test2")
+            addData(1.toLong(),"test3")
+            addData(2.toLong(),"should not get this")
+            val messages = helper.returnAll(1.toLong())
             for(i in 1..messages!!.size-1){
                 println("&&&"+messages[i])
             }
             println("should print nothing here on in")
-            helper.deleteReceipient("1")
+            helper.deleteReceipient(1.toLong())
             for(i in 1..messages!!.size-1){
                 println("&&&"+messages[i])
             }
@@ -39,13 +38,13 @@ class textMessageActivity : AppCompatActivity() {
         }
     }
 
-    fun addData(receipient_id: String, message: String) {
+    fun addData(receipient_id: Long, message: String) {
         /*No id, this is because we are auto incrementing this one*/
         helper.insertData(receipient_id, message)
 
     }
 
-    fun UpdateData(id: String, receipient_id: String, message: String) {
+    fun UpdateData(id: String, receipient_id: Long, message: String) {
         val isUpdate = helper.updateData(id, receipient_id, message)
     }
 

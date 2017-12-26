@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL("create table $TABLE_NAME (id INTEGER PRIMARY KEY AUTOINCREMENT,receipient_id TEXT,message TEXT)")
+        db.execSQL("create table $TABLE_NAME (id INTEGER PRIMARY KEY AUTOINCREMENT,receipient_id LONG,message TEXT)")
         println("this has gotten done")
     }
 
@@ -17,7 +17,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         onCreate(db)
     }
 
-    fun insertData(receipient_id: String, message: String) {
+    fun insertData(receipient_id: Long, message: String) {
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(COL_2, receipient_id)
@@ -33,7 +33,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         }
 
 
-    fun updateData(id: String, receipient_id: String, message: String): Boolean {
+    fun updateData(id: String, receipient_id: Long, message: String): Boolean {
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(COL_1, id)
@@ -43,21 +43,18 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return true
     }
 
-    fun returnAll(receipient_id:String): List<String>? {
+    fun returnAll(receipient_id:Long): List<String>? {
         val db = this.writableDatabase
         val res = db.rawQuery("select * from " + TABLE_NAME, null)
         var messages: MutableList<String> = mutableListOf()
         while(res.moveToNext()){
-
-            if(receipient_id == res.getString(res.getColumnIndex("receipient_id"))){
-                /*So if the row is for this particular receipient_id, then we get the message and
+            if(receipient_id.toString() == res.getString(res.getColumnIndex("receipient_id"))){
+                /* So if the row is for this particular receipient_id, then we get the message and
                 * we shall add it to the messages list */
                 messages.add(res.getString(res.getColumnIndex("message"))) /*Adding to messages*/
             }
-
         }
         return messages
-
     }
 
     fun deleteData(id: String): Int {
@@ -66,12 +63,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
 
-    fun deleteReceipient(receipient_id: String){
+    fun deleteReceipient(receipient_id: Long){
         val db = this.writableDatabase
         val res = db.rawQuery("select * from " + TABLE_NAME, null)
         var toRemove: MutableList<String> = mutableListOf() /*Stores the id's of the messages we want to remove*/
         while(res.moveToNext()){
-            if(receipient_id == res.getString(res.getColumnIndex("receipient_id"))){
+            if(receipient_id.toString() == res.getString(res.getColumnIndex("receipient_id"))){
                 /*So if the row is for this particular receipient_id, then we get the message and
                 * we shall add it to the messages list */
                 println("$$$" + res.getString(res.getColumnIndex("id")))
