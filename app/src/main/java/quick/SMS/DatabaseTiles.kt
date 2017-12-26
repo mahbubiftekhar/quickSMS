@@ -1,5 +1,5 @@
 package quick.SMS
-/**
+/*
  * Created by MAHBUBIFTEKHAR on 26/12/2017.
  */
 import android.content.Context
@@ -25,7 +25,17 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         contentValues.put(COL_2, tileid)
         db.insert(TABLE_NAME, null, contentValues)
     }
-
+    fun closeDatabaseTiles(){
+        /*This function is simply to close the database - just good practise, plus ensures
+        * that all transactions are completed properly*/
+        val db = this.writableDatabase
+        db.close()
+    }
+    fun deleteEntireDBTiles() {
+        /*USE THIS FUNCTION WISELY, WITH GREAT POWER COMES GREAT RESPONSIBILITY*/
+        val db = this.writableDatabase
+        db.delete(DatabaseTiles.TABLE_NAME, null, null)
+    }
     fun getRecipient (tileid: Int): Long{
         val db = this.writableDatabase
         val res = db.rawQuery("select * from " + DatabaseTiles.TABLE_NAME, null)

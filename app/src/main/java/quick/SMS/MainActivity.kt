@@ -89,22 +89,21 @@ class MainActivity : AppCompatActivity() {
     fun onClick(tileNumber: Int){
         /*The idea for this function is to do the bulk of the work when the user clicks the tile
         * just using a function to reduce the amount of code */
+        println("we are getting here")
         var helperTiles = DatabaseTiles(this)
         val intent = Intent(this, textMessageActivity::class.java)
         startActivity(intent)
-        helperTiles.insertData(0L,1)
-        helperTiles.insertData(1L, 2)
-        val a = helperTiles.getRecipient(1)
-        val b = helperTiles.getRecipient(2)
+        helperTiles.insertData(2L, 2)
+        val a = helperTiles.getRecipient(2)
         println(a)
-        println(b)
-        helperTiles.deleteTileAndRecipeintData(1)
         helperTiles.deleteTileAndRecipeintData(2)
         println("should be nothing")
-        val a2 = helperTiles.getRecipient(1)
         val b2 = helperTiles.getRecipient(2)
-        println(a2)
         println(b2)
+
+        /* Deletes whole database, use function wisely oh Alex San, with great power, comes even
+        greater responsibility */
+        helperTiles.deleteEntireDBTiles()
 
 
     }

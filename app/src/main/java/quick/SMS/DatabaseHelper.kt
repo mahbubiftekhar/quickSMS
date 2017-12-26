@@ -56,6 +56,14 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val db = this.writableDatabase
         return db.delete(TABLE_NAME, "id = ?", arrayOf(id))
     }
+
+    fun closeDatabaseHelper(){
+        /*This function is simply to close the database - just good practise, plus ensures
+        * that all transactions are completed properly*/
+        val db = this.writableDatabase
+        db.close()
+    }
+
     @SuppressWarnings("UNUSED")
     fun deleteEntireDB() {
                 /*USE THIS FUNCTION WISELY, WITH GREAT POWER COMES GREAT RESPONSIBILITY*/
