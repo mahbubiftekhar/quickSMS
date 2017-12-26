@@ -9,6 +9,11 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import android.Manifest
+import android.preference.PreferenceManager
+import android.support.v4.app.ActivityCompat
+import android.content.Intent
+import android.net.Uri
 import android.content.Context
 import android.provider.ContactsContract
 import org.jetbrains.anko.ctx
@@ -16,7 +21,6 @@ import org.jetbrains.anko.db.MapRowParser
 import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-
 /*
  * https://antonioleiva.com/databases-anko-kotlin/
  * The above link is to do database's, which I think we will need to save and retain each contacts
@@ -33,11 +37,11 @@ import org.jetbrains.anko.uiThread
  *
  */
 class MainActivity : AppCompatActivity() {
-
+	
     /* The idea to this one was to keep track easily of which tab is selected */
-    private var TAG = "SMS"
+    private var TAG = "SMS"    
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+	override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         // Request required permissions
@@ -166,15 +170,28 @@ class MainActivity : AppCompatActivity() {
     fun onClick(tileNumber: Int){
         /* The idea for this function is to do the bulk of the work when the user clicks the tile
          * just using a function to reduce the amount of code */
+        println("we are getting here")
+        var helperTiles = DatabaseTiles(this)
+        val intent = Intent(this, textMessageActivity::class.java)
+        startActivity(intent)
+        helperTiles.insertData(2L, 2)
+        val a = helperTiles.getRecipient(2)
+        println(a)
+        helperTiles.deleteTileAndRecipeintData(2)
+        println("should be nothing")
+        val b2 = helperTiles.getRecipient(2)
+        println(b2)
 
-        if(TAG=="SMS"){
+        /* Deletes whole database, use function wisely oh Alex San, with great power, comes even
+        greater responsibility */
+        helperTiles.deleteEntireDBTiles()
 
-        } else {
 
-        }
+
     }
 
     data private class NullableContact(val id: Long, val name: String?, val image: String?,
                                        val hasNumber: Long)
 
+        
 }

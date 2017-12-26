@@ -1,47 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="quick.SMS.textMessageActivity">
+    tools:context="com.example.engn.kotlinsql.MainActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+    <EditText
+        android:id="@+id/editid"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_height"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:toolbarId="@+id/toolbar">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_text_message" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="ID :" />
 
-</android.support.design.widget.CoordinatorLayout>
+    <EditText
+        android:id="@+id/editad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Ad :" />
+
+    <EditText
+        android:id="@+id/editsoyad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Soyad :" />
+
+    <EditText
+        android:id="@+id/editnot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Not :"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/buttonekle"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:text="iNSERT" />
+
+    <Button
+        android:id="@+id/butongoster"
+        android:layout_width="77dp"
+        android:layout_height="wrap_content"
+        android:text="SHOWDATA" />
+
+    <Button
+        android:id="@+id/buttonguncelle"
+        android:layout_width="77dp"
+        android:layout_height="wrap_content"
+        android:text="UPDATE DATA" />
+
+    <Button
+        android:id="@+id/buttonsil"
+        android:layout_width="77dp"
+        android:layout_height="wrap_content"
+        android:text="DELETE DATA" />
+
+
+</LinearLayout>
