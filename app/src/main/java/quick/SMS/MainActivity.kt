@@ -10,13 +10,11 @@ import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Context
-import android.database.Cursor
 import android.provider.ContactsContract
 import org.jetbrains.anko.ctx
 import org.jetbrains.anko.db.MapRowParser
 import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.doAsyncResult
 import org.jetbrains.anko.uiThread
 
 /*
@@ -90,29 +88,30 @@ class MainActivity : AppCompatActivity() {
 
     fun getContacts(ctx: Context, then: (List<Contact>)->Unit) {
         doAsync {
-            // TODO: REMOVE THIS: Manually delay lookup to simulate bad case
-            Thread.sleep(5_000)
-            // Query into one of androids internal databases, returns a cursor which is a R/W view into
-            // the returned rows
-            val result = ctx.contentResolver.query(ContactsContract.Contacts.CONTENT_URI
-                    , null, null, null, null)
+            // All contacts saved on the device in raw form
+            val result = ctx.contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
+                    null, null, null, null)
 
-            // The row parser gets each row in turn from the cursor and can turn it into an object, the
-            // result is then a list of these objects (I'm not sure why but it only works when the
-            // parameter is called object)
-            val parsed = result.parseList(object : MapRowParser<NullableContact> {
+            // Parse into an intermediate form where the name can be null and we don't know if
+            // there are any phone numbers
+            val parsed = result.parseList(object: MapRowParser<NullableContact> {
                 override fun parseRow(columns: Map<String, Any?>): NullableContact {
                     return NullableContact(
+                            columns[ContactsContract.Contacts._ID] as Long,
                             columns[ContactsContract.Contacts.DISPLAY_NAME] as? String,
-                            columns[ContactsContract.Contacts.PHOTO_URI] as? String)
+                            columns[ContactsContract.Contacts.PHOTO_URI] as? String,
+                            columns[ContactsContract.Contacts.HAS_PHONE_NUMBER] as Long)
                 }
             })
 
-            // Remove Contacts with null names, sort by name and convert to null safe Contacts
+            // Remove Contacts with null names or no phone number, sort by name and convert to
+            // null safe Contacts
             val contacts = parsed
-                           .filter { it.name != null }
+                           .filter { it.name != null && it.hasNumber == 1L }
                            .sortedBy { it.name }
-                           .map { Contact(it.name!!, it.image) }
+                           .map { Contact(ctx, it.id, it.name!!, it.image) }
+
+            // Send them to the callback
             uiThread {
                 then(contacts)
             }
@@ -175,6 +174,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    data private class NullableContact(val name: String?, val image: String?)
+    data private class NullableContact(val id: Long, val name: String?, val image: String?,
+                                       val hasNumber: Long)
 
 }
