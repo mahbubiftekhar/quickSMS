@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteDatabase
 
 class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL("create table $TABLE_NAME (receipient_id LONG PRIMARY KEY,tileid INTEGER UNIQUE)")
+        db.execSQL("create table $TABLE_NAME (receipient_id LONG PRIMARY KEY,tileid INTEGER)")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -38,7 +38,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     }
     fun deleteTileAndRecipeintData(tileid: Int): Int {
         val db = this.writableDatabase
-        return db.delete(TABLE_NAME, "id = ?", arrayOf(tileid.toString()))
+        return db.delete(TABLE_NAME, "receipient_id = ?", arrayOf(tileid.toString()))
     }
 
     @SuppressWarnings("UNUSED")
