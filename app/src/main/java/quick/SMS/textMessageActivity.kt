@@ -24,12 +24,13 @@ class textMessageActivity : AppCompatActivity() {
             addData(1.toLong(),"test2")
             addData(1.toLong(),"test3")
             addData(2.toLong(),"should not get this")
-            val messages = helper.returnAll(1.toLong())
+            var messages = helper.returnAll(1.toLong())
             for(i in 1..messages!!.size-1){
                 println("&&&"+messages[i])
             }
-            println("should print nothing here on in")
+            println("&&& should print nothing here on in")
             helper.deleteReceipient(1.toLong())
+            messages = helper.returnAll(1.toLong())
             for(i in 1..messages!!.size-1){
                 println("&&&"+messages[i])
             }

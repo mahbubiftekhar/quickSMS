@@ -61,23 +61,26 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val db = this.writableDatabase
         return db.delete(TABLE_NAME, "id = ?", arrayOf(id))
     }
+    fun deleteRow(id:String){
+        val db = this.writableDatabase
+        db.delete(TABLE_NAME, "id = ?", arrayOf(id))
+    }
 
-
+    fun deleteEntireDB() {
+        /*USE THIS FUNCTION WISELY, WITH GREAT POWER COMES GREAT RESPONSIBILITY*/
+        val db = this.writableDatabase
+        db.delete(TABLE_NAME, null, null)
+    }
     fun deleteReceipient(receipient_id: Long){
         val db = this.writableDatabase
         val res = db.rawQuery("select * from " + TABLE_NAME, null)
-        var toRemove: MutableList<String> = mutableListOf() /*Stores the id's of the messages we want to remove*/
+
         while(res.moveToNext()){
-            if(receipient_id.toString() == res.getString(res.getColumnIndex("receipient_id"))){
-                /*So if the row is for this particular receipient_id, then we get the message and
-                * we shall add it to the messages list */
-                println("$$$" + res.getString(res.getColumnIndex("id")))
-                toRemove.add(res.getString(res.getColumnIndex("id")))
-            }
-        }
-        for(i in 0..toRemove!!.size-1){
-            /*remove the messages from the database completely*/
-            deleteData(toRemove[i])
+          if(receipient_id.toString() == res.getString(res.getColumnIndex("receipient_id"))){
+              println("will remove" + res.getString(res.getColumnIndex("id")))
+              /*So if the row is for this particular receipient_id, then we get the message and we shall add it to the messages list */
+              db.delete(TABLE_NAME, "id = ?", arrayOf(res.getString(res.getColumnIndex("id"))))
+          }
         }
     }
     companion object {
