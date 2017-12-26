@@ -89,7 +89,8 @@ class MainActivity : AppCompatActivity() {
     fun onClick(tileNumber: Int){
         /*The idea for this function is to do the bulk of the work when the user clicks the tile
         * just using a function to reduce the amount of code */
-
+        val intent = Intent(this, textMessageActivity::class.java)
+        startActivity(intent)
         if(TAG=="SMS"){
 
         } else {
