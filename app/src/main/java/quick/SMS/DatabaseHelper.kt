@@ -3,7 +3,6 @@ package quick.SMS
 import android.content.Context
 import android.database.sqlite.SQLiteOpenHelper
 import android.content.ContentValues
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
@@ -25,13 +24,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         db.insert(TABLE_NAME, null, contentValues)
 
     }
-    val allData: Cursor
-        get() {
-            val db = this.writableDatabase
-            val res = db.rawQuery("select * from " + TABLE_NAME, null)
-            return res
-        }
-
 
     fun updateData(id: String, receipient_id: Long, message: String): Boolean {
         val db = this.writableDatabase
@@ -44,9 +36,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     fun returnAll(receipient_id:Long): List<String>? {
+        /*This returns all the data, with the messages, in the form of a list
+        * for a particular receipient*/
         val db = this.writableDatabase
         val res = db.rawQuery("select * from " + TABLE_NAME, null)
-        var messages: MutableList<String> = mutableListOf()
+        val messages: MutableList<String> = mutableListOf()
         while(res.moveToNext()){
             if(receipient_id.toString() == res.getString(res.getColumnIndex("receipient_id"))){
                 /* So if the row is for this particular receipient_id, then we get the message and
@@ -54,6 +48,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 messages.add(res.getString(res.getColumnIndex("message"))) /*Adding to messages*/
             }
         }
+        res.close() /*Freeing the cursor*/
         return messages
     }
 
@@ -61,17 +56,14 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val db = this.writableDatabase
         return db.delete(TABLE_NAME, "id = ?", arrayOf(id))
     }
-    fun deleteRow(id:String){
-        val db = this.writableDatabase
-        db.delete(TABLE_NAME, "id = ?", arrayOf(id))
-    }
-
+    @SuppressWarnings("UNUSED")
     fun deleteEntireDB() {
-        /*USE THIS FUNCTION WISELY, WITH GREAT POWER COMES GREAT RESPONSIBILITY*/
+                /*USE THIS FUNCTION WISELY, WITH GREAT POWER COMES GREAT RESPONSIBILITY*/
         val db = this.writableDatabase
         db.delete(TABLE_NAME, null, null)
     }
     fun deleteReceipient(receipient_id: Long){
+        /*This function takes a receipient_id and removes all rows with that receipient id*/
         val db = this.writableDatabase
         val res = db.rawQuery("select * from " + TABLE_NAME, null)
 
@@ -82,6 +74,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
               db.delete(TABLE_NAME, "id = ?", arrayOf(res.getString(res.getColumnIndex("id"))))
           }
         }
+        res.close()
     }
     companion object {
         val DATABASE_NAME = "Messages.db"
