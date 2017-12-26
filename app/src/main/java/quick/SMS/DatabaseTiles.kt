@@ -1,16 +1,14 @@
 package quick.SMS
-/*
- * Created by MAHBUBIFTEKHAR on 26/12/2017.
- */
-import android.content.Context
-import android.database.sqlite.SQLiteOpenHelper
-import android.content.ContentValues
-import android.database.sqlite.SQLiteDatabase
 
+import android.content.ContentValues
+import android.content.Context
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteOpenHelper
 
 class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
+
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL("create table $TABLE_NAME (receipient_id LONG PRIMARY KEY,tileid INTEGER)")
+        db.execSQL("create table $TABLE_NAME (recipient_id LONG PRIMARY KEY,tileid INTEGER)")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -18,49 +16,54 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         onCreate(db)
     }
 
-    fun insertData(receipient_id:Long, tileid: Int) {
+    fun insertData(recipient_id:Long, tileid: Int) {
         val db = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put(COL_1, receipient_id)
+        contentValues.put(COL_1, recipient_id)
         contentValues.put(COL_2, tileid)
         db.insert(TABLE_NAME, null, contentValues)
     }
+
     fun closeDatabaseTiles(){
-        /*This function is simply to close the database - just good practise, plus ensures
-        * that all transactions are completed properly*/
+        /* This function is simply to close the database - just good practise, plus ensures
+         * that all transactions are completed properly */
         val db = this.writableDatabase
         db.close()
     }
+
     fun deleteEntireDBTiles() {
-        /*USE THIS FUNCTION WISELY, WITH GREAT POWER COMES GREAT RESPONSIBILITY*/
+        /* USE THIS FUNCTION WISELY, WITH GREAT POWER COMES GREAT RESPONSIBILITY */
         val db = this.writableDatabase
         db.delete(DatabaseTiles.TABLE_NAME, null, null)
     }
+
     fun getRecipient (tileid: Int): Long{
         val db = this.writableDatabase
         val res = db.rawQuery("select * from " + DatabaseTiles.TABLE_NAME, null)
         while(res.moveToNext()){
             if(tileid.toString() == res.getString(res.getColumnIndex("tileid"))){
-               return res.getLong(res.getColumnIndex("receipient_id"))
+               return res.getLong(res.getColumnIndex("recipient_id"))
             }
         }
         return 0L
     }
+
     fun deleteTileAndRecipeintData(tileid: Int): Int {
         val db = this.writableDatabase
-        return db.delete(TABLE_NAME, "receipient_id = ?", arrayOf(tileid.toString()))
+        return db.delete(TABLE_NAME, "recipient_id = ?", arrayOf(tileid.toString()))
     }
 
     @SuppressWarnings("UNUSED")
     fun deleteEntireDB() {
-        /*USE THIS FUNCTION WISELY, WITH GREAT POWER COMES GREAT RESPONSIBILITY*/
+        /* USE THIS FUNCTION WISELY, WITH GREAT POWER COMES GREAT RESPONSIBILITY */
         val db = this.writableDatabase
         db.delete(TABLE_NAME, null, null)
     }
+
     companion object {
         val DATABASE_NAME = "TilesMaping.db"
         val TABLE_NAME = "TilesMappingTable"
-        val COL_1 = "receipient_id"
+        val COL_1 = "recipient_id"
         val COL_2 = "tileid"
     }
 }

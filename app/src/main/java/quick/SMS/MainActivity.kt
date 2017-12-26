@@ -1,33 +1,26 @@
 package quick.SMS
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.provider.ContactsContract
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import android.Manifest
-import android.preference.PreferenceManager
-import android.support.v4.app.ActivityCompat
-import android.content.Intent
-import android.net.Uri
-import android.content.Context
-import android.provider.ContactsContract
 import org.jetbrains.anko.ctx
 import org.jetbrains.anko.db.MapRowParser
 import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+
 /*
  * https://antonioleiva.com/databases-anko-kotlin/
  * The above link is to do database's, which I think we will need to save and retain each contacts
  * common text messages - which will have to be defined by the user
- *
- * http://sonevalley.blogspot.co.uk/2015/12/retrieving-list-of-contacts-in-android.html
- * A link explaining how to pull up the contacts from the user, in java but Kotlin is interoperable
  *
  * https://www.androidhive.info/2017/07/android-implementing-preferences-settings-screen/
  * Toggle settings for the user
@@ -132,12 +125,14 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+
     fun loadString(key: String): String {
         /* Loads a String from Shared Preferences */
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val savedValue = sharedPreferences.getString(key, "UNKNOWN") /* DEFAULT AS UNKNOWN */
         return savedValue
     }
+
     fun saveString(key: String, value: String) {
         /* Saves a String to Shared Preferences */
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
@@ -145,6 +140,7 @@ class MainActivity : AppCompatActivity() {
         editor.putString(key, value)
         editor.apply()
     }
+
     private fun requestPermissions(permissions: Array<String>) {
         /* Request Permission if required */
         ActivityCompat.requestPermissions(this, permissions, 1)
@@ -185,13 +181,8 @@ class MainActivity : AppCompatActivity() {
         /* Deletes whole database, use function wisely oh Alex San, with great power, comes even
         greater responsibility */
         helperTiles.deleteEntireDBTiles()
-
-
-
     }
 
     data private class NullableContact(val id: Long, val name: String?, val image: String?,
                                        val hasNumber: Long)
-
-        
 }
