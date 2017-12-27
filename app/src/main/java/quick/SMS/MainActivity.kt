@@ -11,11 +11,10 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.ctx
+import org.jetbrains.anko.*
 import org.jetbrains.anko.db.MapRowParser
 import org.jetbrains.anko.db.parseList
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.sdk19.coroutines.onClick
 
 /*
  * https://antonioleiva.com/databases-anko-kotlin/
@@ -36,47 +35,16 @@ class MainActivity : AppCompatActivity() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //setContentView(R.layout.activity_main)
+        MainLayout(5, 2) { onClick(it) }.setContentView(this)
         // Request required permissions
         requestPermissions(arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS))
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-
-        tile_1.setOnClickListener {
-            onClick(1)
-        }
-        tile_2.setOnClickListener {
-            onClick(2)
-        }
-        tile_3.setOnClickListener {
-            onClick(3)
-        }
-        tile_4.setOnClickListener {
-            onClick(4)
-        }
-        tile_5.setOnClickListener {
-            onClick(5)
-        }
-        tile_6.setOnClickListener {
-            onClick(6)
-        }
-        tile_7.setOnClickListener {
-            onClick(7)
-        }
-        tile_8.setOnClickListener {
-            onClick(8)
-        }
-        tile_9.setOnClickListener {
-            onClick(9)
-        }
-        tile_10.setOnClickListener {
-            onClick(10)
-        }
 
         println("Starting Async Lookup")
 
-        getContacts(ctx) { contacts ->
+        getContacts(ctx) {
             // Callback function goes here
-            println(contacts)
+            println(it)
         }
 
         println("Changed Something")
@@ -96,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                     return NullableContact(
                             columns[ContactsContract.Contacts._ID] as Long,
                             columns[ContactsContract.Contacts.DISPLAY_NAME] as? String,
-                            columns[ContactsContract.Contacts.PHOTO_ID] as? String, // PHOTO_URI stopped working
+                            columns[ContactsContract.Contacts.PHOTO_ID] as? String,
                             columns[ContactsContract.Contacts.HAS_PHONE_NUMBER] as Long)
                 }
             })
@@ -185,4 +153,40 @@ class MainActivity : AppCompatActivity() {
 
     data private class NullableContact(val id: Long, val name: String?, val image: String?,
                                        val hasNumber: Long)
+}
+
+/* The Layout class can take arguments */
+class MainLayout(val rows: Int, val cols: Int, val tileCallback: (Int) -> Unit) : AnkoComponent<MainActivity> {
+
+    override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
+        scrollView {
+            verticalLayout {
+                for (i in 1..rows) {
+                    row(ui, cols, i)
+                }
+            }
+        }
+    }
+
+    fun _LinearLayout.tile(ui: AnkoContext<MainActivity>, row: Int, col: Int, rowLen: Int) {
+        button {
+            onClick {
+                val index = (row - 1) * rowLen + col
+                tileCallback(index)
+            }
+        }.lparams(height = matchParent, width = 0) {
+            weight = 1f
+        }
+    }
+
+    fun _LinearLayout.row(ui: AnkoContext<MainActivity>, nTiles: Int, row: Int) {
+        linearLayout {
+            for (i in 1..nTiles) {
+                tile(ui, row, i, nTiles)
+            }
+        }.lparams(height = dip(180), width = matchParent) {
+            weight = 1f
+            padding = dip(7)
+        }
+    }
 }
