@@ -1,0 +1,2 @@
+[filter "multiline-comments"]
+    clean = python multiline_commenter.py
