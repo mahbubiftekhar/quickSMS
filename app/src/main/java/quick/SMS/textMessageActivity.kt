@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.activity_text_message.*
 
 
 
-private var receipient = null
+private var recipient = null
 
 class textMessageActivity : AppCompatActivity() {
     var MESSAGE_LIST: MutableList<String>? = null
@@ -29,7 +29,7 @@ class textMessageActivity : AppCompatActivity() {
                 println("&&&"+messages[i])
             }
             println("&&& should print nothing here on in")
-            helper.deleteReceipient(1.toLong())
+            helper.deleteRecipient(1.toLong())
             messages = helper.returnAll(1.toLong())
             for(i in 1..messages!!.size-1){
                 println("&&&"+messages[i])
@@ -39,14 +39,14 @@ class textMessageActivity : AppCompatActivity() {
         }
     }
 
-    fun addData(receipient_id: Long, message: String) {
+    fun addData(recipient_id: Long, message: String) {
         /*No id, this is because we are auto incrementing this one*/
-        helper.insertData(receipient_id, message)
+        helper.insertData(recipient_id, message)
 
     }
 
-    fun UpdateData(id: String, receipient_id: Long, message: String) {
-        val isUpdate = helper.updateData(id, receipient_id, message)
+    fun UpdateData(id: String, recipient_id: Long, message: String) {
+        val isUpdate = helper.updateData(id, recipient_id, message)
     }
 
 
