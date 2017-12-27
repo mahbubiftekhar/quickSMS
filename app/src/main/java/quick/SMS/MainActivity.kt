@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
                     return NullableContact(
                             columns[ContactsContract.Contacts._ID] as Long,
                             columns[ContactsContract.Contacts.DISPLAY_NAME] as? String,
-                            columns[ContactsContract.Contacts.PHOTO_URI] as? String,
+                            columns[ContactsContract.Contacts.PHOTO_ID] as? String, // PHOTO_URI stopped working
                             columns[ContactsContract.Contacts.HAS_PHONE_NUMBER] as Long)
                 }
             })

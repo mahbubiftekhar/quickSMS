@@ -37,4 +37,11 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    // Anko Layouts
+    compile "org.jetbrains.anko:anko-sdk19:0.10.0"
+    compile "org.jetbrains.anko:anko-appcompat-v7:0.10.0"
+
+    // Coroutine listeners for Anko Layouts
+    compile "org.jetbrains.anko:anko-sdk19-coroutines:0.10.0"
+    compile "org.jetbrains.anko:anko-appcompat-v7-coroutines:0.10.0"
 }
