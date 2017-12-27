@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
             println(contacts)
         }
 
-        println("onCreate continues in the meantime")
+        println("Changed Something")
 
     }
 
