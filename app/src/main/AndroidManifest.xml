@@ -26,7 +26,7 @@
             android:name=".settingsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".textMessageActivity"
+            android:name=".TextMessageActivity"
             android:label="@string/title_activity_text_message"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

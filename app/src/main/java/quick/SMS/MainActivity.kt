@@ -10,7 +10,6 @@ import android.provider.ContactsContract
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.db.MapRowParser
 import org.jetbrains.anko.db.parseList
@@ -35,10 +34,10 @@ class MainActivity : AppCompatActivity() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_main)
         MainLayout(5, 2) { onClick(it) }.setContentView(this)
         // Request required permissions
-        requestPermissions(arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS))
+        requestPermissions(arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE,
+                Manifest.permission.READ_CONTACTS))
 
         println("Starting Async Lookup")
 
@@ -132,7 +131,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onClick(tileNumber: Int){
-        /* The idea for this function is to do the bulk of the work when the user clicks the tile
+        /*/* The idea for this function is to do the bulk of the work when the user clicks the tile
          * just using a function to reduce the amount of code */
         println("we are getting here")
         var helperTiles = DatabaseTiles(this)
@@ -148,27 +147,28 @@ class MainActivity : AppCompatActivity() {
 
         /* Deletes whole database, use function wisely oh Alex San, with great power, comes even
         greater responsibility */
-        helperTiles.deleteEntireDBTiles()
+        helperTiles.deleteEntireDBTiles()*/
+        startActivity<TextMessageActivity>()
     }
 
     data private class NullableContact(val id: Long, val name: String?, val image: String?,
                                        val hasNumber: Long)
 }
 
-/* The Layout class can take arguments */
-class MainLayout(val rows: Int, val cols: Int, val tileCallback: (Int) -> Unit) : AnkoComponent<MainActivity> {
+class MainLayout(val rows: Int, val cols: Int, val tileCallback: (Int) -> Unit)
+    : AnkoComponent<MainActivity> {
 
     override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
         scrollView {
             verticalLayout {
                 for (i in 1..rows) {
-                    row(ui, cols, i)
+                    row(cols, i)
                 }
             }
         }
     }
 
-    fun _LinearLayout.tile(ui: AnkoContext<MainActivity>, row: Int, col: Int, rowLen: Int) {
+    fun _LinearLayout.tile(row: Int, col: Int, rowLen: Int) {
         button {
             onClick {
                 val index = (row - 1) * rowLen + col
@@ -179,10 +179,10 @@ class MainLayout(val rows: Int, val cols: Int, val tileCallback: (Int) -> Unit) 
         }
     }
 
-    fun _LinearLayout.row(ui: AnkoContext<MainActivity>, nTiles: Int, row: Int) {
+    fun _LinearLayout.row(nTiles: Int, row: Int) {
         linearLayout {
             for (i in 1..nTiles) {
-                tile(ui, row, i, nTiles)
+                tile(row, i, nTiles)
             }
         }.lparams(height = dip(180), width = matchParent) {
             weight = 1f
