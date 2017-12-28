@@ -30,16 +30,12 @@ import org.jetbrains.anko.uiThread
  *
  */
 class MainActivity : AppCompatActivity() {
-	
-    /* The idea to this one was to keep track easily of which tab is selected */
-    private var TAG = "SMS"    
 
-	override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        // Request required permissions
+        /* Request required permissions */
         requestPermissions(arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS))
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         tile_1.setOnClickListener {
             onClick(1)
@@ -83,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun getContacts(ctx: Context, then: (List<Contact>)->Unit) {
+    fun getContacts(ctx: Context, then: (List<Contact>) -> Unit) {
         doAsync {
             // All contacts saved on the device in raw form
             val result = ctx.contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
@@ -91,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
             // Parse into an intermediate form where the name can be null and we don't know if
             // there are any phone numbers
-            val parsed = result.parseList(object: MapRowParser<NullableContact> {
+            val parsed = result.parseList(object : MapRowParser<NullableContact> {
                 override fun parseRow(columns: Map<String, Any?>): NullableContact {
                     return NullableContact(
                             columns[ContactsContract.Contacts._ID] as Long,
@@ -104,9 +100,9 @@ class MainActivity : AppCompatActivity() {
             // Remove Contacts with null names or no phone number, sort by name and convert to
             // null safe Contacts
             val contacts = parsed
-                           .filter { it.name != null && it.hasNumber == 1L }
-                           .sortedBy { it.name }
-                           .map { Contact(ctx, it.id, it.name!!, it.image) }
+                    .filter { it.name != null && it.hasNumber == 1L }
+                    .sortedBy { it.name }
+                    .map { Contact(ctx, it.id, it.name!!, it.image) }
 
             // Send them to the callback
             uiThread {
@@ -118,11 +114,11 @@ class MainActivity : AppCompatActivity() {
     fun callNumber(phoneNumber: String) {
         // Calls a phone number
         val callIntent = Intent(Intent.ACTION_CALL)
-        callIntent.data = Uri.parse(Manifest.permission.CALL_PHONE)
-        try{startActivity(callIntent)}
-        catch(e:SecurityException){
+        callIntent.data = Uri.parse(phoneNumber)
+        try {
+            startActivity(callIntent)
+        } catch(e: SecurityException) {
             requestPermissions(arrayOf(Manifest.permission.CALL_PHONE))
-
         }
     }
 
@@ -146,43 +142,40 @@ class MainActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, permissions, 1)
     }
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.SMS -> {
-                TAG = "SMS" /* Setting tag parameter appropriately */
-                /* QUICK SMS */
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.CALL -> {
-                TAG = "CALL" /* Setting tag parameter appropriately */
-                /* QUICK CALL */
-                return@OnNavigationItemSelectedListener true
-            }
-
-        }
-        false
-    }
-
-    fun onClick(tileNumber: Int){
+    fun onClick(tileNumber: Int) {
         /* The idea for this function is to do the bulk of the work when the user clicks the tile
          * just using a function to reduce the amount of code */
         println("we are getting here")
-        var helperTiles = DatabaseTiles(this)
-        val intent = Intent(this, textMessageActivity::class.java)
-        startActivity(intent)
-        helperTiles.insertData(2L, 2)
-        val a = helperTiles.getRecipient(2)
-        println(a)
-        helperTiles.deleteTileAndRecipeintData(2)
-        println("should be nothing")
-        val b2 = helperTiles.getRecipient(2)
-        println(b2)
+        val helperTiles = DatabaseLog(this)
+        helperTiles.insertData("TEXT", "TEST MESSAGE 1", 1L, "RECEIPIENT 1")
+        helperTiles.insertData("TEXT", "TEST MESSAGE 2", 2L, "RECEIPIENT 2")
+        helperTiles.insertData("CALL","", 1L, "RECIPIENT 1 - CALL" )
+        helperTiles.insertData("CALL","", 2L, "RECIPIENT 2 - CALL" )
+        var bufferAll = helperTiles.returnAllLog()
+        var bufferIndividualReceipient = helperTiles.returnAllLog(2L)
 
-        /* Deletes whole database, use function wisely oh Alex San, with great power, comes even
-        greater responsibility */
-        helperTiles.deleteEntireDBTiles()
+        println(" --------- ")
+        println(" --------- ")
+        println("ALL")
+        println(bufferAll.toString())
+        println(" --------- ")
+        println(" --------- ")
+        println(" ONLY 2L ")
+        println(bufferIndividualReceipient.toString())
+        println(" --------- ")
+        println(" --------- ")
+
+        helperTiles.deleteRecipient(2L)
+        bufferAll = helperTiles.returnAllLog()
+        bufferIndividualReceipient = helperTiles.returnAllLog(2L)
+        println("SHOULD ONLY PRINT 1L")
+        println(bufferAll.toString())
+
+        println(" --------- ")
+        println(" SHOULD PRINT NOTHING ")
+        println(bufferIndividualReceipient.toString())
+
     }
 
-    data private class NullableContact(val id: Long, val name: String?, val image: String?,
-                                       val hasNumber: Long)
+    data private class NullableContact(val id: Long, val name: String?, val image: String?, val hasNumber: Long)
 }
