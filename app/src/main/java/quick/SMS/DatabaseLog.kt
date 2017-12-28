@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import org.jetbrains.anko.db.MapRowParser
 import org.jetbrains.anko.db.RowParser
 import org.jetbrains.anko.db.parseList
 import java.sql.Timestamp
@@ -58,7 +57,7 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
 
     fun returnAllLog(recipient_id: Long): List<Map<String,String>> {
         val db = this.writableDatabase
-        val res = db.rawQuery("select * from " + TABLE_NAME + "WHERE recipient_id = " + recipient_id, null)
+        val res = db.rawQuery("select * from $TABLE_NAME WHERE recipient_id=$recipient_id", null)
         val numbers = res.parseList(object: RowParser<Map<String, String>> {
             override fun parseRow(columns: Array<Any?>) : Map<String, String> {
                 val ret = mapOf(
