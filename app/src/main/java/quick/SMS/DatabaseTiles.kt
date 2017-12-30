@@ -45,7 +45,18 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                return res.getLong(res.getColumnIndex("recipient_id"))
             }
         }
-        return 0L
+        return -1L
+    }
+    fun getTile (recipient_id: Long): Int{
+        /*Given a receipient_id it will find the relevent tile ID*/
+        val db = this.writableDatabase
+        val res = db.rawQuery("select * from " + DatabaseTiles.TABLE_NAME, null)
+        while(res.moveToNext()){
+            if(recipient_id.toString() == res.getString(res.getColumnIndex("recipient_id"))){
+                return res.getInt(res.getColumnIndex("tileid"))
+            }
+        }
+        return -1
     }
 
     fun deleteTileAndRecipeintData(tileid: Int): Int {
