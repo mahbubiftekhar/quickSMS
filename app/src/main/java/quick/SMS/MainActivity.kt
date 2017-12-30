@@ -42,8 +42,7 @@ class MainActivity : AppCompatActivity() {
         println("Starting Async Lookup")
 
         getContacts(ctx) {
-            // Callback function goes here
-            println(it)
+            contactsTest(it)
         }
 
         println("Changed Something")
@@ -80,6 +79,13 @@ class MainActivity : AppCompatActivity() {
                 then(contacts)
             }
         }
+    }
+
+    fun contactsTest(contacts: List<Contact>) {
+        val namesAndNumbers = contacts
+                .filter { it.tile == -1 }
+                .associateBy({ it.name }, { it.numbers })
+        startActivity<ContactsActivity>("contacts" to namesAndNumbers);
     }
 
     fun callNumber(phoneNumber: String) {

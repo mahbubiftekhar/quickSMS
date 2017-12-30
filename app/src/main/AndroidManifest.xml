@@ -30,9 +30,9 @@
             android:label="@string/title_activity_text_message"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".contacts"
+            android:name=".ContactsActivity"
             android:label="@string/title_activity_contacts"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
