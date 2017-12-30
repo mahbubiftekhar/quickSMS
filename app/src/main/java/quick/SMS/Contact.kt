@@ -5,11 +5,8 @@ import android.provider.ContactsContract
 import org.jetbrains.anko.db.MapRowParser
 import org.jetbrains.anko.db.parseList
 
-
-
-
-// nullableImage is inaccessible, image == nullableImage if nullableImage != null
-// else image == "NONE", the else part can be changed as appropriate to produce a default image
+/* nullableImage is inaccessible, image == nullableImage if nullableImage != null */
+/* else image == "NONE", the else part can be changed as appropriate to produce a default image */
 class Contact(private val ctx: Context, val id: Long, val name: String,
               private val nullableImage: String?) {
     // Abusing lazy for a neat way of producing a Delegate

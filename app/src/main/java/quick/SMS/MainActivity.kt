@@ -12,10 +12,12 @@ import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.ctx
+import org.jetbrains.anko.*
 import org.jetbrains.anko.db.MapRowParser
 import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.sdk19.coroutines.onClick
 
 /*
  * https://antonioleiva.com/databases-anko-kotlin/
@@ -33,40 +35,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        /* Request required permissions */
-        requestPermissions(arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS))
-
-        tile_1.setOnClickListener {
-            onClick(1)
-        }
-        tile_2.setOnClickListener {
-            onClick(2)
-        }
-        tile_3.setOnClickListener {
-            onClick(3)
-        }
-        tile_4.setOnClickListener {
-            onClick(4)
-        }
-        tile_5.setOnClickListener {
-            onClick(5)
-        }
-        tile_6.setOnClickListener {
-            onClick(6)
-        }
-        tile_7.setOnClickListener {
-            onClick(7)
-        }
-        tile_8.setOnClickListener {
-            onClick(8)
-        }
-        tile_9.setOnClickListener {
-            onClick(9)
-        }
-        tile_10.setOnClickListener {
-            onClick(10)
-        }
+        MainLayout(5, 2) { onClick(it) }.setContentView(this)
+        // Request required permissions
+        requestPermissions(arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE,
+                Manifest.permission.READ_CONTACTS))
 
         println("Starting Async Lookup")
 
@@ -87,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
             // Parse into an intermediate form where the name can be null and we don't know if
             // there are any phone numbers
-            val parsed = result.parseList(object : MapRowParser<NullableContact> {
+            val parsed = result.parseList(object: MapRowParser<NullableContact> {
                 override fun parseRow(columns: Map<String, Any?>): NullableContact {
                     return NullableContact(
                             columns[ContactsContract.Contacts._ID] as Long,
@@ -111,14 +83,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun contactsTest(contacts: List<Contact>) {
+        val namesAndNumbers = contacts
+                .filter { it.tile == -1 }
+                .associateBy({ it.name }, { it.numbers })
+        startActivity<ContactsActivity>("contacts" to namesAndNumbers);
+    }
+
     fun callNumber(phoneNumber: String) {
         // Calls a phone number
         val callIntent = Intent(Intent.ACTION_CALL)
-        callIntent.data = Uri.parse(phoneNumber)
+	// Can't tell which of these is correct
+	/*
+	callIntent.data = Uri.parse(phoneNumber)
         try {
             startActivity(callIntent)
         } catch(e: SecurityException) {
+	*/
+        callIntent.data = Uri.parse(Manifest.permission.CALL_PHONE)
+        try{startActivity(callIntent)}
+        catch(e:SecurityException){
             requestPermissions(arrayOf(Manifest.permission.CALL_PHONE))
+
         }
     }
 
@@ -142,40 +128,48 @@ class MainActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, permissions, 1)
     }
 
-    fun onClick(tileNumber: Int) {
-        /* The idea for this function is to do the bulk of the work when the user clicks the tile
-         * just using a function to reduce the amount of code */
-        println("we are getting here")
-        val helperTiles = DatabaseLog(this)
-        helperTiles.insertData("TEXT", "TEST MESSAGE 1", 1L, "RECEIPIENT 1")
-        helperTiles.insertData("TEXT", "TEST MESSAGE 2", 2L, "RECEIPIENT 2")
-        helperTiles.insertData("CALL","", 1L, "RECIPIENT 1 - CALL" )
-        helperTiles.insertData("CALL","", 2L, "RECIPIENT 2 - CALL" )
-        var bufferAll = helperTiles.returnAllLog()
-        var bufferIndividualReceipient = helperTiles.returnAllLog(2L)
-
-        println(" --------- ")
-        println(" --------- ")
-        println("ALL")
-        println(bufferAll.toString())
-        println(" --------- ")
-        println(" --------- ")
-        println(" ONLY 2L ")
-        println(bufferIndividualReceipient.toString())
-        println(" --------- ")
-        println(" --------- ")
-
-        helperTiles.deleteRecipient(2L)
-        bufferAll = helperTiles.returnAllLog()
-        bufferIndividualReceipient = helperTiles.returnAllLog(2L)
-        println("SHOULD ONLY PRINT 1L")
-        println(bufferAll.toString())
-
-        println(" --------- ")
-        println(" SHOULD PRINT NOTHING ")
-        println(bufferIndividualReceipient.toString())
-
+    fun onClick(tileNumber: Int){
+        startActivity<TextMessageActivity>()
     }
 
-    data private class NullableContact(val id: Long, val name: String?, val image: String?, val hasNumber: Long)
+    
+
+    data private class NullableContact(val id: Long, val name: String?, val image: String?,
+                                       val hasNumber: Long)
+}
+
+class MainLayout(val rows: Int, val cols: Int, val tileCallback: (Int) -> Unit)
+    : AnkoComponent<MainActivity> {
+
+    override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
+        scrollView {
+            verticalLayout {
+                for (i in 1..rows) {
+                    row(cols, i)
+                }
+            }
+        }
+    }
+
+    fun _LinearLayout.tile(row: Int, col: Int, rowLen: Int) {
+        button {
+            onClick {
+                val index = (row - 1) * rowLen + col
+                tileCallback(index)
+            }
+        }.lparams(height = matchParent, width = 0) {
+            weight = 1f
+        }
+    }
+
+    fun _LinearLayout.row(nTiles: Int, row: Int) {
+        linearLayout {
+            for (i in 1..nTiles) {
+                tile(row, i, nTiles)
+            }
+        }.lparams(height = dip(180), width = matchParent) {
+            weight = 1f
+            padding = dip(7)
+        }
+    }
 }

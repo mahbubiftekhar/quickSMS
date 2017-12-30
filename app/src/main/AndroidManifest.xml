@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -26,13 +26,13 @@
             android:name=".settingsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".textMessageActivity"
+            android:name=".TextMessageActivity"
             android:label="@string/title_activity_text_message"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".contacts"
+            android:name=".ContactsActivity"
             android:label="@string/title_activity_contacts"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
