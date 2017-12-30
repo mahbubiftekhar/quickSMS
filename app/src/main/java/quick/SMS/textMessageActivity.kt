@@ -5,8 +5,6 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_text_message.*
 
-
-
 private var recipient = null
 
 class textMessageActivity : AppCompatActivity() {
@@ -46,7 +44,7 @@ class textMessageActivity : AppCompatActivity() {
     }
 
     fun UpdateData(id: String, recipient_id: Long, message: String) {
-        val isUpdate = helper.updateData(id, recipient_id, message)
+        helper.updateData(id, recipient_id, message)
     }
 
 
