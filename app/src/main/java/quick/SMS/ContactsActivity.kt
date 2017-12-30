@@ -1,10 +1,10 @@
 package quick.SMS
 
-import android.content.Context
+/* TODO: There are no comments in this file, probably I should add some */
+
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
-import android.widget.LinearLayout
 import org.jetbrains.anko.*
 
 class ContactsActivity : AppCompatActivity() {

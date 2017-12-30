@@ -7,15 +7,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.ContactsContract
-import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
-import org.jetbrains.anko.ctx
 import org.jetbrains.anko.*
 import org.jetbrains.anko.db.MapRowParser
 import org.jetbrains.anko.db.parseList
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import org.jetbrains.anko.sdk19.coroutines.onClick
 
 /*
@@ -35,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MainLayout(5, 2) { onClick(it) }.setContentView(this)
+
         // Request required permissions
         requestPermissions(arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE,
                 Manifest.permission.READ_CONTACTS))
@@ -56,8 +53,8 @@ class MainActivity : AppCompatActivity() {
             val result = ctx.contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
                     null, null, null, null)
 
-            // Parse into an intermediate form where the name can be null and we don't know if
-            // there are any phone numbers
+            /* Parse into an intermediate form where the name can be null and we don't know if
+             * there are any phone numbers */
             val parsed = result.parseList(object: MapRowParser<NullableContact> {
                 override fun parseRow(columns: Map<String, Any?>): NullableContact {
                     return NullableContact(
@@ -68,8 +65,8 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
-            // Remove Contacts with null names or no phone number, sort by name and convert to
-            // null safe Contacts
+            /* Remove Contacts with null names or no phone number, sort by name and convert to
+             * null safe Contacts */
             val contacts = parsed
                     .filter { it.name != null && it.hasNumber == 1L }
                     .sortedBy { it.name }
@@ -130,8 +127,6 @@ class MainActivity : AppCompatActivity() {
     fun onClick(tileNumber: Int){
         startActivity<TextMessageActivity>()
     }
-
-    
 
     data private class NullableContact(val id: Long, val name: String?, val image: String?,
                                        val hasNumber: Long)

@@ -8,9 +8,9 @@ import org.jetbrains.anko.sdk19.coroutines.onClick
 
 class TextMessageActivity : AppCompatActivity() {
 
-    private lateinit var messages: List<String>
-    internal var helper = DatabaseHelper(this)
-    private var recipient = null
+    private lateinit var messages : List<String>
+    internal var helper = DatabaseHelper(this) // Should this be private?
+    private lateinit var recipient : String // Don't know what type this should be
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

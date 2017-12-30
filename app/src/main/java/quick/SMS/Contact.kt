@@ -5,17 +5,17 @@ import android.provider.ContactsContract
 import org.jetbrains.anko.db.MapRowParser
 import org.jetbrains.anko.db.parseList
 
-/* nullableImage is inaccessible, image == nullableImage if nullableImage != null */
-/* else image == "NONE", the else part can be changed as appropriate to produce a default image */
+/* nullableImage is inaccessible, image == nullableImage if nullableImage != null
+ * else image == "NONE", the else part can be changed as appropriate to produce a default image */
 class Contact(private val ctx: Context, val id: Long, val name: String,
               private val nullableImage: String?) {
     // Abusing lazy for a neat way of producing a Delegate
     val image by lazy { nullableImage ?: "NONE" } // Generate default image URI here
-    internal var dateBaseHelper = DatabaseHelper(ctx)
+    internal var dateBaseHelper = DatabaseHelper(ctx) // TODO: Should these be private?
     internal var dataBaseTiles = DatabaseTiles(ctx)
 
-    // These properties are looked up from their respective databases on first access and
-    // cached for later use
+    /* These properties are looked up from their respective databases on first access and
+     * cached for later use */
     val numbers by lazy { getPhoneNumbers() }
     val texts by lazy { getTextsFromDB(id) }
     val tile by lazy { getTileFromDB(id) }
@@ -38,15 +38,11 @@ class Contact(private val ctx: Context, val id: Long, val name: String,
         val textMessages = dateBaseHelper.returnAll(receipient_id)
         dateBaseHelper.close()
         return textMessages
-        // TODO: This should look up the texts in the relevant database
     }
 
     private fun getTileFromDB(receipient_id: Long) : Int {
-        // TODO: This should look up the attached tile from the relavent database
-        // TODO: Need a behavior for contacts with no tile
+        /* getTile will return -1 if it cannot find a tile corresponding to that particular user,
+         * otherwise it will return the index for that tile */
         return dataBaseTiles.getTile(receipient_id)
-        /*Get file will return -1 if it cannot find a tile corresponding to that particular user,
-        * otherwise it will return the index for that tile*/
     }
-
 }

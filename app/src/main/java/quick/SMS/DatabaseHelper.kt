@@ -73,7 +73,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     fun deleteRecipient(recipient_id: Long){
-        /*This function takes a recipient_id and removes all rows with that recipient id*/
+        /* This function takes a recipient_id and removes all rows with that recipient id */
         val db = this.writableDatabase
         val res = db.rawQuery("select * from " + TABLE_NAME, null)
 

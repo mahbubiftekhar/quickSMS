@@ -16,15 +16,16 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        /*This will actually drop the table completely, slightly different from delete, drop will get rid of the table
-        * whilst deleteAll will remove the contents only*/
+        /* This will actually drop the table completely, slightly different from delete, drop will
+         * get rid of the table whilst deleteAll will remove the contents only */
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME)
         onCreate(db)
     }
 
     fun insertData(type: String, message: String, recipient_id: Long, recipient_name: String) {
-        /*THE ID - WHICH IS COL_1 - IS TAKEN CARE OF AUTOMATICALLY, THE TIMESTAMP IS ALSO DONE AT THIS
-        * LEVEL IN ALL INSTANCES - UPDATING AND INSERTING - HENCE NO NEED TO WORRY ABOUT IT AT A HIGHER LEVEL*/
+        /* THE ID - WHICH IS COL_1 - IS TAKEN CARE OF AUTOMATICALLY, THE TIMESTAMP IS ALSO DONE AT
+         * THIS LEVEL IN ALL INSTANCES - UPDATING AND INSERTING - HENCE NO NEED TO WORRY ABOUT IT
+         * AT A HIGHER LEVEL */
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(COL_2, type)
@@ -35,12 +36,12 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
         contentValues.put(COL_6, timestamp.toString())
 
         db.insert(TABLE_NAME, null, contentValues)
-
     }
 
 
     fun updateData(id: String, type: String, message: String, recipient_id: Long, recipient_name: String): Boolean {
-        /*This function returns true when it is completed - I don't see an immediate use for this, its more having the option*/
+        /* This function returns true when it is completed - I don't see an immediate use for this,
+         * its more having the option */
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(COL_1, id)
@@ -57,7 +58,8 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
 
     fun returnAllLog(recipient_id: Long): List<Map<String,String>> {
         val db = this.writableDatabase
-        val res = db.rawQuery("select * from $TABLE_NAME WHERE recipient_id=$recipient_id", null)
+        val res = db.rawQuery("select * from $TABLE_NAME WHERE recipient_id=$recipient_id",
+                null)
         val numbers = res.parseList(object: RowParser<Map<String, String>> {
             override fun parseRow(columns: Array<Any?>) : Map<String, String> {
                 val ret = mapOf(
@@ -90,8 +92,8 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
     }
 
     fun deleteDataLog(id: String): Int {
-        /*Delete a particular log, where the ID matches - please not this is the unique ID,
-        * NOT the recipient_id, to do that use deleteRecipient()*/
+        /* Delete a particular log, where the ID matches - please not this is the unique ID,
+         * NOT the recipient_id, to do that use deleteRecipient() */
         val db = this.writableDatabase
         return db.delete(TABLE_NAME, "id = ?", arrayOf(id))
     }
@@ -111,13 +113,16 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
     }
 
     fun deleteRecipient(recipient_id: Long) {
-        /*This function takes a recipient_id and removes all rows with that recipient id*/
+        /* This function takes a recipient_id and removes all rows with that recipient id */
         val db = this.writableDatabase
-        val res = db.rawQuery("select * from " + TABLE_NAME, null) /*Takes O(n) time*/
+        /* Takes O(n) time */
+        val res = db.rawQuery("select * from " + TABLE_NAME, null)
 
-        while (res.moveToNext()) { /* Takes O(n) time*/
+        while (res.moveToNext()) { /* Takes O(n) time */
             if (recipient_id.toString() == res.getString(res.getColumnIndex("recipient_id"))) {
-                db.delete(TABLE_NAME, "id = ?", arrayOf(res.getString(res.getColumnIndex("id")))) /*Delete that particular row*/
+                /* Delete that particular row */
+                db.delete(TABLE_NAME, "id = ?",
+                        arrayOf(res.getString(res.getColumnIndex("id"))))
             }
         }
         res.close()
