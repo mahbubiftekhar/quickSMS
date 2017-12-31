@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                     return NullableContact(
                             columns[ContactsContract.Contacts._ID] as Long,
                             columns[ContactsContract.Contacts.DISPLAY_NAME] as? String,
-                            columns[ContactsContract.Contacts.PHOTO_ID] as? String, // Should be PHOTO_URI, seems to have broken
+                            columns[ContactsContract.Contacts.PHOTO_URI] as? String, // Should be PHOTO_URI, seems to have broken
                             columns[ContactsContract.Contacts.HAS_PHONE_NUMBER] as Long)
                 }
             })
