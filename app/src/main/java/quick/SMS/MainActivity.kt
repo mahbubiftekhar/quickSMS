@@ -38,8 +38,8 @@ class MainActivity : AppCompatActivity() {
 
         println("Starting Async Lookup")
 
-        Contact.getContacts(ctx) { contacts : List<Contact> ->
-            println(contacts)
+        Contact.getContacts(ctx) {
+            println(it)
         }
 
         println("onCreate continues in the meantime")
@@ -47,10 +47,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun contactsTest(contacts: List<Contact>) {
-        val namesAndNumbers = contacts
-                .filter { it.tile == -1 }
-                .associateBy({ it.name }, { it.numbers })
-        startActivity<ContactsActivity>("contacts" to namesAndNumbers);
+        startActivity<ContactsActivity>("contacts" to contacts);
     }
 
     fun callNumber(phoneNumber: String) {

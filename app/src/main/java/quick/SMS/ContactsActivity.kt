@@ -11,36 +11,35 @@ class ContactsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val contacts = intent.extras.get("contacts") as Map<String, List<String>>
+        val contacts = intent.extras.get("contacts") as List<Contact>
         ContactsLayout(contacts).setContentView(this)
     }
 }
 
-class ContactsLayout(val contacts: Map<String, List<String>>) : AnkoComponent<ContactsActivity> {
+class ContactsLayout(val contacts: List<Contact>) : AnkoComponent<ContactsActivity> {
 
     override fun createView(ui: AnkoContext<ContactsActivity>) = with(ui) {
-        val names = contacts.keys.sorted()
         scrollView {
             verticalLayout {
-                for (name in names) {
-                    contactView(name)
+                for (contact in contacts) {
+                    contactView(contact)
                 }
             }
         }
     }
 
-    fun _LinearLayout.contactView(name: String) {
+    fun _LinearLayout.contactView(contact: Contact) {
             linearLayout {
                 imageView(imageResource = R.drawable.default_image)
                 frameLayout {
                     verticalLayout {
                         // Name
-                        textView(name) {
+                        textView(contact.name) {
                             textSize = sp(10).toFloat()
                         }.lparams(width = matchParent) {
                             leftMargin = dip(10)
                         }
-                        for (number in contacts[name]!!) {
+                        for (number in contact.numbers) {
                             // Number
                             textView(number) {
                                 textSize = sp(14).toFloat()
