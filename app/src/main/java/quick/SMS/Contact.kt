@@ -7,11 +7,10 @@ import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
-/* nullableImage is inaccessible, image == nullableImage if nullableImage != null
- * else image == "NONE", the else part can be changed as appropriate to produce a default image */
 class Contact private constructor(val id: Long, val name: String,
                                   private val nullableImage: String?, val numbers: List<String>,
                                   val texts: List<String>, val tile: Int) {
+
     // Abusing lazy for a neat way of producing a Delegate
     val image by lazy { nullableImage ?: "NONE" } // Generate default image URI here
 
