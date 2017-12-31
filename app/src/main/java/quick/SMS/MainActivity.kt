@@ -38,45 +38,12 @@ class MainActivity : AppCompatActivity() {
 
         println("Starting Async Lookup")
 
-        getContacts(ctx) { contacts ->
-            // Callback function goes here
+        Contact.getContacts(ctx) { contacts : List<Contact> ->
             println(contacts)
         }
 
         println("onCreate continues in the meantime")
 
-    }
-
-    fun getContacts(ctx: Context, then: (List<Contact>) -> Unit) {
-        doAsync {
-            // All contacts saved on the device in raw form
-            val result = ctx.contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
-                    null, null, null, null)
-
-            /* Parse into an intermediate form where the name can be null and we don't know if
-             * there are any phone numbers */
-            val parsed = result.parseList(object: MapRowParser<NullableContact> {
-                override fun parseRow(columns: Map<String, Any?>): NullableContact {
-                    return NullableContact(
-                            columns[ContactsContract.Contacts._ID] as Long,
-                            columns[ContactsContract.Contacts.DISPLAY_NAME] as? String,
-                            columns[ContactsContract.Contacts.PHOTO_URI] as? String, // Should be PHOTO_URI, seems to have broken
-                            columns[ContactsContract.Contacts.HAS_PHONE_NUMBER] as Long)
-                }
-            })
-
-            /* Remove Contacts with null names or no phone number, sort by name and convert to
-             * null safe Contacts */
-            val contacts = parsed
-                    .filter { it.name != null && it.hasNumber == 1L }
-                    .sortedBy { it.name }
-                    .map { Contact(ctx, it.id, it.name!!, it.image) }
-
-            // Send them to the callback
-            uiThread {
-                then(contacts)
-            }
-        }
     }
 
     fun contactsTest(contacts: List<Contact>) {
@@ -127,9 +94,6 @@ class MainActivity : AppCompatActivity() {
     fun onClick(tileNumber: Int){
         startActivity<TextMessageActivity>()
     }
-
-    data private class NullableContact(val id: Long, val name: String?, val image: String?,
-                                       val hasNumber: Long)
 }
 
 class MainLayout(val rows: Int, val cols: Int, val tileCallback: (Int) -> Unit)
