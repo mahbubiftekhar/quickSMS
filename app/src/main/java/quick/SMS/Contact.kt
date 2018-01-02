@@ -11,7 +11,7 @@ import org.jetbrains.anko.uiThread
 
 class Contact private constructor(val id: Long, val name: String,
                                   private val nullableImage: String?, val numbers: List<String>,
-                                  val texts: List<String>, val tile: Int) : Parcelable {
+                                  val tile: Int) : Parcelable {
     // Abusing lazy for a neat way of producing a Delegate
     val image by lazy { nullableImage ?: "NONE" } // Generate default image URI here
 
@@ -24,7 +24,6 @@ class Contact private constructor(val id: Long, val name: String,
             source.readString(),
             source.readString(),
             source.createStringArrayList(),
-            source.createStringArrayList(),
             source.readInt()
     )
 
@@ -35,7 +34,6 @@ class Contact private constructor(val id: Long, val name: String,
         writeString(name)
         writeString(nullableImage)
         writeStringList(numbers)
-        writeStringList(texts)
         writeInt(tile)
     }
 
@@ -60,6 +58,7 @@ class Contact private constructor(val id: Long, val name: String,
                                 columns[ContactsContract.Contacts.HAS_PHONE_NUMBER] as Long)
                     }
                 })
+                result.close()
 
                 /* Remove Contacts with null names or no phone number, sort by name and convert to
                  * null safe Contacts */
@@ -77,15 +76,13 @@ class Contact private constructor(val id: Long, val name: String,
 
         private fun new(ctx: Context, id: Long, name: String, image: String?): Contact {
 
-            val databaseHelper = DatabaseHelper(ctx)
             val databaseTiles = DatabaseTiles(ctx)
 
             // TODO: Note to self, if this isn't fast enough it should be possible to make these lookups async in this function or inside the object
             val numbers = getPhoneNumbers(ctx, id)
-            val texts = getTexts(id, databaseHelper)
             val tile = getTile(id, databaseTiles)
 
-            return Contact(id, name, image, numbers, texts, tile)
+            return Contact(id, name, image, numbers, tile)
         }
 
         private fun getPhoneNumbers(ctx: Context, id: Long): List<String> {
