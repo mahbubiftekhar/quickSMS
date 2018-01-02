@@ -1,6 +1,7 @@
 package quick.SMS
 
 import android.content.Context
+import android.database.Cursor
 import android.os.Parcel
 import android.os.Parcelable
 import android.provider.ContactsContract
@@ -42,29 +43,30 @@ class Contact private constructor(val id: Long, val name: String,
         fun getContacts(ctx: Context, then: (List<Contact>) -> Unit) {
             doAsync {
                 // All contacts saved on the device in raw form
-                val result = ctx.contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
-                        null, null, null, null)
-
-                /* Parse into an intermediate form where the name can be null and we don't know if
-                 * there are any phone numbers */
-                val nullableContacts = result.parseList(object : MapRowParser<NullableContact> {
-                    override fun parseRow(columns: Map<String, Any?>): NullableContact {
-                        return NullableContact(
-                                columns[ContactsContract.Contacts._ID] as Long,
-                                columns[ContactsContract.Contacts.DISPLAY_NAME] as? String,
-                                /* TODO: ContactsContract.Contacts.PHOTO_URI still isn't working,
+                val result : List<NullableContact> = ctx.contentResolver.query(
+                        ContactsContract.Contacts.CONTENT_URI,
+                        null, null, null, null
+                ).use {
+                    /* Parse into an intermediate form where the name can be null and we don't
+                     * know if there are any phone numbers */
+                    it.parseList(object : MapRowParser<NullableContact> {
+                        override fun parseRow(columns: Map<String, Any?>): NullableContact {
+                            return NullableContact(
+                                    columns[ContactsContract.Contacts._ID] as Long,
+                                    columns[ContactsContract.Contacts.DISPLAY_NAME] as? String,
+                                    /* TODO: ContactsContract.Contacts.PHOTO_URI still isn't working,
                                  * this is the actual value */
-                                columns["photo_uri"] as? String,
-                                columns[ContactsContract.Contacts.HAS_PHONE_NUMBER] as Long)
-                    }
-                })
-                result.close()
+                                    columns["photo_uri"] as? String,
+                                    columns[ContactsContract.Contacts.HAS_PHONE_NUMBER] as Long)
+                        }
+                    })
+                }
 
                 val phoneNumbers = getPhoneNumbers(ctx)
 
                 /* Remove Contacts with null names or no phone number, sort by name and convert to
                  * null safe Contacts */
-                val contacts = nullableContacts
+                val contacts = result
                         .filter { it.name != null && it.hasNumber == 1L }
                         .sortedBy { it.name }
                         .map { Contact.new(ctx, it.id, it.name!!, it.image,
@@ -89,17 +91,19 @@ class Contact private constructor(val id: Long, val name: String,
             val result = ctx.contentResolver.query(
                     ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     null, null, null, null
-            )
-            val parsed = result.parseList(object : MapRowParser<PhoneNumber> {
-                override fun parseRow(columns: Map<String, Any?>): PhoneNumber {
-                    return PhoneNumber(
-                            columns[ContactsContract.CommonDataKinds.Phone.CONTACT_ID] as Long,
-                            columns[ContactsContract.CommonDataKinds.Phone.NUMBER] as String
-                    )
-                }
-            })
+            ).use {
+                it.parseList(object : MapRowParser<PhoneNumber> {
+                    override fun parseRow(columns: Map<String, Any?>): PhoneNumber {
+                        return PhoneNumber(
+                                columns[ContactsContract.CommonDataKinds.Phone.CONTACT_ID] as Long,
+                                columns[ContactsContract.CommonDataKinds.Phone.NUMBER] as String
+                        )
+                    }
+                })
+            }
+
             val numbers = mutableMapOf<Long, List<String>>()
-            for (number in parsed) {
+            for (number in result) {
                 val id = number.id
                 val numlist = numbers.getOrDefault(id, listOf<String>()) + number.number
                 numbers.put(number.id, numlist)
