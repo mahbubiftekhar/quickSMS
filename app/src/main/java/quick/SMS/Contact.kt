@@ -47,7 +47,7 @@ class Contact private constructor(val id: Long, val name: String,
 
                 /* Parse into an intermediate form where the name can be null and we don't know if
                  * there are any phone numbers */
-                val parsed = result.parseList(object : MapRowParser<NullableContact> {
+                val nullableContacts = result.parseList(object : MapRowParser<NullableContact> {
                     override fun parseRow(columns: Map<String, Any?>): NullableContact {
                         return NullableContact(
                                 columns[ContactsContract.Contacts._ID] as Long,
@@ -60,12 +60,15 @@ class Contact private constructor(val id: Long, val name: String,
                 })
                 result.close()
 
+                val phoneNumbers = getPhoneNumbers(ctx)
+
                 /* Remove Contacts with null names or no phone number, sort by name and convert to
                  * null safe Contacts */
-                val contacts = parsed
+                val contacts = nullableContacts
                         .filter { it.name != null && it.hasNumber == 1L }
                         .sortedBy { it.name }
-                        .map { Contact.new(ctx, it.id, it.name!!, it.image) }
+                        .map { Contact.new(ctx, it.id, it.name!!, it.image,
+                                phoneNumbers[it.id] ?: emptyList()) }
 
                 // Send them to the callback
                 uiThread {
@@ -74,28 +77,34 @@ class Contact private constructor(val id: Long, val name: String,
             }
         }
 
-        private fun new(ctx: Context, id: Long, name: String, image: String?): Contact {
-
+        private fun new(ctx: Context, id: Long, name: String, image: String?,
+                        numbers: List<String>): Contact {
             val databaseTiles = DatabaseTiles(ctx)
-
-            // TODO: Note to self, if this isn't fast enough it should be possible to make these lookups async in this function or inside the object
-            val numbers = getPhoneNumbers(ctx, id)
             val tile = getTile(id, databaseTiles)
 
             return Contact(id, name, image, numbers, tile)
         }
 
-        private fun getPhoneNumbers(ctx: Context, id: Long): List<String> {
+        private fun getPhoneNumbers(ctx: Context): Map<Long, List<String>> {
             val result = ctx.contentResolver.query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                    "${ContactsContract.CommonDataKinds.Phone.CONTACT_ID} = $id", null, null
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null, null, null, null
             )
-            val numbers = result.parseList(object : MapRowParser<String> {
-                override fun parseRow(columns: Map<String, Any?>): String {
-                    return columns[ContactsContract.CommonDataKinds.Phone.NUMBER] as String
+            val parsed = result.parseList(object : MapRowParser<PhoneNumber> {
+                override fun parseRow(columns: Map<String, Any?>): PhoneNumber {
+                    return PhoneNumber(
+                            columns[ContactsContract.CommonDataKinds.Phone.CONTACT_ID] as Long,
+                            columns[ContactsContract.CommonDataKinds.Phone.NUMBER] as String
+                    )
                 }
             })
-            return numbers
+            val numbers = mutableMapOf<Long, List<String>>()
+            for (number in parsed) {
+                val id = number.id
+                val numlist = numbers.getOrDefault(id, listOf<String>()) + number.number
+                numbers.put(number.id, numlist)
+            }
+            return numbers.toMap()
         }
 
         private fun getTexts(recipient_id: Long, db: DatabaseHelper): List<String> {
@@ -118,4 +127,6 @@ class Contact private constructor(val id: Long, val name: String,
             override fun newArray(size: Int): Array<Contact?> = arrayOfNulls(size)
         }
     }
+
+    private data class PhoneNumber(val id: Long, val number: String)
 }
