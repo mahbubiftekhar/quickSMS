@@ -43,7 +43,7 @@ class Contact private constructor(val id: Long, val name: String,
         fun getContacts(ctx: Context, then: (List<Contact>) -> Unit) {
             doAsync {
                 // All contacts saved on the device in raw form
-                val result : List<NullableContact> = ctx.contentResolver.query(
+                val result = ctx.contentResolver.query(
                         ContactsContract.Contacts.CONTENT_URI,
                         null, null, null, null
                 ).use {
