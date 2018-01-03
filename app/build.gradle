@@ -44,4 +44,19 @@ dependencies {
     // Coroutine listeners for Anko Layouts
     compile "org.jetbrains.anko:anko-sdk19-coroutines:0.10.0"
     compile "org.jetbrains.anko:anko-appcompat-v7-coroutines:0.10.0"
+
+    // Testing
+    testCompile 'org.jetbrains.kotlin:kotlin-stdlib:1.1.0'
+    testCompile 'org.jetbrains.kotlin:kotlin-test-junit:1.0.6'
+    testCompile "com.nhaarman:mockito-kotlin:1.1.0"
+    testCompile 'org.amshove.kluent:kluent:1.14'
+    testImplementation "org.robolectric:robolectric:3.6.1"
+
+    android {
+        testOptions {
+            unitTests {
+                includeAndroidResources = true
+            }
+        }
+    }
 }
