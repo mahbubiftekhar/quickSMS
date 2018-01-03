@@ -56,7 +56,7 @@ class Contact private constructor(val id: Long, val name: String,
                                 columns[ContactsContract.Contacts.DISPLAY_NAME] as? String,
                                 /* TODO: ContactsContract.Contacts.PHOTO_URI still isn't working,
                                  * this is the actual value */
-                                columns[ContactsContract.Contacts.PHOTO_URI] as? String,
+                                columns["photo_uri"] as? String,
                                 columns[ContactsContract.Contacts.HAS_PHONE_NUMBER] as Long)
                     }
                 })
