@@ -10,13 +10,10 @@ import android.os.Vibrator
 import android.preference.PreferenceManager
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.telephony.SmsManager
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
-import kotlinx.android.synthetic.main.activity_text_message.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import android.text.InputType
@@ -64,7 +61,7 @@ class textMessageActivity : AppCompatActivity() {
         println("we are getting here in the listener")
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Add message")
-        var m_Text = ""
+        var m_Text = "Type Message"
         // Set up the input
         val input = EditText(this)
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
@@ -191,15 +188,15 @@ class textMessageActivity : AppCompatActivity() {
     }
 
     fun makeSound() {
-        val sound = true /*Currently set to true, will look up from shared Preference later*/
+        val sound = true /* Currently set to true, will look up from shared Preference later */
 
     }
 
     fun vibrate() {
-        val vibrate = true /*Currently set to true, will look up from shared Preference later*/
+        val vibrate = true /* Currently set to true, will look up from shared Preference later */
         if (vibrate) {
             if (Build.VERSION.SDK_INT > 25) { /*Attempt to not use the deprecated version if possible, if the SDK version is >25, use the newer one*/
-                //(getSystemService(VIBRATOR_SERVICE) as Vibrator).vibrate(VibrationEffect.createOneShot(300, 10))
+                (getSystemService(VIBRATOR_SERVICE) as Vibrator).vibrate(VibrationEffect.createOneShot(300, 10))
             } else {
                 /*for backward comparability*/
                 @Suppress("DEPRECATION")
