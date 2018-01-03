@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL("create table $TABLE_NAME (id INTEGER PRIMARY KEY AUTOINCREMENT,recipient_id LONG,message TEXT)")
+        db.execSQL("create table $TABLE_NAME (id INTEGER PRIMARY KEY UNIQUE,recipient_id LONG,message TEXT)")
         println("this has gotten done")
     }
 
@@ -17,11 +17,16 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         onCreate(db)
     }
 
-    fun insertData(recipient_id: Long, message: String) {
+    fun insertData(db_id: Int, recipient_id: Long, message: String) {
         val db = this.writableDatabase
         val contentValues = ContentValues()
+        contentValues.put(COL_1, db_id)
+        println("HERE "+db_id)
         contentValues.put(COL_2, recipient_id)
+        println("HERE "+recipient_id)
         contentValues.put(COL_3, message)
+        println("HERE "+message)
+        println("-------------------")
         db.insert(TABLE_NAME, null, contentValues)
 
     }
@@ -47,6 +52,23 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 /* So if the row is for this particular recipient_id, then we get the message and
                  * we shall add it to the messages list */
                 messages.add(res.getString(res.getColumnIndex("message"))) /*Adding to messages*/
+            }
+        }
+        res.close() /* Freeing the cursor */
+        return messages
+    }
+
+    fun returnAllHashMap(recipient_id:Long): LinkedHashMap<Int, String> {
+        /* This returns all the data, with the messages, in the form of a list
+         * for a particular recipient */
+        val db = this.writableDatabase
+        val res = db.rawQuery("select * from " + TABLE_NAME, null)
+        val messages: LinkedHashMap<Int, String> = linkedMapOf()
+        while(res.moveToNext()){
+            if(recipient_id.toString() == res.getString(res.getColumnIndex("recipient_id"))){
+                /* So if the row is for this particular recipient_id, then we get the message and
+                 * we shall add it to the messages list */
+                messages.put(res.getInt(res.getColumnIndex("id")), res.getString(res.getColumnIndex("message"))) /*Adding to messages*/
             }
         }
         res.close() /* Freeing the cursor */

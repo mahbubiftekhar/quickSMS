@@ -60,6 +60,7 @@ class Contact private constructor(val id: Long, val name: String,
                                 columns[ContactsContract.Contacts.HAS_PHONE_NUMBER] as Long)
                     }
                 })
+                result.close()
 
                 /* Remove Contacts with null names or no phone number, sort by name and convert to
                  * null safe Contacts */

@@ -43,11 +43,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         println("onCreate continues in the meantime")
-
+        val intent = Intent(this, textMessageActivity()::class.java)
+        startActivity(intent)
     }
 
     fun contactsTest(contacts: List<Contact>) {
-        startActivity<ContactsActivity>("contacts" to contacts);
+        startActivity<ContactsActivity>("contacts" to contacts)
     }
 
     fun callNumber(phoneNumber: String) {
@@ -68,20 +69,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun loadString(key: String): String {
-        /* Loads a String from Shared Preferences */
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val savedValue = sharedPreferences.getString(key, "UNKNOWN") /* DEFAULT AS UNKNOWN */
-        return savedValue
-    }
-
-    fun saveString(key: String, value: String) {
-        /* Saves a String to Shared Preferences */
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val editor = sharedPreferences.edit()
-        editor.putString(key, value)
-        editor.apply()
-    }
 
     private fun requestPermissions(permissions: Array<String>) {
         /* Request Permission if required */
@@ -89,7 +76,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onClick(tileNumber: Int){
-        startActivity<TextMessageActivity>()
+
     }
 }
 
