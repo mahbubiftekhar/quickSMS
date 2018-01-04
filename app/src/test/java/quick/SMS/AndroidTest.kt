@@ -19,13 +19,7 @@ import java.io.File
         sdk = intArrayOf(19))
 abstract class AndroidTest {
 
-    fun context(): Context {
-        return RuntimeEnvironment.application
-    }
-
-    fun cacheDir(): File {
-        return context().cacheDir
-    }
+    val context by lazy { RuntimeEnvironment.application }
 
     internal class ApplicationStub : Application()
 }
