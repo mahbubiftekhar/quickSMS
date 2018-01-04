@@ -132,8 +132,7 @@ class Contact(val id: Long, val name: String, private val nullableImage: String?
         }
 
         private fun getTiles(db: DatabaseTiles): Map<Long, Int> {
-            // TODO: Implement
-            return emptyMap()
+            return db.getAllTiles()
         }
 
         private data class NullableContact(val id: Long, val name: String?, val image: String?,
