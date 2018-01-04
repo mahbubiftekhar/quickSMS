@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -26,13 +27,13 @@
             android:name=".settingsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".TextMessageActivity"
-            android:label="@string/title_activity_text_message"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".ContactsActivity"
             android:label="@string/title_activity_contacts"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".textMessageActivity"
+            android:label="@string/title_activity_text_message"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

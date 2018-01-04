@@ -1,66 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#2072A4">
 
-    <EditText
-        android:id="@+id/editid"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="ID :" />
-
-    <EditText
-        android:id="@+id/editad"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Ad :" />
-
-    <EditText
-        android:id="@+id/editsoyad"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Soyad :" />
-
-    <EditText
-        android:id="@+id/editnot"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Not :"
-        android:inputType="number" />
-
-    <Button
-        android:id="@+id/buttonekle"
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:text="iNSERT" />
-
-    <Button
-        android:id="@+id/butongoster"
-        android:layout_width="77dp"
-        android:layout_height="wrap_content"
-        android:text="SHOWDATA" />
-
-    <Button
-        android:id="@+id/buttonguncelle"
-        android:layout_width="77dp"
-        android:layout_height="wrap_content"
-        android:text="UPDATE DATA" />
-
-    <Button
-        android:id="@+id/buttonsil"
-        android:layout_width="77dp"
-        android:layout_height="wrap_content"
-        android:text="DELETE DATA" />
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
-</LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/spacerView"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_weight="1"
+                android:text="PADDING HERE" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>
