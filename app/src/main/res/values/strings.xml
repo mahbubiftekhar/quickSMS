@@ -102,4 +102,6 @@
     <string name="todo">TODO</string>
     <string name="phone">Phone</string>
     <string name="name">Name</string>
+    <string name="title_activity_log">LogActivity</string>
+    <string name="all">ALL</string>
 </resources>

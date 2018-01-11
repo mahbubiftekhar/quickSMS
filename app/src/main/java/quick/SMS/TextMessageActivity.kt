@@ -26,8 +26,9 @@ class textMessageActivity : AppCompatActivity() {
     var smsManager = SmsManager.getDefault()
     var Messages: LinkedHashMap<Int, String> = linkedMapOf()
     var receipient_id = 0L
-    var recipient_name = "Michael Fourman"
-    var phoneNumber = "01315818775"
+    var recipient_name = "NULL"
+    var phoneNumber = "NULL"
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
@@ -37,20 +38,22 @@ class textMessageActivity : AppCompatActivity() {
 
     fun makeCall() {
         /* Calls a phone number */
-        try {
-            val callIntent = Intent(Intent.ACTION_CALL)
-            callIntent.data = Uri.parse("tel:$phoneNumber")
-            callIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK /*This line means you don't have to confirm the number
+        if (phoneNumber != "NULL") {
+            try {
+                val callIntent = Intent(Intent.ACTION_CALL)
+                callIntent.data = Uri.parse("tel:$phoneNumber")
+                callIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK /*This line means you don't have to confirm the number
             in the dialer, suprisingly difficult to find online*/
-            startActivity(callIntent)
-            doAsync {
-                /*Asynchronously add to the log about the call*/
-                insertLog("CALL", "N/A", receipient_id, recipient_name)
+                startActivity(callIntent)
+                doAsync {
+                    /*Asynchronously add to the log about the call*/
+                    insertLog("CALL", "N/A", receipient_id, recipient_name)
+                }
+            } catch(e: SecurityException) {
+                requestPermissions(arrayOf(Manifest.permission.CALL_PHONE))
             }
-        } catch(e: SecurityException) {
-            requestPermissions(arrayOf(Manifest.permission.CALL_PHONE))
+            /*THIS IS THE CORRECT VERSION*/
         }
-        /*THIS IS THE CORRECT VERSION*/
     }
 
     private fun requestPermissions(permissions: Array<String>) {
@@ -60,7 +63,7 @@ class textMessageActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection
-        when (item.getItemId()) {
+        when (item.itemId) {
             R.id.addButton -> {
                 makeCall()
                 return true
@@ -72,28 +75,39 @@ class textMessageActivity : AppCompatActivity() {
             else -> return super.onOptionsItemSelected(item)
         }
     }
+    fun updateTitle(){
+        (this).supportActionBar!!.title = recipient_name /*This will programatically set the title, this should be the receipients_name*/
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val contact = intent.extras.get("contact")
+        if (contact is Contact) {
+            phoneNumber = contact.numbers[0]
+            recipient_name = contact.name
+            updateTitle()
+            val Helper = DatabaseHelper(this)
+            /* Helper.insertData(loadID(), 0L, "Test1")
+             incrementID()
+             Helper.insertData(loadID(), 0L, "Test1")
+             incrementID()
+             Helper.insertData(loadID(), 0L, "Test1")
+             incrementID() */
 
-        val Helper = DatabaseHelper(this)
-        /* Helper.insertData(loadID(), 0L, "Test1")
-         incrementID()
-         Helper.insertData(loadID(), 0L, "Test1")
-         incrementID()
-         Helper.insertData(loadID(), 0L, "Test1")
-         incrementID() */
-        (this).supportActionBar!!.title = "Michael Fourman" /*This will programatically set the title, this should be the receipients_name*/
+            doAsync {
+                /*Asynchronously get the text messages for the particular use*/
+                val result = Helper.returnAllHashMap(receipient_id)
+                uiThread {
+                    /*After the ASYNC thread, we should */
+                    addButtons(result) /*Add buttons to the layout*/
+                    Messages = result /*Save locally for speedy re-establishment of the buttons should the user change the messages*/
 
-        doAsync {
-            /*Asynchronously get the text messages for the particular use*/
-            val result = Helper.returnAllHashMap(receipient_id)
-            uiThread {
-                /*After the ASYNC thread, we should */
-                addButtons(result) /*Add buttons to the layout*/
-                Messages = result /*Save locally for speedy re-establishment of the buttons should the user change the messages*/
-
+                }
             }
+        } else {
+            println("Error happenede")
         }
+
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_text_message)
 
@@ -110,7 +124,7 @@ class textMessageActivity : AppCompatActivity() {
 
         // Set up the buttons
         builder.setPositiveButton("Add") {
-            dialog, which ->
+            dialog, _ ->
             val m_Text = input.text.toString()
             if (m_Text == "Type Message" || m_Text == "") {
                 /*Do nothing should the user not enter anything*/
@@ -195,7 +209,6 @@ class textMessageActivity : AppCompatActivity() {
                 builder.setNegativeButton("No") { dialog, _ -> dialog.cancel() }
 
                 builder.show()
-
                 true
             }
             ll_main.addView(button_dynamic) /*Add button to the layout*/
