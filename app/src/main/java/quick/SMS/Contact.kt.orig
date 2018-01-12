@@ -11,7 +11,11 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 class Contact(val id: Long, val name: String, private val nullableImage: String?,
+<<<<<<< HEAD
+                   val numbers: List<String>, val tile: Int) : Parcelable {
+=======
               val numbers: List<String>, tileNum : Int) : Parcelable {
+>>>>>>> DBSafety
 
     // Abusing lazy for a neat way of producing a Delegate
     val image by lazy { nullableImage ?: "NONE" } // Generate default image URI here
@@ -80,8 +84,12 @@ class Contact(val id: Long, val name: String, private val nullableImage: String?
         }
 
         // Separated for testing purposes. Don't call directly, use getContacts
+<<<<<<< HEAD
         internal fun _getContactsBase(androidDB: ContentResolver,
                                       phoneNumbers: Map<Long, List<String>>, tiles: Map<Long, Int>)
+=======
+        internal fun _getContactsBase(androidDB: ContentResolver, phoneNumbers: Map<Long, List<String>>, tiles: Map<Long, Int>)
+>>>>>>> DBSafety
                 : List<Contact> {
             // All contacts saved on the device in raw form
             val result = androidDB.query(
@@ -139,9 +147,13 @@ class Contact(val id: Long, val name: String, private val nullableImage: String?
         }
 
         private fun getTiles(db: DatabaseTiles): Map<Long, Int> {
+<<<<<<< HEAD
+            return db.getAllTiles()
+=======
             val tiles = db.getAllTiles()
             db.close()
             return tiles
+>>>>>>> DBSafety
         }
 
         private data class NullableContact(val id: Long, val name: String?, val image: String?,
@@ -152,4 +164,10 @@ class Contact(val id: Long, val name: String, private val nullableImage: String?
             override fun newArray(size: Int): Array<Contact?> = arrayOfNulls(size)
         }
     }
+
+    private data class PhoneNumber(val id: Long, val number: String)
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> DBSafety

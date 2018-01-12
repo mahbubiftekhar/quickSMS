@@ -13,6 +13,7 @@ import org.jetbrains.anko.*
 import org.jetbrains.anko.db.MapRowParser
 import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.sdk19.coroutines.onClick
+import org.jetbrains.anko.sdk19.coroutines.onLongClick
 
 /*
  * https://antonioleiva.com/databases-anko-kotlin/
@@ -27,9 +28,13 @@ import org.jetbrains.anko.sdk19.coroutines.onClick
  *
  */
 class MainActivity : AppCompatActivity() {
+    lateinit var contacts: Map<Int, Contact>
+    var canWeProceed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val helperTilss = DatabaseTiles(this)
+        helperTilss.insertData(3629, 1, 0)
         MainLayout(5, 2) { onClick(it) }.setContentView(this)
 
         // Request required permissions
@@ -40,11 +45,12 @@ class MainActivity : AppCompatActivity() {
 
         Contact.getContacts(ctx) {
             println(it)
+            println("here above contacts")
+            contacts = it.associateBy { it.tile }
+            canWeProceed = true
+            println("we can go ahead")
         }
-
         println("onCreate continues in the meantime")
-        val intent = Intent(this, textMessageActivity()::class.java)
-        startActivity(intent)
     }
 
     fun contactsTest(contacts: List<Contact>) {
@@ -52,20 +58,39 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun callNumber(phoneNumber: String) {
-        /* Calls a phone number */
-        /*THIS IS THE CORRECT VERSION*/
+        // Calls a phone number
+        val callIntent = Intent(Intent.ACTION_CALL)
+        // Can't tell which of these is correct
+        /*
+        callIntent.data = Uri.parse(phoneNumber)
+            try {
+                startActivity(callIntent)
+            } catch(e: SecurityException) {
+        */
+        callIntent.data = Uri.parse(Manifest.permission.CALL_PHONE)
         try {
-            val callIntent = Intent(Intent.ACTION_CALL)
-            callIntent.data = Uri.parse("tel:$phoneNumber")
-            callIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK /*This line means you don't have to confirm the number
-            in the dialer, suprisingly difficult to find online*/
             startActivity(callIntent)
         } catch(e: SecurityException) {
             requestPermissions(arrayOf(Manifest.permission.CALL_PHONE))
+
         }
-        /*THIS IS THE CORRECT VERSION*/
     }
 
+    fun loadString(key: String): String {
+        /* Loads a String from Shared Preferences */
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val savedValue = sharedPreferences.getString(key, "UNKNOWN") /* DEFAULT AS UNKNOWN */
+        return savedValue
+
+    }
+
+    fun saveString(key: String, value: String) {
+        /* Saves a String to Shared Preferences */
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val editor = sharedPreferences.edit()
+        editor.putString(key, value)
+        editor.apply()
+    }
 
     private fun requestPermissions(permissions: Array<String>) {
         /* Request Permission if required */
@@ -73,7 +98,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onClick(tileNumber: Int) {
-
+        if (!canWeProceed) {
+            println("cannot proccedd")
+        }
+        if (canWeProceed) {
+            val contact = contacts[1]
+            if (contact != null) {
+                println("we can procced onClickd")
+                startActivity<textMessageActivity>("contact" to contact!!)
+            } else {
+                println("contact is null - weird")
+            }
+        }
     }
 }
 
@@ -98,6 +134,9 @@ class MainLayout(val rows: Int, val cols: Int, val tileCallback: (Int) -> Unit)
             }
         }.lparams(height = matchParent, width = 0) {
             weight = 1f
+        }
+        onLongClick {
+
         }
     }
 

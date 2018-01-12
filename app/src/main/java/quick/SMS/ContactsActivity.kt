@@ -1,7 +1,6 @@
 package quick.SMS
 
 /* TODO: There are no comments in this file, probably I should add some */
-
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
