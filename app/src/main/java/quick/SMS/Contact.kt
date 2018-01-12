@@ -146,6 +146,7 @@ class Contact(val id: Long, val name: String, private val nullableImage: String?
 
         private data class NullableContact(val id: Long, val name: String?, val image: String?,
                                            val hasNumber: Long)
+        private data class PhoneNumber(val id: Long, val number: String)
 
         @JvmField val CREATOR: Parcelable.Creator<Contact> = object : Parcelable.Creator<Contact> {
             override fun createFromParcel(source: Parcel): Contact = Contact(source)
