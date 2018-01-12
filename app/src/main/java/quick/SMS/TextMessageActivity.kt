@@ -42,17 +42,21 @@ class textMessageActivity : AppCompatActivity() {
             try {
                 val callIntent = Intent(Intent.ACTION_CALL)
                 callIntent.data = Uri.parse("tel:$phoneNumber")
-                callIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK /*This line means you don't have to confirm the number
-            in the dialer, suprisingly difficult to find online*/
+
+                callIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK/*This line means you don't have to confirm the
+                 number in the dialer, suprisingly difficult to find online*/
                 startActivity(callIntent)
-                doAsync {
-                    /*Asynchronously add to the log about the call*/
-                    insertLog("CALL", "N/A", receipient_id, recipient_name)
-                }
             } catch(e: SecurityException) {
                 requestPermissions(arrayOf(Manifest.permission.CALL_PHONE))
             }
-            /*THIS IS THE CORRECT VERSION*/
+
+            try {
+
+            }catch(e:SecurityException){
+
+            }
+            /*THIS IS THE CORRECT VERSION, WE DO NOT NEED TO WORRY
+            * ABOUT THE LOG FOR CALLS, THE DIALER TAKES CARE OF THAT*/
         }
     }
 
@@ -75,7 +79,8 @@ class textMessageActivity : AppCompatActivity() {
             else -> return super.onOptionsItemSelected(item)
         }
     }
-    fun updateTitle(){
+
+    fun updateTitle() {
         (this).supportActionBar!!.title = recipient_name /*This will programatically set the title, this should be the receipients_name*/
     }
 
@@ -159,10 +164,8 @@ class textMessageActivity : AppCompatActivity() {
 
     fun insertLog(type: String, message: String, recipient_id: Long, recipient_name: String) {
         /*This function will unconditionally add sent messages into the log - async of course*/
-        val Loggyy = DatabaseLog(this)
         doAsync {
-            Loggyy.insertData(type, message, recipient_id, recipient_name)
-            Loggyy.close()
+
         }
     }
 
@@ -183,7 +186,10 @@ class textMessageActivity : AppCompatActivity() {
             button_dynamic.setOnClickListener {
                 smsManager.sendTextMessage("07552695272", null, value, null, null)
                 Toast.makeText(this@textMessageActivity, "Message sent", Toast.LENGTH_SHORT).show()
-                doAsync { insertLog("MESSAGE", value, receipient_id, recipient_name) /*Adds the SMS to the log*/ }
+                doAsync {
+
+
+                }
             }
             button_dynamic.setOnLongClickListener {
                 val builder = AlertDialog.Builder(this)

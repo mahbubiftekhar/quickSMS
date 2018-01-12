@@ -63,7 +63,6 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             tiles.put(res.getLong(res.getColumnIndex("recipient_id")), res.getInt(res.getColumnIndex("tileid")))
         }
         return tiles
-
     }
 
     fun copyData(ctx: Context, fromTileId: Int, toTileId: Int): Boolean {
