@@ -28,13 +28,13 @@ import org.jetbrains.anko.sdk19.coroutines.onLongClick
  *
  */
 class MainActivity : AppCompatActivity() {
-    lateinit var contacts : Map<Int, Contact>
+    lateinit var contacts: Map<Int, Contact>
     var canWeProceed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val helperTilss = DatabaseTiles(this)
-        helperTilss.insertData(3629,1,0)
+        helperTilss.insertData(3629, 1, 0)
         MainLayout(5, 2) { onClick(it) }.setContentView(this)
 
         // Request required permissions
@@ -68,8 +68,9 @@ class MainActivity : AppCompatActivity() {
             } catch(e: SecurityException) {
         */
         callIntent.data = Uri.parse(Manifest.permission.CALL_PHONE)
-        try{startActivity(callIntent)}
-        catch(e:SecurityException){
+        try {
+            startActivity(callIntent)
+        } catch(e: SecurityException) {
             requestPermissions(arrayOf(Manifest.permission.CALL_PHONE))
 
         }
@@ -97,10 +98,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onClick(tileNumber: Int) {
-        if(!canWeProceed){
+        if (!canWeProceed) {
             println("cannot proccedd")
         }
-        if(canWeProceed) {
+        if (canWeProceed) {
             val contact = contacts[1]
             if (contact != null) {
                 println("we can procced onClickd")

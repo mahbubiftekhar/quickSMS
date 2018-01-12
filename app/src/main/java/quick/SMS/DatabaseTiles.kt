@@ -7,9 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.preference.PreferenceManager
 import android.support.v7.app.AlertDialog
-import android.text.InputType
-import android.widget.EditText
-import android.widget.Toast
+
 
 class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
@@ -38,6 +36,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         db.close()
     }
 
+    @SuppressLint("unused")
     fun deleteEntireDBTiles() {
         /* USE THIS FUNCTION WISELY, WITH GREAT POWER COMES GREAT RESPONSIBILITY */
         val db = this.writableDatabase
@@ -47,6 +46,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     fun getRecipient(tileid: Int): Long {
         val db = this.writableDatabase
         val res = db.rawQuery("select * from " + DatabaseTiles.TABLE_NAME, null)
+        res.close()
         while (res.moveToNext()) {
             if (tileid.toString() == res.getString(res.getColumnIndex("tileid"))) {
                 return res.getLong(res.getColumnIndex("recipient_id"))
@@ -66,7 +66,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
     }
 
-    fun copyData(ctx: Context, fromTileId: Int, toTileId: Int):Boolean {
+    fun copyData(ctx: Context, fromTileId: Int, toTileId: Int): Boolean {
         @SuppressLint("ApplySharedPref")
         fun saveString(key: String, value: String) {
             /* Saves a String to Shared Preferences */
@@ -75,17 +75,20 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             editor.putString(key, value)
             editor.commit()
         }
-        fun reset(){
+
+        fun reset() {
             saveString("fromTileReceipient", "")
             saveString("fromTilePrefered", "")
             saveString("isCopyInProgress", "NO") /*Here we know we have possibly done something fatal to the databaes*/
             saveString("FROMTILE", "")
-            saveString("FROMTILE", "")
+            saveString("TOTILE", "")
         }
+
         val db = this.writableDatabase
         var fromTileReceipient = ""
         var fromTilePrefered = ""
         val res = db.rawQuery("select * from " + DatabaseTiles.TABLE_NAME, null)
+        res.close()
         while (res.moveToNext()) {
             if (fromTileId.toString() == res.getString(res.getColumnIndex("tileid"))) {
                 fromTileReceipient = res.getString(res.getColumnIndex("recipient_id"))
@@ -94,7 +97,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 saveString("fromTilePrefered", fromTilePrefered)
                 saveString("isCopyInProgress", "YES") /*Here we know we have possibly done something fatal to the databaes*/
                 saveString("FROMTILE", fromTileId.toString())
-                saveString("FROMTILE", toTileId.toString())
+                saveString("TOTILE", toTileId.toString())
                 break
             }
         }
@@ -120,25 +123,80 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 reset()
             }
             builder.setNegativeButton("Cancel") {
-                dialog, _ -> dialog.cancel()
+                dialog, _ ->
+                dialog.cancel()
                 reset()
-            /* the use wants to cancel the transfer */
+                /* the use wants to cancel the transfer */
             }
 
             builder.show()
         }
-     return true
+        return true
     }
 
-    fun getTile (recipient_id: Long): Int {
+    fun DatabaseFix(ctx: Context) {
+        /*The purpose of this function is to reset the database to the previous stage
+        * given an error occured*/
+        @SuppressLint("ApplySharedPref")
+                /*This function will be called iff the isCopyInProgress flag is not reset, this will essentially take it back to the previous state*/
+        fun saveString(key: String, value: String) {
+            /* Saves a String to Shared Preferences */
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ctx)
+            val editor = sharedPreferences.edit()
+            editor.putString(key, value)
+            editor.commit()
+        }
+
+        fun loadString(key: String): String {
+            /* Loads a String from Shared Preferences */
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ctx)
+            val savedValue = sharedPreferences.getString(key, "UNKNOWN") /* DEFAULT AS UNKNOWN */
+            return savedValue
+        }
+
+        fun reset() {
+            saveString("fromTileReceipient", "")
+            saveString("fromTilePrefered", "")
+            saveString("toTileReceipient", "")
+            saveString("toTilePrefered", "")
+            saveString("isCopyInProgress", "NO") /*Here we know we have possibly done something fatal to the databaes*/
+            saveString("FROMTILE", "")
+            saveString("TOTILE", "")
+        }
+
+        val fromTileReceipient = loadString("fromTileReceipient")
+        val fromTilePrefered = loadString("fromTilePrefered")
+        val toTileReceipient = loadString("toTileReceipient")
+        val toTilePrefered = loadString("toTilePrefered")
+        val FROMTILE = loadString("FROMTILE")
+        val TOTILE = loadString("TOTILE")
+
+        val db = this.writableDatabase
+
+        /*Here we are basically reseting the fromTile */
+        val cv = ContentValues()
+        cv.put("recipient_id", fromTileReceipient)
+        cv.put("preferednum", fromTilePrefered)
+        db.update(TABLE_NAME, cv, "tileid=$TOTILE", null)
+
+        /*Here we are basically reseting the toTile */
+        val bv = ContentValues()
+        bv.put("recipient_id", toTileReceipient)
+        bv.put("preferednum", toTilePrefered)
+        db.update(TABLE_NAME, bv, "tileid=$FROMTILE", null)
+        reset()
+    }
+
+    fun getTile(recipient_id: Long): Int {
         /*Given a receipient_id it will find the relevent tile ID*/
         val db = this.writableDatabase
         val res = db.rawQuery("select * from " + DatabaseTiles.TABLE_NAME, null)
-        while(res.moveToNext()){
-            if(recipient_id.toString() == res.getString(res.getColumnIndex("recipient_id"))){
+        while (res.moveToNext()) {
+            if (recipient_id.toString() == res.getString(res.getColumnIndex("recipient_id"))) {
                 return res.getInt(res.getColumnIndex("tileid"))
             }
         }
+        db.close()
         return -1
     }
 
