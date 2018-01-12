@@ -17,7 +17,7 @@ class Contact(val id: Long, val name: String, private val nullableImage: String?
     val image by lazy { nullableImage ?: "NONE" } // Generate default image URI here
     var tile = tileNum
     set(value) {
-        tile = value
+        field = value
         doAsync {
             // Database here
         }

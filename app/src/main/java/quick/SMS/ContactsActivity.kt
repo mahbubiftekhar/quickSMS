@@ -1,6 +1,5 @@
 package quick.SMS
 
-/* TODO: There are no comments in this file, probably I should add some */
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
@@ -10,8 +9,14 @@ class ContactsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val contacts = intent.extras.get("contacts") as List<Contact>
-        ContactsLayout(contacts).setContentView(this)
+        val contactsFromIntent = intent.extras.get("contacts")
+        // Can't check for erased type, the best we can do it enforce that it's a list
+        if (contactsFromIntent is List<*>) {
+            val contacts = contactsFromIntent as List<Contact>
+            ContactsLayout(contacts).setContentView(this)
+        } else {
+            throw RuntimeException("Intent supplied incorrect type")
+        }
     }
 }
 
