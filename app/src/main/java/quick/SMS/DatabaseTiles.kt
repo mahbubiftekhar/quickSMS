@@ -47,6 +47,16 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         }
         return -1L
     }
+
+    fun getAllTiles(): HashMap<Long, Int>{
+        val db = this.writableDatabase
+        val res = db.rawQuery("select * from " + DatabaseTiles.TABLE_NAME, null)
+        val tiles: HashMap<Long, Int> = linkedMapOf()
+        while(res.moveToNext()){
+            tiles.put(res.getLong(res.getColumnIndex("recipient_id")),res.getInt(res.getColumnIndex("tileid")))
+        }
+        return tiles
+    }
     fun getTile (recipient_id: Long): Int{
         /*Given a receipient_id it will find the relevent tile ID*/
         val db = this.writableDatabase

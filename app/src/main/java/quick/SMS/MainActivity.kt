@@ -43,53 +43,37 @@ class MainActivity : AppCompatActivity() {
         }
 
         println("onCreate continues in the meantime")
-
+        val intent = Intent(this, textMessageActivity()::class.java)
+        startActivity(intent)
     }
 
     fun contactsTest(contacts: List<Contact>) {
-        startActivity<ContactsActivity>("contacts" to contacts);
+        startActivity<ContactsActivity>("contacts" to contacts)
     }
 
     fun callNumber(phoneNumber: String) {
-        // Calls a phone number
-        val callIntent = Intent(Intent.ACTION_CALL)
-	// Can't tell which of these is correct
-	/*
-	callIntent.data = Uri.parse(phoneNumber)
+        /* Calls a phone number */
+        /*THIS IS THE CORRECT VERSION*/
         try {
+            val callIntent = Intent(Intent.ACTION_CALL)
+            callIntent.data = Uri.parse("tel:$phoneNumber")
+            callIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK /*This line means you don't have to confirm the number
+            in the dialer, suprisingly difficult to find online*/
             startActivity(callIntent)
         } catch(e: SecurityException) {
-	*/
-        callIntent.data = Uri.parse(Manifest.permission.CALL_PHONE)
-        try{startActivity(callIntent)}
-        catch(e:SecurityException){
             requestPermissions(arrayOf(Manifest.permission.CALL_PHONE))
-
         }
+        /*THIS IS THE CORRECT VERSION*/
     }
 
-    fun loadString(key: String): String {
-        /* Loads a String from Shared Preferences */
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val savedValue = sharedPreferences.getString(key, "UNKNOWN") /* DEFAULT AS UNKNOWN */
-        return savedValue
-    }
-
-    fun saveString(key: String, value: String) {
-        /* Saves a String to Shared Preferences */
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val editor = sharedPreferences.edit()
-        editor.putString(key, value)
-        editor.apply()
-    }
 
     private fun requestPermissions(permissions: Array<String>) {
         /* Request Permission if required */
         ActivityCompat.requestPermissions(this, permissions, 1)
     }
 
-    fun onClick(tileNumber: Int){
-        startActivity<TextMessageActivity>()
+    fun onClick(tileNumber: Int) {
+
     }
 }
 
