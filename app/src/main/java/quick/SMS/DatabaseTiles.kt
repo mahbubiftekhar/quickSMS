@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.preference.PreferenceManager
 import android.support.v7.app.AlertDialog
+import java.util.*
 
 
 class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
@@ -27,13 +28,6 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         contentValues.put(COL_2, tileid)
         contentValues.put(COL_3, prefered_number)
         db.insert(TABLE_NAME, null, contentValues)
-    }
-
-    fun closeDatabaseTiles() {
-        /* This function is simply to close the database - just good practise, plus ensures
-         * that all transactions are completed properly */
-        val db = this.writableDatabase
-        db.close()
     }
 
     @SuppressLint("unused")
@@ -60,10 +54,12 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         val res = db.rawQuery("select * from " + DatabaseTiles.TABLE_NAME, null)
         val tiles: HashMap<Long, Int> = linkedMapOf()
         while (res.moveToNext()) {
-            tiles.put(res.getLong(res.getColumnIndex("recipient_id")), res.getInt(res.getColumnIndex("tileid")))
+            tiles[res.getLong(res.getColumnIndex("recipient_id"))] = res.getInt(res.getColumnIndex("tileid"))
         }
         return tiles
     }
+
+
 
     fun copyData(ctx: Context, fromTileId: Int, toTileId: Int): Boolean {
         @SuppressLint("ApplySharedPref")
