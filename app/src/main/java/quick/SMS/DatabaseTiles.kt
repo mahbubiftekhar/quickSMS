@@ -7,16 +7,17 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.preference.PreferenceManager
 import android.support.v7.app.AlertDialog
+import java.util.*
 
 
 class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL("create table $TABLE_NAME (recipient_id LONG PRIMARY KEY,tileid INTEGER)")
+        db.execSQL("create table $TABLE_NAME (recipient_id LONG PRIMARY KEY,tileid INTEGER, prefered_number INTEGER)")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME)
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
     }
 
@@ -29,21 +30,8 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         db.insert(TABLE_NAME, null, contentValues)
     }
 
-    fun closeDatabaseTiles() {
-        /* This function is simply to close the database - just good practise, plus ensures
-         * that all transactions are completed properly */
-        val db = this.writableDatabase
-        db.close()
-    }
 
-    @SuppressLint("unused")
-    fun deleteEntireDBTiles() {
-        /* USE THIS FUNCTION WISELY, WITH GREAT POWER COMES GREAT RESPONSIBILITY */
-        val db = this.writableDatabase
-        db.delete(DatabaseTiles.TABLE_NAME, null, null)
-    }
-
-    fun getRecipient(tileid: Int): Long {
+    private fun getRecipient(tileid: Int): Long {
         val db = this.writableDatabase
         val res = db.rawQuery("select * from " + DatabaseTiles.TABLE_NAME, null)
         res.close()

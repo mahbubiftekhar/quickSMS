@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.ContactsContract
 import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
 import org.jetbrains.anko.*
 import org.jetbrains.anko.db.MapRowParser
@@ -36,7 +37,6 @@ class MainActivity : AppCompatActivity() {
         val helperTilss = DatabaseTiles(this)
         helperTilss.insertData(3629, 1, 0)
         MainLayout(5, 2) { onClick(it) }.setContentView(this)
-
         // Request required permissions
         requestPermissions(arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE,
                 Manifest.permission.READ_CONTACTS))

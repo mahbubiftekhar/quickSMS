@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.WRITE_SMS"/>
+    <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -25,9 +25,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".settingsActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".ContactsActivity"
             android:label="@string/title_activity_contacts"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -35,6 +32,11 @@
             android:name=".textMessageActivity"
             android:label="@string/title_activity_text_message"
             android:theme="@style/AppTheme" />
+        <activity android:name=".settingsActivity" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

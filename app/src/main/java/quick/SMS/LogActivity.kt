@@ -15,9 +15,6 @@ class LogActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_log)
-        setSupportActionBar(toolbar)
-
 
         /* val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, SongTitles)
          Spinner.adapter = adapter
