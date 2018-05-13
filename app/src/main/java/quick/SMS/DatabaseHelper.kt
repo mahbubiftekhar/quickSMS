@@ -14,7 +14,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME)
         onCreate(db)
     }
 
@@ -46,7 +46,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         /* This returns all the data, with the messages, in the form of a list
          * for a particular recipient */
         val db = this.writableDatabase
-        val res = db.rawQuery("select * from $TABLE_NAME", null)
+        val res = db.rawQuery("select * from " + TABLE_NAME, null)
         val messages: MutableList<String> = mutableListOf()
         while(res.moveToNext()){
             if(recipient_id.toString() == res.getString(res.getColumnIndex("recipient_id"))){
@@ -69,7 +69,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             if(recipient_id.toString() == res.getString(res.getColumnIndex("recipient_id"))){
                 /* So if the row is for this particular recipient_id, then we get the message and
                  * we shall add it to the messages list */
-                messages[res.getInt(res.getColumnIndex("id"))] = res.getString(res.getColumnIndex("message")) /*Adding to messages*/
+                messages.put(res.getInt(res.getColumnIndex("id")), res.getString(res.getColumnIndex("message"))) /*Adding to messages*/
             }
         }
         res.close() /* Freeing the cursor */
@@ -81,11 +81,24 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return db.delete(TABLE_NAME, "id = ?", arrayOf(id))
     }
 
+    fun closeDatabaseHelper(){
+        /* This function is simply to close the database - just good practise, plus ensures
+         * that all transactions are completed properly */
+        val db = this.writableDatabase
+        db.close()
+    }
+
+    @SuppressWarnings("UNUSED")
+    fun deleteEntireDB() {
+        /* USE THIS FUNCTION WISELY, WITH GREAT POWER COMES GREAT RESPONSIBILITY */
+        val db = this.writableDatabase
+        db.delete(TABLE_NAME, null, null)
+    }
 
     fun deleteRecipient(recipient_id: Long){
         /* This function takes a recipient_id and removes all rows with that recipient id */
         val db = this.writableDatabase
-        val res = db.rawQuery("select * from $TABLE_NAME", null)
+        val res = db.rawQuery("select * from " + TABLE_NAME, null)
 
         while(res.moveToNext()){
           if(recipient_id.toString() == res.getString(res.getColumnIndex("recipient_id"))){

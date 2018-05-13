@@ -1,7 +1,7 @@
 package quick.SMS
 
-import android.content.ContentResolver
 import android.content.Context
+import android.database.Cursor
 import android.os.Parcel
 import android.os.Parcelable
 import android.provider.ContactsContract
@@ -10,37 +10,13 @@ import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
-class Contact(val id: Long, val name: String, private val nullableImage: String?,
-              val numbers: List<String>, tileNum : Int) : Parcelable {
-
+class Contact private constructor(val id: Long, val name: String,
+                                  private val nullableImage: String?, val numbers: List<String>,
+                                  val tile: Int) : Parcelable {
     // Abusing lazy for a neat way of producing a Delegate
     val image by lazy { nullableImage ?: "NONE" } // Generate default image URI here
-    var tile = tileNum
-    set(value) {
-        field = value
-        doAsync {
-            // Database here
-        }
-    }
 
     override fun toString(): String = "Contact(id=$id, name=$name, image=$image, numbers=$numbers)"
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other === null) return false
-        if (other is Contact) return (this.id == other.id && this.name == other.name &&
-                this.image == other.image && this.numbers == other.numbers &&
-                this.tile == other.tile)
-        return false
-    }
-
-    override fun hashCode(): Int {
-        val prime = 31
-        var result = 1
-        result = prime * result + id.hashCode() +
-                name.hashCode() + image.hashCode() + numbers.hashCode() + tile.hashCode()
-        return result
-    }
 
     // Parcelable code
 
@@ -66,11 +42,35 @@ class Contact(val id: Long, val name: String, private val nullableImage: String?
     companion object {
         fun getContacts(ctx: Context, then: (List<Contact>) -> Unit) {
             doAsync {
+                // All contacts saved on the device in raw form
+                val result = ctx.contentResolver.query(
+                        ContactsContract.Contacts.CONTENT_URI,
+                        null, null, null, null
+                ).use {
+                    /* Parse into an intermediate form where the name can be null and we don't
+                     * know if there are any phone numbers */
+                    it.parseList(object : MapRowParser<NullableContact> {
+                        override fun parseRow(columns: Map<String, Any?>): NullableContact {
+                            return NullableContact(
+                                    columns[ContactsContract.Contacts._ID] as Long,
+                                    columns[ContactsContract.Contacts.DISPLAY_NAME] as? String,
+                                    /* TODO: ContactsContract.Contacts.PHOTO_URI still isn't working,
+                                 * this is the actual value */
+                                    columns["photo_uri"] as? String,
+                                    columns[ContactsContract.Contacts.HAS_PHONE_NUMBER] as Long)
+                        }
+                    })
+                }
 
-                val androidDB = ctx.contentResolver
-                val tiles = getTiles(DatabaseTiles(ctx))
-                val phoneNumbers = getPhoneNumbers(androidDB)
-                val contacts = _getContactsBase(androidDB, phoneNumbers, tiles)
+                val phoneNumbers = getPhoneNumbers(ctx)
+
+                /* Remove Contacts with null names or no phone number, sort by name and convert to
+                 * null safe Contacts */
+                val contacts = result
+                        .filter { it.name != null && it.hasNumber == 1L }
+                        .sortedBy { it.name }
+                        .map { Contact.new(ctx, it.id, it.name!!, it.image,
+                                phoneNumbers[it.id] ?: emptyList()) }
 
                 // Send them to the callback
                 uiThread {
@@ -79,43 +79,16 @@ class Contact(val id: Long, val name: String, private val nullableImage: String?
             }
         }
 
-        // Separated for testing purposes. Don't call directly, use getContacts
-        internal fun _getContactsBase(androidDB: ContentResolver,
-                                      phoneNumbers: Map<Long, List<String>>, tiles: Map<Long, Int>)
-                : List<Contact> {
-            // All contacts saved on the device in raw form
-            val result = androidDB.query(
-                    ContactsContract.Contacts.CONTENT_URI,
-                    null, null, null, null
-            ).use {
-                /* Parse into an intermediate form where the name can be null and we don't
-                 * know if there are any phone numbers */
-                it.parseList(object : MapRowParser<NullableContact> {
-                    override fun parseRow(columns: Map<String, Any?>): NullableContact {
-                        return NullableContact(
-                                columns[ContactsContract.Contacts._ID] as Long,
-                                columns[ContactsContract.Contacts.DISPLAY_NAME] as? String,
-                                /* TODO: ContactsContract.Contacts.PHOTO_URI still isn't working,
-                                 * this is the actual value */
-                                columns["photo_uri"] as? String,
-                                columns[ContactsContract.Contacts.HAS_PHONE_NUMBER] as Long
-                        )
-                    }
-                })
-            }
+        private fun new(ctx: Context, id: Long, name: String, image: String?,
+                        numbers: List<String>): Contact {
+            val databaseTiles = DatabaseTiles(ctx)
+            val tile = getTile(id, databaseTiles)
 
-            /* Remove Contacts with null names or no phone number, sort by name and convert to
-             * null safe Contacts */
-            return result
-                    .filter { it.name != null && it.hasNumber == 1L }
-                    .sortedBy { it.name }
-                    .map { Contact(it.id, it.name!!, it.image,
-                            phoneNumbers.getOrDefault(it.id, emptyList()),
-                            tiles.getOrDefault(it.id, -1)) }
+            return Contact(id, name, image, numbers, tile)
         }
 
-        internal fun getPhoneNumbers(db: ContentResolver): Map<Long, List<String>> {
-            val result = db.query(
+        private fun getPhoneNumbers(ctx: Context): Map<Long, List<String>> {
+            val result = ctx.contentResolver.query(
                     ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     null, null, null, null
             ).use {
@@ -138,19 +111,26 @@ class Contact(val id: Long, val name: String, private val nullableImage: String?
             return numbers.toMap()
         }
 
-        private fun getTiles(db: DatabaseTiles): Map<Long, Int> {
-            val tiles = db.getAllTiles()
+        private fun getTexts(recipient_id: Long, db: DatabaseHelper): List<String> {
+            val textMessages = db.returnAll(recipient_id)
             db.close()
-            return tiles
+            return textMessages ?: emptyList()
+        }
+
+        private fun getTile(recipient_id: Long, db: DatabaseTiles): Int {
+            /* getTile will return -1 if it cannot find a tile corresponding to that particular user,
+             * otherwise it will return the index for that tile */
+            return db.getTile(recipient_id) // TODO: Why doesn't this need to be closed
         }
 
         private data class NullableContact(val id: Long, val name: String?, val image: String?,
                                            val hasNumber: Long)
-        private data class PhoneNumber(val id: Long, val number: String)
 
         @JvmField val CREATOR: Parcelable.Creator<Contact> = object : Parcelable.Creator<Contact> {
             override fun createFromParcel(source: Parcel): Contact = Contact(source)
             override fun newArray(size: Int): Array<Contact?> = arrayOfNulls(size)
         }
     }
+
+    private data class PhoneNumber(val id: Long, val number: String)
 }

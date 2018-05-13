@@ -19,6 +19,11 @@ import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
+import java.util.*
+import android.media.RingtoneManager
+import android.media.Ringtone
+
+
 
 
 class textMessageActivity : AppCompatActivity() {
@@ -28,6 +33,7 @@ class textMessageActivity : AppCompatActivity() {
     var receipient_id = 0L
     var recipient_name = "NULL"
     var phoneNumber = "NULL"
+    var sound = false
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -48,13 +54,10 @@ class textMessageActivity : AppCompatActivity() {
                 startActivity(callIntent)
             } catch(e: SecurityException) {
                 requestPermissions(arrayOf(Manifest.permission.CALL_PHONE))
-            }
-
-            try {
-
-            }catch(e:SecurityException){
+            } catch (e:Exception){
 
             }
+
             /*THIS IS THE CORRECT VERSION, WE DO NOT NEED TO WORRY
             * ABOUT THE LOG FOR CALLS, THE DIALER TAKES CARE OF THAT*/
         }
@@ -67,21 +70,22 @@ class textMessageActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.addButton -> {
                 makeCall()
-                return true
+                true
             }
             R.id.action_settings -> {
                 popUpAddMessage()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
     fun updateTitle() {
-        (this).supportActionBar!!.title = recipient_name /*This will programatically set the title, this should be the receipients_name*/
+        (this).supportActionBar!!.title = recipient_name
+        /*This will programatically set the title, this should be the receipients_name*/
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -166,6 +170,7 @@ class textMessageActivity : AppCompatActivity() {
         /*This function will unconditionally add sent messages into the log - async of course*/
         doAsync {
 
+            //This needs to be filled in with the code -- 13/05/2018
         }
     }
 
@@ -202,7 +207,8 @@ class textMessageActivity : AppCompatActivity() {
                     _, _ ->
                     doAsync {
                         /* Asynchronously delete from database in the background, so not need to worry about it
-                         * as will be done in the background */
+                         * as will be d
+                         *one in the background */
                         DeleteData(button_dynamic.id.toString())
                     }
                     try {
@@ -223,7 +229,6 @@ class textMessageActivity : AppCompatActivity() {
     }
 
     fun addData(recipient_id: Long, message: String) {
-        val Helper = DatabaseHelper(this)
         vibrate()
         makeSound()
         val databaseID = loadID()
@@ -256,8 +261,16 @@ class textMessageActivity : AppCompatActivity() {
     }
 
     fun makeSound() {
-        val sound = true /* Currently set to true, will look up from shared Preference later */
 
+        if(sound){
+            try {
+                val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+                val r = RingtoneManager.getRingtone(applicationContext, notification)
+                r.play()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     @SuppressLint("ServiceCast")
