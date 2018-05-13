@@ -1,17 +1,13 @@
 package quick.SMS
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.provider.ContactsContract
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import org.jetbrains.anko.*
-import org.jetbrains.anko.db.MapRowParser
-import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.sdk19.coroutines.onClick
 import org.jetbrains.anko.sdk19.coroutines.onLongClick
 
@@ -79,8 +75,7 @@ class MainActivity : AppCompatActivity() {
     fun loadString(key: String): String {
         /* Loads a String from Shared Preferences */
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val savedValue = sharedPreferences.getString(key, "UNKNOWN") /* DEFAULT AS UNKNOWN */
-        return savedValue
+        return sharedPreferences.getString(key, "UNKNOWN")
 
     }
 
