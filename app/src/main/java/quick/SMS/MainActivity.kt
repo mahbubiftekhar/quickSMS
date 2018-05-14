@@ -1,18 +1,13 @@
 package quick.SMS
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.provider.ContactsContract
 import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
 import org.jetbrains.anko.*
-import org.jetbrains.anko.db.MapRowParser
-import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.sdk19.coroutines.onClick
 import org.jetbrains.anko.sdk19.coroutines.onLongClick
 
@@ -29,14 +24,15 @@ import org.jetbrains.anko.sdk19.coroutines.onLongClick
  *
  */
 class MainActivity : AppCompatActivity() {
-    lateinit var contacts: Map<Int, Contact>
-    var canWeProceed = false
+    private lateinit var contacts: Map<Int, Contact>
+    private var canWeProceed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val helperTilss = DatabaseTiles(this)
         helperTilss.insertData(3629, 1, 0)
         MainLayout(5, 2) { onClick(it) }.setContentView(this)
+
         // Request required permissions
         requestPermissions(arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE,
                 Manifest.permission.READ_CONTACTS))

@@ -30,11 +30,10 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         db.insert(TABLE_NAME, null, contentValues)
     }
 
-
     private fun getRecipient(tileid: Int): Long {
         val db = this.writableDatabase
         val res = db.rawQuery("select * from " + DatabaseTiles.TABLE_NAME, null)
-        res.close()
+        res.close() //closing the cursor
         while (res.moveToNext()) {
             if (tileid.toString() == res.getString(res.getColumnIndex("tileid"))) {
                 return res.getLong(res.getColumnIndex("recipient_id"))
