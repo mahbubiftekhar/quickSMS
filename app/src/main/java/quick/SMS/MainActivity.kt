@@ -7,6 +7,9 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk19.coroutines.onClick
 import org.jetbrains.anko.sdk19.coroutines.onLongClick
@@ -32,6 +35,12 @@ class MainActivity : AppCompatActivity() {
         val helperTilss = DatabaseTiles(this)
         helperTilss.insertData(3629, 1, 0)
         MainLayout(5, 2) { onClick(it) }.setContentView(this)
+
+        //Banner advert on screen - Lets make the money!
+        MobileAds.initialize(this, "ca-app-pub-2206499302575732/2755153561")
+        val adView = AdView(this)
+        adView.adSize = AdSize.BANNER
+        adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
 
         // Request required permissions
         requestPermissions(arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE,
@@ -66,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         callIntent.data = Uri.parse(Manifest.permission.CALL_PHONE)
         try {
             startActivity(callIntent)
-        } catch(e: SecurityException) {
+        } catch (e: SecurityException) {
             requestPermissions(arrayOf(Manifest.permission.CALL_PHONE))
 
         }
@@ -98,7 +107,7 @@ class MainActivity : AppCompatActivity() {
             println("cannot proccedd")
         }
         if (canWeProceed) {
-            val contact = contacts[1]
+            val contact = contacts[tileNumber]
             if (contact != null) {
                 println("we can procced onClickd")
                 startActivity<textMessageActivity>("contact" to contact!!)
@@ -136,6 +145,26 @@ class MainLayout(val rows: Int, val cols: Int, val tileCallback: (Int) -> Unit)
         }
     }
 
+    /*
+    <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+        </com.google.android.gms.ads.AdView>
+
+The above needs to be done in Anko, I have no idea how to do this
+     */
+
+    /*
+    val adView = AdView(this)
+adView.adSize = AdSize.BANNER
+adView.adUnitId = "ca-app-pub-3940256099942544/6300978111" //Sample id, need to change to ours
+     */
     fun _LinearLayout.row(nTiles: Int, row: Int) {
         linearLayout {
             for (i in 1..nTiles) {
