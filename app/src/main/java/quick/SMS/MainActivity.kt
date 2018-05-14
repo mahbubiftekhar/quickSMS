@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         val helperTilss = DatabaseTiles(this)
         helperTilss.insertData(3629, 1, 0)
         MainLayout(5, 2) { onClick(it) }.setContentView(this)
-
+        startActivity<SettingsActivity>()
         //Banner advert on screen - Lets make the money!
         MobileAds.initialize(this, "ca-app-pub-2206499302575732/2755153561")
         val adView = AdView(this)
