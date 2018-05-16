@@ -105,10 +105,10 @@ class Contact private constructor(val id: Long, val name: String,
             val numbers = mutableMapOf<Long, List<String>>()
             for (number in result) {
                 val id = number.id
-                val numlist = numbers.getOrDefault(id, listOf<String>()) + number.number
+                val numlist = numbers.getOrDefault(id, listOf<String>()) + number.number //HERE: Unresolved reference: getOrDefault
                 numbers.put(number.id, numlist)
             }
-            return numbers.toMap()
+            return numbers.toMap() //HERE: Unresolved reference: None of the following candidates is applicatable due to the receiver type
         }
 
         private fun getTexts(recipient_id: Long, db: DatabaseHelper): List<String> {

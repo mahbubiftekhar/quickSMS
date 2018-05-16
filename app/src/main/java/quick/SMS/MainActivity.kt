@@ -43,8 +43,7 @@ class MainActivity : AppCompatActivity() {
         adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
 
         // Request required permissions
-        requestPermissions(arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE,
-                Manifest.permission.READ_CONTACTS))
+        requestPermissions(arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS))
 
         println("Starting Async Lookup")
 
@@ -112,6 +111,7 @@ class MainActivity : AppCompatActivity() {
                 println("we can procced onClickd")
                 startActivity<textMessageActivity>("contact" to contact!!)
             } else {
+                //HERE: We always fall for this clauses, for some reason contact is null which again doesn't make sense
                 println("contact is null - weird")
             }
         }

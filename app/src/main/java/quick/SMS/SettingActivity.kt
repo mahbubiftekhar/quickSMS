@@ -12,6 +12,7 @@ class SettingsActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         try{
+            //HERE: When compiling fragmentManager is unresolved reference which makes no sense
             if (fragmentManager.findFragmentById(android.R.id.content) == null) {
                 fragmentManager.beginTransaction().add(android.R.id.content, SettingsFragment()).commit()
             }
