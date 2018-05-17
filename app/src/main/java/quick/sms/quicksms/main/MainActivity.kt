@@ -26,8 +26,6 @@ class MainActivity : AppCompatActivity() {
         val tilesDB = DatabaseTiles(this)
         tilesDB.insertData(3629, 1, 0)
         MainLayout(5, 2) { onClick(it) }.setContentView(this)
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -109,6 +107,5 @@ The above needs to be done in Anko, I have no idea how to do this
     adView.adSize = AdSize.BANNER
     adView.adUnitId = "ca-app-pub-3940256099942544/6300978111" //Sample id, need to change to ours
          */
-
     }
 }

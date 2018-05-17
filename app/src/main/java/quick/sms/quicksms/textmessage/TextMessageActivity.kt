@@ -94,7 +94,7 @@ class TextMessageActivity : AppCompatActivity() {
                 toast("Invalid input, Please try again")
             } else {
                 addData(recipientId, mText)
-                toast("Message added!!")
+                toast("MESSAGE ADDED")
             }
         }
 
@@ -135,7 +135,7 @@ class TextMessageActivity : AppCompatActivity() {
                         null, null)
                 this@TextMessageActivity.toast("Message sent")
                 doAsync {
-                    // TODO: What does here
+                    //Add message to the log
                 }
             }
             buttonDynamic.setOnLongClickListener {
@@ -149,6 +149,7 @@ class TextMessageActivity : AppCompatActivity() {
                         deleteData(buttonDynamic.id.toString())
                     }
                     // TODO: Why does this throw?
+                    //Basically during testing I passed invalid removes at some point by accident and I got fed up on nullpointers
                     try {
                         messages.remove(buttonDynamic.id)
                     } catch (e: NullPointerException) {
@@ -171,7 +172,7 @@ class TextMessageActivity : AppCompatActivity() {
         makeSound()
         val databaseID = loadID()
         incrementID()
-        messages.put(databaseID, message)
+        messages[databaseID] = message
         addButtons(messages)
         doAsync {
             contactDB.insertData(databaseID, recipientId, message)
@@ -209,9 +210,9 @@ class TextMessageActivity : AppCompatActivity() {
     private fun vibrate() {
         val v = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
+            v.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE))
         } else {
-            v.vibrate(500)
+            v.vibrate(300)
         }
     }
 }
