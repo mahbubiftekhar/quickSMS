@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <Vibrate
-        android:key="switch"
-        android:title="Switch Preference"
-        android:summary="Click to switch on or off"
+    <SwitchPreference
+        android:key="Sound"
+        android:title="Sound"
+        android:summary="Sound when sending SMS"
         android:defaultValue="true"/>
-    <Sound
-        android:key="switch"
-        android:title="Switch Preference"
-        android:summary="Click to switch on or off"
-        android:defaultValue="true"/>
-    <DoubleCheck
-        android:key="switch"
-        android:title="Switch Preference"
-        android:summary="Click to switch on or off"
-        android:defaultValue="true"/>
-    <HeaderColour
-        android:key="switch"
-        android:title="Switch Preference"
-        android:summary="Click to switch on or off"
-        android:defaultValue="true"/>
-    <BackGroundColour
-        android:key="switch"
-        android:title="Switch Preference"
-        android:summary="Click to switch on or off"
-        android:defaultValue="true"/>
+    <SwitchPreference
+        android:key="Vibrate"
+        android:title="Vibrate"
+        android:summary="Vibrate when sending SMS"
+        android:defaultValue="false"/>
+    <SwitchPreference
+        android:key="DoubleCheck"
+        android:title="Confirm before sending"
+        android:summary="Confirm before sending SMS"
+        android:defaultValue="false"/>
+    <ListPreference
+        android:dialogTitle="Action bar colour"
+        android:entries="@array/settings_list_preference_titles"
+        android:entryValues="@array/settings_list_preference_values"
+        android:key="list"
+        android:summary="Click to show a list to choose from"
+        android:title="Action Bar Colour" />
+    <ListPreference
+        android:dialogTitle="Background Colour"
+        android:entries="@array/settings_list_preference_titles"
+        android:entryValues="@array/settings_list_preference_values"
+        android:key="list"
+        android:summary="Colours for background"
+        android:title="Background Colour" />
 
 </PreferenceScreen>

@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import java.sql.SQLException
 
-class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1){
+class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
     // TODO: Android Studio wanted db to have type SQLiteDatabase?
     override fun onCreate(db: SQLiteDatabase) {
@@ -76,12 +76,29 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
     fun deleteTile(tileid: Int) {
         val db = this.writableDatabase
-        db.delete(TABLE_NAME, "tileid = ?", arrayOf(tileid.toString()))
+        try {
+            db.beginTransaction()
+            db.delete(TABLE_NAME, "tileid = ?", arrayOf(tileid.toString()))
+            db.setTransactionSuccessful()
+        } catch (e: SQLException) {
+            // do some error handling
+        } finally {
+            db.endTransaction()
+        }
     }
 
     fun deleteEntireDB() {
+        //This function will delete the entire database
         val db = this.writableDatabase
-        db.delete(TABLE_NAME, null, null)
+        try {
+            db.beginTransaction()
+            db.delete(TABLE_NAME, null, null)
+            db.setTransactionSuccessful()
+        } catch (e: SQLException) {
+            // do some error handling
+        } finally {
+            db.endTransaction()
+        }
     }
 
     companion object {
