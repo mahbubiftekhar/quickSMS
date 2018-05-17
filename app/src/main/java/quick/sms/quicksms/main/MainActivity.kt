@@ -2,11 +2,16 @@ package quick.sms.quicksms.main
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.backend.DatabaseTiles
 import quick.sms.quicksms.textmessage.TextMessageActivity
+import android.view.MenuItem
+import quick.sms.quicksms.R
+import quick.sms.quicksms.settings.SettingsActivity
+
 
 // TODO: Need to prevent back from taking you back to the splash screen
 
@@ -23,6 +28,19 @@ class MainActivity : AppCompatActivity() {
         MainLayout(5, 2) { onClick(it) }.setContentView(this)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.mainactivity, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.action_settings -> {
+            startActivity<SettingsActivity>()
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
+    }
+
     private fun onClick(tileNumber: Int) {
         val contact = contacts[tileNumber]
         if (contact != null) {
@@ -30,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             println("No Contact found")
         }
+        startActivity<TextMessageActivity>("contact" to contact)
     }
 
     private class MainLayout(val rows : Int, val cols : Int, val tileCallBack : (Int) -> Unit)
@@ -88,6 +107,5 @@ The above needs to be done in Anko, I have no idea how to do this
     adView.adSize = AdSize.BANNER
     adView.adUnitId = "ca-app-pub-3940256099942544/6300978111" //Sample id, need to change to ours
          */
-
     }
 }

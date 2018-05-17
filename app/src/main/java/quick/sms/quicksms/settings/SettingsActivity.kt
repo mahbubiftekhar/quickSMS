@@ -7,10 +7,10 @@ import quick.sms.quicksms.R
 
 class SettingsActivity : AppCompatActivity() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fragmentManager.beginTransaction()
-                .replace(android.R.id.content, SettingsFragment()).commit()
+        fragmentManager.beginTransaction().replace(android.R.id.content, SettingsFragment()).commit()
     }
 
     class SettingsFragment: PreferenceFragment() {

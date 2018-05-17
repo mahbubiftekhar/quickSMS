@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.sql.SQLException
 
 class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
@@ -20,22 +21,39 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
 
     fun insertData(dbID: Int, recipientId: Long, message: String) {
         val db = this.writableDatabase
-        val contentValues = ContentValues()
-        contentValues.put(COL_1, dbID)
-        contentValues.put(COL_2, recipientId)
-        contentValues.put(COL_3, message)
-        db.insert(TABLE_NAME, null, contentValues)
+        try {
+            db.beginTransaction()
+            val contentValues = ContentValues()
+            contentValues.put(COL_1, dbID)
+            contentValues.put(COL_2, recipientId)
+            contentValues.put(COL_3, message)
+            db.insert(TABLE_NAME, null, contentValues)
+            db.setTransactionSuccessful()
+        } catch (e: SQLException) {
+            // do some error handling
+        } finally {
+            db.endTransaction()
+        }
+
     }
 
-    // TODO: Why does this return a boolean
-    fun updateData(id: String, recipientId: Long, message: String): Boolean {
+    fun updateData(id: String, recipientId: Long, message: String) {
         val db = this.writableDatabase
-        val contentValues = ContentValues()
-        contentValues.put(COL_1, id)
-        contentValues.put(COL_2, recipientId)
-        contentValues.put(COL_3, message)
-        db.update(TABLE_NAME, contentValues, "ID = ?", arrayOf(id))
-        return true
+        try {
+            db.beginTransaction()
+            val contentValues = ContentValues()
+            contentValues.put(COL_1, id)
+            contentValues.put(COL_2, recipientId)
+            contentValues.put(COL_3, message)
+            db.update(TABLE_NAME, contentValues, "ID = ?", arrayOf(id))
+            db.setTransactionSuccessful()
+        } catch (e: SQLException) {
+            // do some error handling
+        } finally {
+            db.endTransaction()
+            db.close()
+        }
+
     }
 
     // TODO: This doesn't need to be nullable
@@ -73,18 +91,47 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
 
     fun deleteEntireDB() {
         val db = this.writableDatabase
-        db.delete(TABLE_NAME, null, null)
+        try {
+            db.beginTransaction()
+            db.delete(TABLE_NAME, null, null)
+            db.setTransactionSuccessful()
+        } catch (e: SQLException) {
+            // do some error handling
+        } finally {
+            db.endTransaction()
+        }
     }
+
+
+    /*
+      try {
+            db.beginTransaction()
+            // your sql stuff
+            db.setTransactionSuccessful()
+        } catch (e: SQLException) {
+            // do some error handling
+        } finally {
+            db.endTransaction()
+        }
+     */
 
     fun deleteRecipient(recipientId: Long){
         val db = this.writableDatabase
-        db.rawQuery("select * from $TABLE_NAME", null).use {
-            while (it.moveToNext()) {
-                if (recipientId.toString() == it.getString(it.getColumnIndex("recipient_id"))) {
-                    db.delete(TABLE_NAME, "id = ?",
-                            arrayOf(it.getString(it.getColumnIndex("id"))))
+        try {
+            db.beginTransaction()
+            db.rawQuery("select * from $TABLE_NAME", null).use {
+                while (it.moveToNext()) {
+                    if (recipientId.toString() == it.getString(it.getColumnIndex("recipient_id"))) {
+                        db.delete(TABLE_NAME, "id = ?",
+                                arrayOf(it.getString(it.getColumnIndex("id"))))
+                    }
                 }
             }
+            db.setTransactionSuccessful()
+        } catch (e: SQLException) {
+            // do some error handling
+        } finally {
+            db.endTransaction()
         }
     }
 

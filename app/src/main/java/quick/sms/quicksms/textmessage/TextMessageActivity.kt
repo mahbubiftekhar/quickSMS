@@ -10,6 +10,7 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.VibrationEffect
 import android.os.Vibrator
 import android.support.v7.app.AlertDialog
 import android.telephony.SmsManager
@@ -26,14 +27,15 @@ import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.backend.DatabaseMessages
 
+@Suppress("DEPRECATION")
 class TextMessageActivity : AppCompatActivity() {
 
-    private lateinit var contactDB : DatabaseMessages
+    private lateinit var contactDB: DatabaseMessages
     private val smsManager = SmsManager.getDefault()
-    private lateinit var messages : LinkedHashMap<Int, String>
+    private lateinit var messages: LinkedHashMap<Int, String>
     private val recipientId = 0L
-    private lateinit var recipientName : String
-    private lateinit var phoneNumber : String
+    private lateinit var recipientName: String
+    private lateinit var phoneNumber: String
     private var sound = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,19 +88,18 @@ class TextMessageActivity : AppCompatActivity() {
         input.inputType = InputType.TYPE_CLASS_TEXT
         builder.setView(input)
 
-        builder.setPositiveButton("Add") {
-            dialog, _ ->
+        builder.setPositiveButton("Add") { dialog, _ ->
             val mText = input.text.toString()
             if (mText == "Type Message" || mText == "") {
                 toast("Invalid input, Please try again")
             } else {
                 addData(recipientId, mText)
-                toast("Message added!!")
+                toast("MESSAGE ADDED")
             }
         }
 
-        builder.setNegativeButton("Cancel") {
-            dialog, _ -> dialog.cancel()
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.cancel()
         }
         builder.show()
     }
@@ -134,7 +135,7 @@ class TextMessageActivity : AppCompatActivity() {
                         null, null)
                 this@TextMessageActivity.toast("Message sent")
                 doAsync {
-                    // TODO: What does here
+                    //Add message to the log
                 }
             }
             buttonDynamic.setOnLongClickListener {
@@ -148,6 +149,7 @@ class TextMessageActivity : AppCompatActivity() {
                         deleteData(buttonDynamic.id.toString())
                     }
                     // TODO: Why does this throw?
+                    //Basically during testing I passed invalid removes at some point by accident and I got fed up on nullpointers
                     try {
                         messages.remove(buttonDynamic.id)
                     } catch (e: NullPointerException) {
@@ -170,12 +172,10 @@ class TextMessageActivity : AppCompatActivity() {
         makeSound()
         val databaseID = loadID()
         incrementID()
-        messages.put(databaseID, message)
+        messages[databaseID] = message
         addButtons(messages)
         doAsync {
             contactDB.insertData(databaseID, recipientId, message)
-            // TODO: These closes aren't needed, contactDB manages this internally
-            contactDB.close()
         }
     }
 
@@ -184,8 +184,6 @@ class TextMessageActivity : AppCompatActivity() {
         makeSound()
         doAsync {
             contactDB.updateData(id, recipientId, message)
-            // TODO: These closes aren't needed, contactDB manages this internally
-            contactDB.close()
         }
     }
 
@@ -194,8 +192,6 @@ class TextMessageActivity : AppCompatActivity() {
         makeSound()
         doAsync {
             contactDB.deleteData(id)
-            // TODO: These closes aren't needed, contactDB manages this internally
-            contactDB.close()
         }
     }
 
@@ -211,12 +207,12 @@ class TextMessageActivity : AppCompatActivity() {
         }
     }
 
-    // TODO: These are the same
     private fun vibrate() {
-        if (Build.VERSION.SDK_INT > 25) {
-            (getSystemService(Context.VIBRATOR_SERVICE) as Vibrator).vibrate(300L)
+        val v = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE))
         } else {
-            (getSystemService(Context.VIBRATOR_SERVICE) as Vibrator).vibrate(300L)
+            v.vibrate(300)
         }
     }
 }
