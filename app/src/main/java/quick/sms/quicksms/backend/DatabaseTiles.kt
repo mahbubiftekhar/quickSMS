@@ -4,9 +4,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.sql.SQLException
 
-class DatabaseTiles(context: Context)
-    : SQLiteOpenHelper(context, DATABASE_NAME, null, 1){
+class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1){
 
     // TODO: Android Studio wanted db to have type SQLiteDatabase?
     override fun onCreate(db: SQLiteDatabase) {
@@ -21,15 +21,24 @@ class DatabaseTiles(context: Context)
 
     fun insertData(recipient_id: Long, tileid: Int, prefered_number: Int) {
         val db = this.writableDatabase
-        val contentValues = ContentValues()
-        contentValues.put(COL_1, recipient_id)
-        contentValues.put(COL_2, tileid)
-        contentValues.put(COL_3, prefered_number)
-        db.insert(TABLE_NAME, null, contentValues)
+        try {
+            db.beginTransaction()
+            val contentValues = ContentValues()
+            contentValues.put(COL_1, recipient_id)
+            contentValues.put(COL_2, tileid)
+            contentValues.put(COL_3, prefered_number)
+            db.insert(TABLE_NAME, null, contentValues)
+            db.setTransactionSuccessful()
+        } catch (e: SQLException) {
+        } finally {
+            db.endTransaction()
+        }
+
     }
 
     // TODO: Using null instead of -1 for failure would allow the type system to enforce error checking
-    private fun getRecipient(tileid: Int): Long {
+    //The above has been implemented
+    private fun getRecipient(tileid: Int): Long? {
         val db = this.writableDatabase
         db.rawQuery("select * from $TABLE_NAME", null).use {
             while (it.moveToNext()) {
@@ -38,7 +47,7 @@ class DatabaseTiles(context: Context)
                 }
             }
         }
-        return -1L
+        return null
     }
 
     fun getAllTiles(): Map<Long, Int> {
@@ -50,10 +59,6 @@ class DatabaseTiles(context: Context)
             }
             return tiles
         }
-    }
-
-    fun copyData(fromTileId: Int, toTileId: Int) {
-
     }
 
     // TODO: This is just a specialisation on getAllTiles, there may be something that can be done with that
