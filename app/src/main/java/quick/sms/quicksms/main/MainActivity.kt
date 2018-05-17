@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onClick(tileNumber: Int) {
-        val contact = contacts[1]
+        val contact = contacts[tileNumber]
         if (contact != null) {
             startActivity<TextMessageActivity>("contact" to contact)
         } else {
