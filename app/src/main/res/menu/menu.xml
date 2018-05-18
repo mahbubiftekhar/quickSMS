@@ -4,15 +4,9 @@
     tools:context="quick.SMS.contacts">
 
     <item
-        android:id="@+id/addButton"
-        android:icon="@drawable/default_image"
-        android:orderInCategory="100"
-        android:title="@string/Add"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="@string/add_message"
+        android:title="@string/settings"
         app:showAsAction="always" />
 </menu>
 

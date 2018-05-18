@@ -10,11 +10,12 @@ import android.os.Bundle
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.main.MainActivity
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : BaseActivity() {
 
     private val requiredPermissions = arrayOf(
             Manifest.permission.SEND_SMS,

@@ -3,12 +3,9 @@ package quick.sms.quicksms.textmessage
 import Util.Android.editor
 import Util.Android.prefs
 import Util.Android.putIntAndCommit
-import Util.Android.settings
 import android.content.Context
-import android.media.Ringtone
 import android.media.RingtoneManager
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -23,12 +20,13 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import org.jetbrains.anko.*
+import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.backend.DatabaseMessages
 
 @Suppress("DEPRECATION")
-class TextMessageActivity : AppCompatActivity() {
+class TextMessageActivity : BaseActivity() {
 
     private lateinit var contactDB: DatabaseMessages
     private val smsManager = SmsManager.getDefault()
@@ -59,21 +57,24 @@ class TextMessageActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
-        return true
+    override fun menuPrepend(menu: Menu) {
+        menuInflater.inflate(R.menu.textmessage_extras, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.addButton -> {
-                makeCall(phoneNumber)
-            }
-            R.id.action_settings -> {
-                popUpAddMessage()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+    override fun extendedOptions(item: MenuItem) = when (item.itemId) {
+        R.id.make_call -> {
+            println(1)
+            makeCall(phoneNumber)
+            true
+        }
+        R.id.add_message -> {
+            println(2)
+            popUpAddMessage()
+            true
+        }
+        else -> {
+            println(3)
+            super.extendedOptions(item)
         }
     }
 

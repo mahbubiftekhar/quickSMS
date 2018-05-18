@@ -96,8 +96,8 @@
     </string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_contacts">contacts</string>
-    <string name="Add">add</string>
-    <string name="add_message">ADD MESSAGE</string>
+    <string name="phone_call">Phone Call</string>
+    <string name="add_message">Add a message</string>
     <string name="padding_here">PADDING HERE</string>
     <string name="todo">TODO</string>
     <string name="phone">Phone</string>
