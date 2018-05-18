@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.preference.PreferenceManager
 import android.support.v7.app.AlertDialog
 import android.telephony.SmsManager
 import android.text.InputType
@@ -39,7 +40,7 @@ class TextMessageActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_text_message)
-
+        // reading settings preferences
         contactDB = DatabaseMessages(this)
 
         val contact = intent.extras.get("contact")

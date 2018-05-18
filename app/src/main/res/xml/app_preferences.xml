@@ -19,14 +19,14 @@
         android:dialogTitle="Action bar colour"
         android:entries="@array/settings_list_preference_titles"
         android:entryValues="@array/settings_list_preference_values"
-        android:key="list"
+        android:key="actionbarcolour"
         android:summary="Click to show a list to choose from"
         android:title="Action Bar Colour" />
     <ListPreference
         android:dialogTitle="Background Colour"
         android:entries="@array/settings_list_preference_titles"
         android:entryValues="@array/settings_list_preference_values"
-        android:key="list"
+        android:key="backgroundcolour"
         android:summary="Colours for background"
         android:title="Background Colour" />
 

@@ -30,6 +30,7 @@
         <activity android:name=".contacts.ContactsActivity" />
         <activity android:name=".log.LogActivity" />
         <activity android:name=".settings.SettingsActivity"></activity>
+        <activity android:name=".BaseActivity" />
     </application>
 
 </manifest>

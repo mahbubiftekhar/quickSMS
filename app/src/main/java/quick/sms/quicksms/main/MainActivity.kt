@@ -2,7 +2,6 @@ package quick.sms.quicksms.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onLongClick
@@ -10,16 +9,14 @@ import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.backend.DatabaseTiles
 import quick.sms.quicksms.contacts.ContactsActivity
 import quick.sms.quicksms.textmessage.TextMessageActivity
-import android.view.MenuItem
 import quick.sms.quicksms.BaseActivity
-import quick.sms.quicksms.R
-import quick.sms.quicksms.settings.SettingsActivity
 
 class MainActivity : BaseActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
     private lateinit var contactsList : List<Contact>
-
+    val backgroundColour = getBackGroundColour()
+    val actionBarColours = getActionBarColour()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // TODO: There should be a better way to do this
