@@ -9,7 +9,9 @@ import kotlinx.android.parcel.Parcelize
 import org.jetbrains.anko.*
 
 @Parcelize
-class Contact(val id : Long, val name : String, private val nullableImage : String?, val numbers : List<String>, val tile : Int) : Parcelable { val image by lazy { nullableImage ?: "NONE" } // Generate default image URI here
+
+class Contact(val id : Long, val name : String, private val nullableImage : String?, val numbers : List<String>, val tile : Int?) : Parcelable {
+    val image by lazy { nullableImage ?: "NONE" } // Generate default image URI here
 
     override fun toString(): String = "Contact(id=$id, name=$name, image=$image, numbers=$numbers)"
 
@@ -18,8 +20,9 @@ class Contact(val id : Long, val name : String, private val nullableImage : Stri
         fun getContacts(ctx : Context, then : (List<Contact>) -> Unit) {
             doAsync {
                 val androidDB = ctx.contentResolver
+                val tilesDB = DatabaseTiles(ctx)
                 val numbers = getPhoneNumbers(androidDB)
-                val tiles = getTiles(androidDB)
+                val tiles = tilesDB.getAllTiles()
                 val contacts = lookupContacts(androidDB, numbers, tiles)
 
                 uiThread {
@@ -44,12 +47,7 @@ class Contact(val id : Long, val name : String, private val nullableImage : Stri
             return numbers.toMap()
         }
 
-        private fun getTiles(androidDB : ContentResolver) : Nothing? {
-            //TODO : Do this
-            return null
-        }
-
-        private fun lookupContacts(db : ContentResolver, numbers : Map<Long, List<String>>, tiles : Nothing?)
+        private fun lookupContacts(db : ContentResolver, numbers : Map<Long, List<String>>, tiles : Map<Long, Int>)
                 : List<Contact> {
             val result = db.toList(ContactsContract.Contacts.CONTENT_URI) {
                 NullableContact(
@@ -62,7 +60,7 @@ class Contact(val id : Long, val name : String, private val nullableImage : Stri
             return result
                     .filter { it.name != null && it.hasNumber == 1L }
                     .map {
-                        Contact(it.id, it.name!!, it.image, numbers.getOrDefault(it.id, emptyList()), -1)
+                        Contact(it.id, it.name!!, it.image, numbers.getOrDefault(it.id, emptyList()), tiles[it.id])
                     }.sortedBy { it.name }.toList()
         }
     }

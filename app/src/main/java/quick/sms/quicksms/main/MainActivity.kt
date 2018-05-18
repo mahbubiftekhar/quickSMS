@@ -1,12 +1,15 @@
 package quick.sms.quicksms.main
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
+import org.jetbrains.anko.sdk25.coroutines.onLongClick
 import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.backend.DatabaseTiles
+import quick.sms.quicksms.contacts.ContactsActivity
 import quick.sms.quicksms.textmessage.TextMessageActivity
 import android.view.MenuItem
 import quick.sms.quicksms.R
@@ -15,13 +18,14 @@ import quick.sms.quicksms.settings.SettingsActivity
 class MainActivity : AppCompatActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
+    private lateinit var contactsList : List<Contact>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // TODO: There should be a better way to do this
-        contacts = (intent.extras.get("contacts") as List<Contact>).associateBy { it.tile }
-        val tilesDB = DatabaseTiles(this)
-        MainLayout(5, 2) { onClick(it) }.setContentView(this)
+        // TODO: There should be a better way to do thi
+        contactsList = intent.extras.get("contacts") as List<Contact>
+        contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
+        MainLayout(5, 2, { onClick(it) }, { assignTile(it) }).setContentView(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -47,8 +51,24 @@ class MainActivity : AppCompatActivity() {
         startActivity<TextMessageActivity>("contact" to contact)
     }
 
-    private class MainLayout(val rows : Int, val cols : Int, val tileCallBack : (Int) -> Unit)
-        : AnkoComponent<MainActivity> {
+    private fun assignTile(tileNumber: Int) {
+        println(tileNumber)
+        startActivityForResult<ContactsActivity>(1,
+                "tile_number" to tileNumber,
+                "contacts" to contactsList)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (data != null) {
+            val tileNumber = data.extras.getInt("tile_number", 0)
+            val contact = data.extras.get("chosen_contact") as Contact
+            val tilesDB = DatabaseTiles(this)
+            tilesDB.insertData(contact.id, tileNumber, 0)
+        }
+    }
+
+    private class MainLayout(val rows : Int, val cols : Int, val tileCallBack : (Int) -> Unit,
+    val assignCallBack : (Int) -> Unit) : AnkoComponent<MainActivity> {
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
             scrollView {
@@ -73,9 +93,12 @@ class MainActivity : AppCompatActivity() {
 
         fun _LinearLayout.tile(row : Int, col : Int, rowLen : Int) {
             button {
+                val index = (row - 1) * rowLen + col
                 onClick {
-                    val index = (row - 1) * rowLen + col
                     tileCallBack(index)
+                }
+                onLongClick {
+                    assignCallBack(index)
                 }
             }.lparams(height=matchParent, width=0) {
                 weight = 1f
