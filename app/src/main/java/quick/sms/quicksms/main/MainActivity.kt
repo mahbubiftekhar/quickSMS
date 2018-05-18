@@ -48,7 +48,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             println("No Contact found")
         }
-        startActivity<TextMessageActivity>("contact" to contact)
     }
 
     private fun assignTile(tileNumber: Int) {
