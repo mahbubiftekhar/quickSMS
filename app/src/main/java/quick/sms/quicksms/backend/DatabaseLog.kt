@@ -4,9 +4,13 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import quick.sms.quicksms.log.LogActivity
 import java.sql.SQLException
 
+val allLogs = ArrayList<DatabaseLog.Log>()
+
 class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
+    data class Log(val message: String, val id:Int, val phoneNumber: String, val timeStamp: String )
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL("create table $TABLE_NAME (id INTEGER PRIMARY KEY UNIQUE AUTOINCREMENT,recipient_id LONG,message TEXT,receipientName TEXT,phoneNumber TEXT,timeStamp TEXT )")
@@ -16,6 +20,7 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
     }
+
 
     fun insertData(recipientId: Long, message: String, receipientName: String, phoneNumber: String) {
         val db = this.writableDatabase
@@ -37,18 +42,19 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
 
     }
 
-    fun returnAll(): List<String>? {
+    fun returnAll():Boolean  {
         val db = this.writableDatabase
         db.rawQuery("select * from $TABLE_NAME", null).use {
-            val messages = mutableListOf<String>()
             while (it.moveToNext()) {
-                messages.add("Message: " + it.getString(it.getColumnIndex("message")) + "\n" + "TimeStamp: " + it.getString(it.getColumnIndex("timeStamp"))
-                        + "\n" + "Receipient Name: " + it.getString(it.getColumnIndex("receipientName"))
-                        + "\n" + "phoneNumber: " + it.getString(it.getColumnIndex("phoneNumber"))
-                )
+                allLogs.run{
+                    allLogs.clear()
+                    //TODO: Here we shall add to the dataclass
+                    //add(Log(it.getColumnName()))
+
+                }
             }
-            return messages
         }
+        return true
     }
 
     fun deleteData(id: String) {
