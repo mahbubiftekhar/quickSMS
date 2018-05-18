@@ -3,6 +3,7 @@ package quick.sms.quicksms.main
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onLongClick
@@ -10,8 +11,9 @@ import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.backend.DatabaseTiles
 import quick.sms.quicksms.contacts.ContactsActivity
 import quick.sms.quicksms.textmessage.TextMessageActivity
-
-// TODO: Need to prevent back from taking you back to the splash screen
+import android.view.MenuItem
+import quick.sms.quicksms.R
+import quick.sms.quicksms.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,10 +22,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // TODO: There should be a better way to do this
+        // TODO: There should be a better way to do thi
         contactsList = intent.extras.get("contacts") as List<Contact>
         contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
         MainLayout(5, 2, { onClick(it) }, { assignTile(it) }).setContentView(this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.mainactivity, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.action_settings -> {
+            startActivity<SettingsActivity>()
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     private fun onClick(tileNumber: Int) {
@@ -33,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             println("No Contact found")
         }
+        startActivity<TextMessageActivity>("contact" to contact)
     }
 
     private fun assignTile(tileNumber: Int) {
@@ -110,6 +126,5 @@ The above needs to be done in Anko, I have no idea how to do this
     adView.adSize = AdSize.BANNER
     adView.adUnitId = "ca-app-pub-3940256099942544/6300978111" //Sample id, need to change to ours
          */
-
     }
 }
