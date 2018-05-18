@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // TODO: There should be a better way to do thi
+        // TODO: There should be a better way to do this
         contactsList = intent.extras.get("contacts") as List<Contact>
         contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
         MainLayout(5, 2, { onClick(it) }, { assignTile(it) }).setContentView(this)
@@ -48,7 +48,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             println("No Contact found")
         }
-        startActivity<TextMessageActivity>("contact" to contact)
     }
 
     private fun assignTile(tileNumber: Int) {
@@ -60,10 +59,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (data != null) {
+            val mutableContacts = contacts.toMutableMap()
             val tileNumber = data.extras.getInt("tile_number", 0)
             val contact = data.extras.get("chosen_contact") as Contact
             val tilesDB = DatabaseTiles(this)
             tilesDB.insertData(contact.id, tileNumber, 0)
+            mutableContacts[tileNumber] = contact
+            contacts = mutableContacts.toMap()
         }
     }
 

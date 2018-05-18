@@ -2,6 +2,7 @@ package quick.sms.quicksms.backend
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import java.sql.SQLException
@@ -27,17 +28,21 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             contentValues.put(COL_1, recipient_id)
             contentValues.put(COL_2, tileid)
             contentValues.put(COL_3, prefered_number)
-            db.insert(TABLE_NAME, null, contentValues)
+            val a = db.insertWithOnConflict(TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE)
+            if (a == (-1).toLong()) {
+                contentValues.put(COL_1, recipient_id)
+                contentValues.put(COL_2, tileid)
+                contentValues.put(COL_3, prefered_number)
+                db.update(TABLE_NAME, contentValues, "recipient_id = ?", arrayOf(recipient_id.toString()))
+            }
             db.setTransactionSuccessful()
         } catch (e: SQLException) {
+
         } finally {
             db.endTransaction()
         }
-
     }
 
-    // TODO: Using null instead of -1 for failure would allow the type system to enforce error checking
-    //The above has been implemented
     private fun getRecipient(tileid: Int): Long? {
         val db = this.writableDatabase
         db.rawQuery("select * from $TABLE_NAME", null).use {
