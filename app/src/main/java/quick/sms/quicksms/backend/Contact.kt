@@ -10,7 +10,8 @@ import org.jetbrains.anko.*
 
 @Parcelize
 
-class Contact(val id : Long, val name : String, private val nullableImage : String?, val numbers : List<String>, val tile : Int?) : Parcelable {
+class Contact(val id : Long, val name : String, private val nullableImage : String?, val numbers : List<String>, var tile : Int?) : Parcelable {
+
     val image by lazy { nullableImage ?: "NONE" } // Generate default image URI here
 
     override fun toString(): String = "Contact(id=$id, name=$name, image=$image, numbers=$numbers)"

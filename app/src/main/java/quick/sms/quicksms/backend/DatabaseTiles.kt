@@ -43,8 +43,6 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         }
     }
 
-    // TODO: Using null instead of -1 for failure would allow the type system to enforce error checking
-    //The above has been implemented
     private fun getRecipient(tileid: Int): Long? {
         val db = this.writableDatabase
         db.rawQuery("select * from $TABLE_NAME", null).use {
