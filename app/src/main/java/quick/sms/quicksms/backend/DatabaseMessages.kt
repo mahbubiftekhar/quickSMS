@@ -30,11 +30,10 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
             db.insert(TABLE_NAME, null, contentValues)
             db.setTransactionSuccessful()
         } catch (e: SQLException) {
-            // do some error handling
+
         } finally {
             db.endTransaction()
         }
-
     }
 
     fun updateData(id: String, recipientId: Long, message: String) {
@@ -53,8 +52,8 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
             db.endTransaction()
             db.close()
         }
-
     }
+
     // TODO: This doesn't need to be nullable
     fun returnAll(recipientId: Long): List<String>? {
         val db = this.writableDatabase
