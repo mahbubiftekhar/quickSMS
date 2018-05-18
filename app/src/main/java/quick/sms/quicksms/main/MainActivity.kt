@@ -1,7 +1,6 @@
 package quick.sms.quicksms.main
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import org.jetbrains.anko.*
@@ -12,10 +11,11 @@ import quick.sms.quicksms.backend.DatabaseTiles
 import quick.sms.quicksms.contacts.ContactsActivity
 import quick.sms.quicksms.textmessage.TextMessageActivity
 import android.view.MenuItem
+import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.settings.SettingsActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
     private lateinit var contactsList : List<Contact>
@@ -26,19 +26,6 @@ class MainActivity : AppCompatActivity() {
         contactsList = intent.extras.get("contacts") as List<Contact>
         contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
         MainLayout(5, 2, { onClick(it) }, { assignTile(it) }).setContentView(this)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.mainactivity, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.action_settings -> {
-            startActivity<SettingsActivity>()
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
     }
 
     private fun onClick(tileNumber: Int) {

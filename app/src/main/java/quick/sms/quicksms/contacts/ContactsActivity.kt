@@ -7,10 +7,11 @@ import android.os.Bundle
 import android.view.Gravity
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
+import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.Contact
 
-class ContactsActivity : AppCompatActivity() {
+class ContactsActivity : BaseActivity() {
 
     private var tileNumber = 0
 
