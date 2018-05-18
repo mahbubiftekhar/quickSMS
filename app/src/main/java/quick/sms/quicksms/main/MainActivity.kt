@@ -17,7 +17,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // TODO: There should be a better way to do this
-        contacts = (intent.extras.get("contacts") as List<Contact>).associateBy { it.tile }
+        contacts = (intent.extras.get("contacts") as List<Contact>).asSequence()
+                .filter { it.tile != null }
+                .associateBy { it.tile!! }
         val tilesDB = DatabaseTiles(this)
         tilesDB.insertData(3629, 1, 0)
         MainLayout(5, 2) { onClick(it) }.setContentView(this)
