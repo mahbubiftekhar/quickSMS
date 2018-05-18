@@ -14,9 +14,7 @@ import quick.sms.quicksms.BaseActivity
 class MainActivity : BaseActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
-    private lateinit var contactsList : List<Contact>
-    val backgroundColour = getBackGroundColour()
-    val actionBarColours = getActionBarColour()
+    private lateinit var contactsList: List<Contact>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // TODO: There should be a better way to do this
@@ -53,8 +51,8 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private class MainLayout(val rows : Int, val cols : Int, val tileCallBack : (Int) -> Unit,
-    val assignCallBack : (Int) -> Unit) : AnkoComponent<MainActivity> {
+    private class MainLayout(val rows: Int, val cols: Int, val tileCallBack: (Int) -> Unit,
+                             val assignCallBack: (Int) -> Unit) : AnkoComponent<MainActivity> {
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
             scrollView {
@@ -66,18 +64,18 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        fun _LinearLayout.row(nTiles : Int, row : Int) {
+        fun _LinearLayout.row(nTiles: Int, row: Int) {
             linearLayout {
                 for (i in 1..nTiles) {
                     tile(row, i, nTiles)
                 }
-            }.lparams(height=dip(180), width=matchParent) {
+            }.lparams(height = dip(180), width = matchParent) {
                 weight = 1f
                 padding = dip(7)
             }
         }
 
-        fun _LinearLayout.tile(row : Int, col : Int, rowLen : Int) {
+        fun _LinearLayout.tile(row: Int, col: Int, rowLen: Int) {
             button {
                 val index = (row - 1) * rowLen + col
                 onClick {
@@ -86,7 +84,7 @@ class MainActivity : BaseActivity() {
                 onLongClick {
                     assignCallBack(index)
                 }
-            }.lparams(height=matchParent, width=0) {
+            }.lparams(height = matchParent, width = 0) {
                 weight = 1f
             }
         }

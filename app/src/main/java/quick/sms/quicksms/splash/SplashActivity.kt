@@ -4,8 +4,6 @@ import Util.Android.getPermissions
 import android.Manifest
 import android.content.pm.PackageManager
 import org.jetbrains.anko.*
-
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView

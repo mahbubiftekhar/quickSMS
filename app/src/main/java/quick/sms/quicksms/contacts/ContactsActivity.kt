@@ -30,7 +30,7 @@ class ContactsActivity : BaseActivity() {
         finish()
     }
 
-    private class ContactsLayout(val contacts: List<Contact>, val selectContact: (Contact) -> Unit): AnkoComponent<ContactsActivity> {
+    private class ContactsLayout(val contacts: List<Contact>, val selectContact: (Contact) -> Unit) : AnkoComponent<ContactsActivity> {
 
         override fun createView(ui: AnkoContext<ContactsActivity>) = with(ui) {
             scrollView {
@@ -44,19 +44,19 @@ class ContactsActivity : BaseActivity() {
 
         fun _LinearLayout.contactView(contact: Contact) {
             linearLayout {
-                imageView(imageResource=R.drawable.default_image).lparams() {
+                imageView(imageResource = R.drawable.default_image).lparams() {
                     gravity = Gravity.START
                 }
                 textView(contact.name) {
                     textSize = sp(10).toFloat()
-                }.lparams(width=matchParent) {
-                    leftMargin=dip(10)
+                }.lparams(width = matchParent) {
+                    leftMargin = dip(10)
                     gravity = Gravity.END
                 }
                 onClick {
                     selectContact(contact)
                 }
-            }.lparams(width=matchParent)
+            }.lparams(width = matchParent)
         }
     }
 }

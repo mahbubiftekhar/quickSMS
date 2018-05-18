@@ -8,12 +8,10 @@ import java.sql.SQLException
 
 class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
-    // TODO: See DatabaseTiles
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL("create table $TABLE_NAME (id INTEGER PRIMARY KEY UNIQUE,recipient_id LONG,message TEXT)")
     }
 
-    // TODO: Same here
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
@@ -54,7 +52,6 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
         }
     }
 
-    // TODO: This doesn't need to be nullable
     fun returnAll(recipientId: Long): List<String>? {
         val db = this.writableDatabase
         db.rawQuery("select * from $TABLE_NAME", null).use {
@@ -100,7 +97,7 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
         }
     }
 
-    fun deleteRecipient(recipientId: Long){
+    fun deleteRecipient(recipientId: Long) {
         val db = this.writableDatabase
         try {
             db.beginTransaction()

@@ -9,12 +9,10 @@ import java.sql.SQLException
 
 class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
-    // TODO: Android Studio wanted db to have type SQLiteDatabase?
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL("create table $TABLE_NAME (recipient_id LONG PRIMARY KEY,tileid INTEGER, prefered_number INTEGER)")
     }
 
-    // TODO: Same Here
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
@@ -66,7 +64,6 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         }
     }
 
-    // TODO: This is just a specialisation on getAllTiles, there may be something that can be done with that
     fun getTile(recipient_id: Long): Int {
         val db = this.writableDatabase
         db.rawQuery("select * from $TABLE_NAME", null).use {

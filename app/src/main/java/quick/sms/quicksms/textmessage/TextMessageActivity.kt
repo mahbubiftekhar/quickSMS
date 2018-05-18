@@ -24,15 +24,18 @@ import org.jetbrains.anko.*
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.Contact
+import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.DatabaseMessages
 
 @Suppress("DEPRECATION")
 class TextMessageActivity : BaseActivity() {
 
     private lateinit var contactDB: DatabaseMessages
+    private lateinit var tilesDB: DatabaseLog
     private val smsManager = SmsManager.getDefault()
     private lateinit var messages: LinkedHashMap<Int, String>
     private val recipientId = 0L
+    private var receipientID: Long = 1L
     private lateinit var recipientName: String
     private lateinit var phoneNumber: String
     private var sound = false
@@ -42,7 +45,7 @@ class TextMessageActivity : BaseActivity() {
         setContentView(R.layout.activity_text_message)
         // reading settings preferences
         contactDB = DatabaseMessages(this)
-
+        tilesDB = DatabaseLog(this)
         val contact = intent.extras.get("contact")
         if (contact is Contact) {
             phoneNumber = contact.numbers[0]
@@ -106,15 +109,13 @@ class TextMessageActivity : BaseActivity() {
         builder.show()
     }
 
+    private fun addToLog(recipient_id: Long, message: String, receipientName: String, phoneNumber: String) {
+        tilesDB.insertData(recipient_id, message, receipientName, phoneNumber)
+    }
+
     private fun loadID() = prefs.getInt("DBHELPERID", 0)
     fun incrementID() {
         editor.putIntAndCommit("DBHELPERID", loadID() + 1)
-    }
-
-    fun insertLog(type: String, message: String, recipientId: Long, recipientName: String) {
-        doAsync {
-            // TODO: Add Code
-        }
     }
 
     fun addButtons(textMessages: LinkedHashMap<Int, String>) {
@@ -133,11 +134,14 @@ class TextMessageActivity : BaseActivity() {
             buttonDynamic.layoutParams = params
             buttonDynamic.id = key
             buttonDynamic.setOnClickListener {
-                smsManager.sendTextMessage("07552695272", null, value,
+                smsManager.sendTextMessage(phoneNumber, null, value,
                         null, null)
                 this@TextMessageActivity.toast("Message sent")
                 doAsync {
-                    //Add message to the log
+                    if (receipientID != 1L) {
+                        //Here we are adding to the log, checking for not 1L to not add during development
+                        addToLog(receipientID, buttonDynamic.text as String, recipientName, phoneNumber)
+                    }
                 }
             }
             buttonDynamic.setOnLongClickListener {

@@ -9,7 +9,7 @@ import java.sql.SQLException
 class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL("create table $TABLE_NAME (id INTEGER PRIMARY KEY UNIQUE,recipient_id LONG,message TEXT,receipientName TEXT,phoneNumber TEXT,timeStamp TEXT )")
+        db.execSQL("create table $TABLE_NAME (id INTEGER PRIMARY KEY UNIQUE AUTOINCREMENT,recipient_id LONG,message TEXT,receipientName TEXT,phoneNumber TEXT,timeStamp TEXT )")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -17,12 +17,11 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
         onCreate(db)
     }
 
-    fun insertData(dbID: Int, recipientId: Long, message: String, receipientName: String, phoneNumber: String) {
+    fun insertData(recipientId: Long, message: String, receipientName: String, phoneNumber: String) {
         val db = this.writableDatabase
         try {
             db.beginTransaction()
             val contentValues = ContentValues()
-            contentValues.put(COL_1, dbID)
             contentValues.put(COL_2, recipientId)
             contentValues.put(COL_3, message)
             contentValues.put(COL_4, receipientName)
@@ -43,10 +42,10 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
         db.rawQuery("select * from $TABLE_NAME", null).use {
             val messages = mutableListOf<String>()
             while (it.moveToNext()) {
-                    messages.add("Message: "+it.getString(it.getColumnIndex("message")) +"\n"+"TimeStamp: "+it.getString(it.getColumnIndex("timeStamp"))
-                            +"\n"+"Receipient Name: "+it.getString(it.getColumnIndex("receipientName"))
-                            +"\n"+"phoneNumber: "+it.getString(it.getColumnIndex("phoneNumber"))
-                    )
+                messages.add("Message: " + it.getString(it.getColumnIndex("message")) + "\n" + "TimeStamp: " + it.getString(it.getColumnIndex("timeStamp"))
+                        + "\n" + "Receipient Name: " + it.getString(it.getColumnIndex("receipientName"))
+                        + "\n" + "phoneNumber: " + it.getString(it.getColumnIndex("phoneNumber"))
+                )
             }
             return messages
         }
@@ -58,7 +57,7 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
             db.beginTransaction()
             db.delete(TABLE_NAME, "id = ?", arrayOf(id))
             db.setTransactionSuccessful()
-        } catch (e:SQLException){
+        } catch (e: SQLException) {
 
         } finally {
             db.endTransaction()

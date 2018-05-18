@@ -13,7 +13,7 @@ class SettingsActivity : BaseActivity() {
         fragmentManager.beginTransaction().replace(android.R.id.content, SettingsFragment()).commit()
     }
 
-    class SettingsFragment: PreferenceFragment() {
+    class SettingsFragment : PreferenceFragment() {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             addPreferencesFromResource(R.xml.app_preferences)
