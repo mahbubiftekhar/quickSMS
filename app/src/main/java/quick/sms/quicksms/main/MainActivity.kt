@@ -1,5 +1,6 @@
 package quick.sms.quicksms.main
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import org.jetbrains.anko.*
@@ -7,6 +8,7 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onLongClick
 import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.backend.DatabaseTiles
+import quick.sms.quicksms.contacts.ContactsActivity
 import quick.sms.quicksms.textmessage.TextMessageActivity
 
 // TODO: Need to prevent back from taking you back to the splash screen
@@ -14,13 +16,13 @@ import quick.sms.quicksms.textmessage.TextMessageActivity
 class MainActivity : AppCompatActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
+    private lateinit var contactsList : List<Contact>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // TODO: There should be a better way to do this
-        contacts = (intent.extras.get("contacts") as List<Contact>).asSequence()
-                .filter { it.tile != null }
-                .associateBy { it.tile!! }
+        contactsList = intent.extras.get("contacts") as List<Contact>
+        contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
         MainLayout(5, 2, { onClick(it) }, { assignTile(it) }).setContentView(this)
     }
 
@@ -34,6 +36,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun assignTile(tileNumber: Int) {
+        println(tileNumber)
+        startActivityForResult<ContactsActivity>(1,
+                "tile_number" to tileNumber,
+                "contacts" to contactsList)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (data != null) {
+            val tileNumber = data.extras.getInt("tile_number", 0)
+            val contact = data.extras.get("chosen_contact") as Contact
+            val tilesDB = DatabaseTiles(this)
+            tilesDB.insertData(contact.id, tileNumber, 0)
+        }
     }
 
     private class MainLayout(val rows : Int, val cols : Int, val tileCallBack : (Int) -> Unit,
