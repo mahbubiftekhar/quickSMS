@@ -1,4 +1,4 @@
-package quick.sms.quicksms.backend
+package quick.sms.quicksms.log
 
 import android.content.ContentValues
 import android.content.Context
@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import java.sql.SQLException
 
-class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
+class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
     // TODO: See DatabaseTiles
     override fun onCreate(db: SQLiteDatabase) {
@@ -19,7 +19,7 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
         onCreate(db)
     }
 
-    fun insertData(dbID: Int, recipientId: Long, message: String) {
+    fun insertData(dbID: Int, recipientId: Long, message: String, receipientName: String, phoneNumber: String ) {
         val db = this.writableDatabase
         try {
             db.beginTransaction()
@@ -27,6 +27,8 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
             contentValues.put(COL_1, dbID)
             contentValues.put(COL_2, recipientId)
             contentValues.put(COL_3, message)
+            contentValues.put(COL_4, receipientName)
+            contentValues.put(COL_5, phoneNumber)
             db.insert(TABLE_NAME, null, contentValues)
             db.setTransactionSuccessful()
         } catch (e: SQLException) {
@@ -34,9 +36,10 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
         } finally {
             db.endTransaction()
         }
+
     }
 
-    fun updateData(id: String, recipientId: Long, message: String) {
+    fun updateData(id: String, recipientId: Long, message: String,receipientName: String, phoneNumber: String) {
         val db = this.writableDatabase
         try {
             db.beginTransaction()
@@ -44,6 +47,8 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
             contentValues.put(COL_1, id)
             contentValues.put(COL_2, recipientId)
             contentValues.put(COL_3, message)
+            contentValues.put(COL_4, receipientName)
+            contentValues.put(COL_5, phoneNumber)
             db.update(TABLE_NAME, contentValues, "ID = ?", arrayOf(id))
             db.setTransactionSuccessful()
         } catch (e: SQLException) {
@@ -52,9 +57,9 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
             db.endTransaction()
             db.close()
         }
+
     }
 
-    // TODO: This doesn't need to be nullable
     fun returnAll(recipientId: Long): List<String>? {
         val db = this.writableDatabase
         db.rawQuery("select * from $TABLE_NAME", null).use {
@@ -62,20 +67,6 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
             while (it.moveToNext()) {
                 if (recipientId.toString() == it.getString(it.getColumnIndex("recipient_id"))) {
                     messages.add(it.getString(it.getColumnIndex("message")))
-                }
-            }
-            return messages
-        }
-    }
-
-    fun returnAllHashMap(recipientId: Long): LinkedHashMap<Int, String> {
-        val db = this.writableDatabase
-        db.rawQuery("select * from $TABLE_NAME", null).use {
-            val messages: LinkedHashMap<Int, String> = linkedMapOf()
-            while (it.moveToNext()) {
-                if (recipientId.toString() == it.getString(it.getColumnIndex("recipient_id"))) {
-                    messages[it.getInt(it.getColumnIndex("id"))] =
-                            it.getString(it.getColumnIndex("message"))
                 }
             }
             return messages
@@ -126,5 +117,7 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
         private const val COL_1 = "id"
         private const val COL_2 = "recipient_id"
         private const val COL_3 = "message"
+        private const val COL_4 = "receipientName"
+        private const val COL_5 = "phoneNumber"
     }
 }

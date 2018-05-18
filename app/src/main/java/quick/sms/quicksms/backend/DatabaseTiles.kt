@@ -106,6 +106,6 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         private const val TABLE_NAME = "TilesMappingTable"
         private const val COL_1 = "recipient_id"
         private const val COL_2 = "tileid"
-        private const val COL_3 = "preferednum"
+        private const val COL_3 = "prefered_number"
     }
 }
