@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
+import org.jetbrains.anko.sdk25.coroutines.onLongClick
 import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.backend.DatabaseTiles
 import quick.sms.quicksms.textmessage.TextMessageActivity
@@ -20,9 +21,7 @@ class MainActivity : AppCompatActivity() {
         contacts = (intent.extras.get("contacts") as List<Contact>).asSequence()
                 .filter { it.tile != null }
                 .associateBy { it.tile!! }
-        val tilesDB = DatabaseTiles(this)
-        tilesDB.insertData(3629, 1, 0)
-        MainLayout(5, 2) { onClick(it) }.setContentView(this)
+        MainLayout(5, 2, { onClick(it) }, { assignTile(it) }).setContentView(this)
     }
 
     private fun onClick(tileNumber: Int) {
@@ -34,8 +33,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private class MainLayout(val rows : Int, val cols : Int, val tileCallBack : (Int) -> Unit)
-        : AnkoComponent<MainActivity> {
+    private fun assignTile(tileNumber: Int) {
+    }
+
+    private class MainLayout(val rows : Int, val cols : Int, val tileCallBack : (Int) -> Unit,
+    val assignCallBack : (Int) -> Unit) : AnkoComponent<MainActivity> {
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
             scrollView {
@@ -60,9 +62,12 @@ class MainActivity : AppCompatActivity() {
 
         fun _LinearLayout.tile(row : Int, col : Int, rowLen : Int) {
             button {
+                val index = (row - 1) * rowLen + col
                 onClick {
-                    val index = (row - 1) * rowLen + col
                     tileCallBack(index)
+                }
+                onLongClick {
+                    assignCallBack(index)
                 }
             }.lparams(height=matchParent, width=0) {
                 weight = 1f
