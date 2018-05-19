@@ -107,4 +107,6 @@
     <string name="settings">SETTINGS</string>
     <string name="delete_log">DELETE LOG</string>
     <string name="clear_log">CLEAR LOG</string>
+    <string name="options">OPTIONS</string>
+    <string name="share">SHARE</string>
 </resources>

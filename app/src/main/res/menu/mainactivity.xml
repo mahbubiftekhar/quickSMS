@@ -1,0 +1,41 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="quick.SMS.contacts">
+
+
+
+    <item android:id="@+id/menu_item_share"
+        android:title="@string/share"
+        android:icon="@android:drawable/ic_menu_share"
+        app:showAsAction="ifRoom"
+         />
+
+    <item
+        android:id="@+id/empty"
+        android:title="@string/options"
+        android:orderInCategory="101"
+        app:showAsAction="always"
+      >
+
+        <menu>
+
+            <item android:id="@+id/action_settings"
+                android:icon="@android:drawable/ic_menu_preferences"
+                app:showAsAction="ifRoom"
+                android:title="@string/settings" />
+
+            <item android:id="@+id/action_help"
+                android:icon="@android:drawable/ic_dialog_info"
+                app:showAsAction="ifRoom"
+                android:titleCondensed="About"
+                android:title="" />
+
+        </menu>
+
+    </item>
+</menu>
+
+<!-- Search, should appear as action button -->
+
+
