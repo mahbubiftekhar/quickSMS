@@ -5,6 +5,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import org.jetbrains.anko.*
 import android.os.Bundle
+import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -14,6 +15,7 @@ import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.main.MainActivity
 
 class SplashActivity : BaseActivity() {
+    lateinit var mAdView: AdView
 
     private val requiredPermissions = arrayOf(
             Manifest.permission.SEND_SMS,
@@ -27,14 +29,15 @@ class SplashActivity : BaseActivity() {
         supportActionBar?.hide() //hide actionbar
 
         // Setup Ads
-        MobileAds.initialize(this, "ca-app-pub-3940256099942544/6300978111")
-        val adView = AdView(this)
-        adView.adSize = AdSize.BANNER
-        adView.adUnitId = "ca-app-pub-3940256099942544/6300978111"
+        MobileAds.initialize(this, "ca-app-pub-7643266345625929~4795636158")
+        mAdView = findViewById(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
 
         if (getPermissions(this, requiredPermissions)) {
             // Already got permissions
             sendContactsToMain()
+
         }
     }
 

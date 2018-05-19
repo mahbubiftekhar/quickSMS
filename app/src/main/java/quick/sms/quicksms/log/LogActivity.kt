@@ -8,6 +8,9 @@ import quick.sms.quicksms.R
 import org.jetbrains.anko.*
 import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.allLogs
+import android.view.MenuInflater
+
+
 
 var allLogsLocal = ArrayList<DatabaseLog.Log>()
 
@@ -16,7 +19,6 @@ class LogActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log)
         val tilesDB = DatabaseLog(this)
-        tilesDB.insertData(2L, "Test Message sent", "Mahbub Iftekhar", "07552695272")
         val a = tilesDB.returnAll()
         if (a) {
             //If the returnAll function was successful we shall launch the UI
@@ -52,10 +54,9 @@ class LogActivity : AppCompatActivity() {
                             textView {
                                 // tvNameMain
                                 text = allLogsLocal[i].message
-                                textSize = sp(15).toFloat()
+                                textSize = sp(9).toFloat()
                             }.lparams(width = wrapContent, height = wrapContent) {
                                 topPadding = dip(5)
-                                rightMargin = dip(5)
                             }
                         }
                         linearLayout {
@@ -106,7 +107,7 @@ class LogActivity : AppCompatActivity() {
                             }
                             textView {
                                 // tvDate
-                                text = "TimeStamp:"
+                                text = "Date & Time:"
                             }.lparams(width = wrapContent, height = wrapContent) {
                                 rightMargin = dip(10)
                             }

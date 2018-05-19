@@ -29,8 +29,9 @@
         <activity android:name=".textmessage.TextMessageActivity" />
         <activity android:name=".contacts.ContactsActivity" />
         <activity android:name=".log.LogActivity" />
-        <activity android:name=".settings.SettingsActivity"></activity>
+        <activity android:name=".settings.SettingsActivity" />
         <activity android:name=".BaseActivity" />
+        <activity android:name=".settings.AboutDevelopersActivity"></activity>
     </application>
 
 </manifest>

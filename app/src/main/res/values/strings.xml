@@ -105,4 +105,6 @@
     <string name="title_activity_log">LogActivity</string>
     <string name="all">ALL</string>
     <string name="settings">SETTINGS</string>
+    <string name="delete_log">DELETE LOG</string>
+    <string name="clear_log">CLEAR LOG</string>
 </resources>

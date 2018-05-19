@@ -11,6 +11,7 @@ import quick.sms.quicksms.contacts.ContactsActivity
 import quick.sms.quicksms.textmessage.TextMessageActivity
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.log.LogActivity
+import quick.sms.quicksms.settings.AboutDevelopersActivity
 
 class MainActivity : BaseActivity() {
 
@@ -22,7 +23,7 @@ class MainActivity : BaseActivity() {
         contactsList = intent.extras.get("contacts") as List<Contact>
         contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
         MainLayout(5, 2, { onClick(it) }, { assignTile(it) }).setContentView(this)
-        startActivity<LogActivity>()
+        startActivity<AboutDevelopersActivity>()
     }
 
     private fun onClick(tileNumber: Int) {

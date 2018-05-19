@@ -1,10 +1,13 @@
 package quick.sms.quicksms.backend
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import java.sql.SQLException
+import java.text.SimpleDateFormat
+import java.util.*
 
 val allLogs = ArrayList<DatabaseLog.Log>()
 
@@ -21,6 +24,7 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
     }
 
 
+    @SuppressLint("SimpleDateFormat")
     fun insertData(recipientId: Long, message: String, receipientName: String, phoneNumber: String) {
         val db = this.writableDatabase
         try {
@@ -30,7 +34,9 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
             contentValues.put(COL_3, message)
             contentValues.put(COL_4, receipientName)
             contentValues.put(COL_5, phoneNumber)
-            contentValues.put(COL_6, System.currentTimeMillis())
+            val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+            val date = Date()
+            contentValues.put(COL_6, dateFormat.format(date))
             db.insert(TABLE_NAME, null, contentValues)
             db.setTransactionSuccessful()
         } catch (e: SQLException) {
