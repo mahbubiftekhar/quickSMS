@@ -1,19 +1,21 @@
 package quick.sms.quicksms.backend
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import quick.sms.quicksms.log.LogActivity
 import java.sql.SQLException
+import java.text.SimpleDateFormat
+import java.util.*
 
 val allLogs = ArrayList<DatabaseLog.Log>()
 
 class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
-    data class Log(val message: String, val id:Int, val phoneNumber: String, val timeStamp: String )
+    data class Log(val message: String, val id: Int, val phoneNumber: String, val receipientName: String, val timeStamp: String)
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL("create table $TABLE_NAME (id INTEGER PRIMARY KEY UNIQUE AUTOINCREMENT,recipient_id LONG,message TEXT,receipientName TEXT,phoneNumber TEXT,timeStamp TEXT )")
+        db.execSQL("create table $TABLE_NAME (id INTEGER PRIMARY KEY UNIQUE,recipient_id LONG,message TEXT,receipientName TEXT,phoneNumber TEXT,timeStamp TEXT )")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -22,6 +24,7 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
     }
 
 
+    @SuppressLint("SimpleDateFormat")
     fun insertData(recipientId: Long, message: String, receipientName: String, phoneNumber: String) {
         val db = this.writableDatabase
         try {
@@ -31,7 +34,9 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
             contentValues.put(COL_3, message)
             contentValues.put(COL_4, receipientName)
             contentValues.put(COL_5, phoneNumber)
-            contentValues.put(COL_6, System.currentTimeMillis())
+            val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+            val date = Date()
+            contentValues.put(COL_6, dateFormat.format(date))
             db.insert(TABLE_NAME, null, contentValues)
             db.setTransactionSuccessful()
         } catch (e: SQLException) {
@@ -42,14 +47,19 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
 
     }
 
-    fun returnAll():Boolean  {
+    fun returnAll(): Boolean {
         val db = this.writableDatabase
         db.rawQuery("select * from $TABLE_NAME", null).use {
+            allLogs.clear()
             while (it.moveToNext()) {
-                allLogs.run{
-                    allLogs.clear()
+                allLogs.run {
                     //TODO: Here we shall add to the dataclass
-                    //add(Log(it.getColumnName()))
+                    add(Log(it.getString(it.getColumnIndex("message")),
+                            it.getInt(it.getColumnIndex("id")).toInt(),
+                            it.getString(it.getColumnIndex("phoneNumber")),
+                            it.getString(it.getColumnIndex("receipientName")),
+                            it.getString(it.getColumnIndex("timeStamp"))
+                    ))
 
                 }
             }
