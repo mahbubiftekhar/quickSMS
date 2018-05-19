@@ -3,10 +3,7 @@ package quick.sms.quicksms.log
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import quick.sms.quicksms.R
-import android.widget.Button
-import android.widget.LinearLayout
 import org.jetbrains.anko.*
 import quick.sms.quicksms.backend.DatabaseLog
 
@@ -18,8 +15,7 @@ class LogActivity : AppCompatActivity() {
         setContentView(R.layout.activity_log)
         val tilesDB = DatabaseLog(this)
         val log = tilesDB.returnAll()
-        sizeOfLog = log!!.size
-        var uIcreator = UIcreator()
+        UIcreator()
 
     }
 
