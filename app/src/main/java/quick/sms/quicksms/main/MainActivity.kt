@@ -2,6 +2,10 @@ package quick.sms.quicksms.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.ShareActionProvider
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onLongClick
@@ -10,13 +14,17 @@ import quick.sms.quicksms.backend.DatabaseTiles
 import quick.sms.quicksms.contacts.ContactsActivity
 import quick.sms.quicksms.textmessage.TextMessageActivity
 import quick.sms.quicksms.BaseActivity
-import quick.sms.quicksms.log.LogActivity
+import quick.sms.quicksms.R
 import quick.sms.quicksms.settings.AboutDevelopersActivity
+import quick.sms.quicksms.settings.ContactUsActivity
+import quick.sms.quicksms.settings.SettingsActivity
 
 class MainActivity : BaseActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
     private lateinit var contactsList: List<Contact>
+    private var mShareActionProvider: ShareActionProvider? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // TODO: There should be a better way to do this
@@ -24,6 +32,55 @@ class MainActivity : BaseActivity() {
         contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
         MainLayout(5, 2, { onClick(it) }, { assignTile(it) }).setContentView(this)
         startActivity<AboutDevelopersActivity>()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate your main_menu into the menu
+        menuInflater.inflate(R.menu.mainactivity, menu)
+        // Locate MenuItem with ShareActionProvider
+        val item = menu?.findItem(R.id.menu_item_share)
+        return true
+    }
+
+    fun shareText(view: View) {
+        val intent = Intent(android.content.Intent.ACTION_SEND)
+        intent.type = "text/plain"
+        val shareBodyText = "Your shearing message goes here"
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject/Title")
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
+        startActivity(Intent.createChooser(intent, "Choose sharing method"))
+    }
+
+    override fun extendedOptions(item: MenuItem) = when (item.itemId) {
+
+        R.id.action_settings -> {
+            startActivity<SettingsActivity>()
+            true
+        }
+        R.id.menu_item_share -> {
+            //Allow the users to share the app to their friends/family
+            val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+            sharingIntent.type = "text/plain"
+            val shareBodyText = "Check it out, quickSMS saves me so much time! Download it from the Google Play store!"
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check it out! quickSMS")
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
+            startActivity(Intent.createChooser(sharingIntent, "Shearing Option"))
+            true
+        }
+        R.id.about ->{
+            //About the app and developers
+            startActivity<AboutDevelopersActivity>()
+            true
+        }
+        R.id.contactButton ->{
+            //Contact form
+            startActivity<ContactUsActivity>()
+            true
+        }
+
+        else -> {
+            super.extendedOptions(item)
+        }
     }
 
     private fun onClick(tileNumber: Int) {

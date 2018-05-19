@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">quickSMS</string>
     <string name="title_home">SMS</string>
+    <string name="contact_form">Contact Us</string>
+    <string name="contact_form_name">Your Name</string>
+    <string name="contact_form_email">Your Email</string>
+    <string name="contact_form_subject">Subject</string>
+    <string name="contact_form_message">Message</string>
+    <string name="contact_form_button">Send Message</string>
+    <string name="contact_form_post_message">Please wait! We\'re sending your message to the support department…</string>
+    <string name="contact_posted">Your message has been successfully delivered.</string>
     <string name="title_dashboard">CALL</string>
     <string name="title_notifications">LOG</string>
     <string name="title_activity_settings">HOME</string>
@@ -107,4 +115,8 @@
     <string name="settings">SETTINGS</string>
     <string name="delete_log">DELETE LOG</string>
     <string name="clear_log">CLEAR LOG</string>
+    <string name="options">OPTIONS</string>
+    <string name="share">SHARE</string>
+    <string name="settings2">Settings</string>
+    <string name="if_you_have_any_questions_issues_or_if_you_want_to_provide_some_suggestions_feel_free_to_drop_us_a_line">If you have any questions, issues or if you want to provide some suggestions, feel free to drop us a line!</string>
 </resources>

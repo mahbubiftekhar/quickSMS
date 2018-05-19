@@ -10,7 +10,7 @@ import quick.sms.quicksms.settings.SettingsActivity
 
 open class BaseActivity : AppCompatActivity() {
 
-    private val excludedActivities = setOf("SettingsActivity", "SplashActivity")
+    private val excludedActivities = setOf("SettingsActivity", "SplashActivity", "MainActivity")
 
     open fun getBackGroundColour(): String {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
