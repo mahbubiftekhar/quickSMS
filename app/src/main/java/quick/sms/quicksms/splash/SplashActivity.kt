@@ -29,14 +29,21 @@ class SplashActivity : BaseActivity() {
         supportActionBar?.hide() //hide actionbar
 
         // Setup Ads
-        MobileAds.initialize(this, "ca-app-pub-7643266345625929~4795636158")
+        MobileAds.initialize(this, "ca-app-pub-2206499302575732~5712613107")
         mAdView = findViewById(R.id.adView)
         val adRequest = AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
+        val adView = AdView(this)
+        adView.adSize = AdSize.BANNER
+        adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
 
         if (getPermissions(this, requiredPermissions)) {
             // Already got permissions
-            sendContactsToMain()
+            doAsync{
+                Thread.sleep(10000)
+                sendContactsToMain()
+
+            }
 
         }
     }

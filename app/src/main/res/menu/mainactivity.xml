@@ -28,13 +28,14 @@
             <item android:id="@+id/about"
                 android:icon="@android:drawable/ic_dialog_info"
                 app:showAsAction="ifRoom"
+                android:title="@string/about"
                 android:titleCondensed="About"
-                android:title="" />
+                />
             <item android:id="@+id/contactButton"
                 android:icon="@android:drawable/ic_dialog_email"
                 app:showAsAction="ifRoom"
                 android:titleCondensed="About"
-                android:title="" />
+                android:title="@string/contact4" />
 
         </menu>
 

@@ -118,5 +118,8 @@
     <string name="options">OPTIONS</string>
     <string name="share">SHARE</string>
     <string name="settings2">Settings</string>
-    <string name="if_you_have_any_questions_issues_or_if_you_want_to_provide_some_suggestions_feel_free_to_drop_us_a_line">If you have any questions, issues or if you want to provide some suggestions, feel free to drop us a line!</string>
+    <string name="if_you_have_any_questions_issues_or_if_you_want_to_provide_some_suggestions_feel_free_to_drop_us_a_line">If you have any questions, issues or if you want to provide some suggestions,
+        feel free to drop us a line!</string>
+    <string name="about">About</string>
+    <string name="contact4">Contact</string>
 </resources>
