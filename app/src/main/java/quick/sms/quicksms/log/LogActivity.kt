@@ -1,28 +1,37 @@
 package quick.sms.quicksms.log
 
+import android.annotation.SuppressLint
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import quick.sms.quicksms.R
 import org.jetbrains.anko.*
 import quick.sms.quicksms.backend.DatabaseLog
+import quick.sms.quicksms.backend.allLogs
 
+var allLogsLocal = ArrayList<DatabaseLog.Log>()
 
 class LogActivity : AppCompatActivity() {
-    var sizeOfLog = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log)
         val tilesDB = DatabaseLog(this)
-        val log = tilesDB.returnAll()
-        UIcreator()
+        tilesDB.insertData(2L, "Test Message sent", "Mahbub Iftekhar", "07552695272")
+        val a = tilesDB.returnAll()
+        if (a) {
+            //If the returnAll function was successful we shall launch the UI
+            allLogsLocal = allLogs
+            UIcreator()
+        }
 
     }
 
+    @SuppressLint("SetTextI18n")
     fun UIcreator(): View {
-        return scrollView{
+        return scrollView {
             verticalLayout {
-                for (i in 0..15) {
+                allLogsLocal.reverse() // reverse the log
+                for (i in 0 until allLogsLocal.size) {
                     lparams {
                         width = matchParent
                         height = matchParent
@@ -42,20 +51,46 @@ class LogActivity : AppCompatActivity() {
                             leftPadding = dip(10)
                             textView {
                                 // tvNameMain
-                                text = "Unknown"
+                                text = allLogsLocal[i].message
                                 textSize = sp(15).toFloat()
-                                // Can't find textStyle="bold"
                             }.lparams(width = wrapContent, height = wrapContent) {
                                 topPadding = dip(5)
                                 rightMargin = dip(5)
                             }
+                        }
+                        linearLayout {
+                            lparams {
+                                width = matchParent
+                                height = wrapContent
+                                leftPadding = dip(10)
+                            }
                             textView {
                                 // textView2
-                                text = "No: "
+                                text = "Number: "
                             }.lparams(width = wrapContent, height = wrapContent)
                             textView {
                                 // tvTime
-                                text = "Number"
+                                text = allLogsLocal[i].phoneNumber
+                            }.lparams(width = wrapContent, height = wrapContent) {
+                                rightMargin = dip(10)
+                            }
+                            textView {
+                                // tvTime
+                            }.lparams(width = wrapContent, height = wrapContent)
+                        }
+                        linearLayout {
+                            lparams {
+                                width = matchParent
+                                height = wrapContent
+                                leftPadding = dip(10)
+                            }
+                            textView {
+                                // textView2
+                                text = "Recipient: "
+                            }.lparams(width = wrapContent, height = wrapContent)
+                            textView {
+                                // tvTime
+                                text = allLogsLocal[i].receipientName
                             }.lparams(width = wrapContent, height = wrapContent) {
                                 rightMargin = dip(10)
                             }
@@ -71,7 +106,13 @@ class LogActivity : AppCompatActivity() {
                             }
                             textView {
                                 // tvDate
-                                text = "Date"
+                                text = "TimeStamp:"
+                            }.lparams(width = wrapContent, height = wrapContent) {
+                                rightMargin = dip(10)
+                            }
+                            textView {
+                                // tvTime
+                                text = allLogsLocal[i].timeStamp
                             }.lparams(width = wrapContent, height = wrapContent) {
                                 rightMargin = dip(10)
                             }
