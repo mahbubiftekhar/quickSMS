@@ -23,10 +23,15 @@
             <item android:id="@+id/action_settings"
                 android:icon="@android:drawable/ic_menu_preferences"
                 app:showAsAction="ifRoom"
-                android:title="@string/settings" />
+                android:title="@string/settings2" />
 
-            <item android:id="@+id/action_help"
+            <item android:id="@+id/about"
                 android:icon="@android:drawable/ic_dialog_info"
+                app:showAsAction="ifRoom"
+                android:titleCondensed="About"
+                android:title="" />
+            <item android:id="@+id/contactButton"
+                android:icon="@android:drawable/ic_dialog_email"
                 app:showAsAction="ifRoom"
                 android:titleCondensed="About"
                 android:title="" />

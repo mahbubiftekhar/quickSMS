@@ -16,6 +16,7 @@ import quick.sms.quicksms.textmessage.TextMessageActivity
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.settings.AboutDevelopersActivity
+import quick.sms.quicksms.settings.ContactUsActivity
 import quick.sms.quicksms.settings.SettingsActivity
 
 class MainActivity : BaseActivity() {
@@ -49,13 +50,15 @@ class MainActivity : BaseActivity() {
         intent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
         startActivity(Intent.createChooser(intent, "Choose sharing method"))
     }
+
     override fun extendedOptions(item: MenuItem) = when (item.itemId) {
 
         R.id.action_settings -> {
-                startActivity<SettingsActivity>()
-                true
+            startActivity<SettingsActivity>()
+            true
         }
-        R.id.menu_item_share ->{
+        R.id.menu_item_share -> {
+            //Allow the users to share the app to their friends/family
             val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
             sharingIntent.type = "text/plain"
             val shareBodyText = "Check it out, quickSMS saves me so much time! Download it from the Google Play store!"
@@ -64,11 +67,22 @@ class MainActivity : BaseActivity() {
             startActivity(Intent.createChooser(sharingIntent, "Shearing Option"))
             true
         }
+        R.id.about ->{
+            //About the app and developers
+            startActivity<AboutDevelopersActivity>()
+            true
+        }
+        R.id.contactButton ->{
+            //Contact form
+            startActivity<ContactUsActivity>()
+            true
+        }
 
         else -> {
             super.extendedOptions(item)
         }
     }
+
     private fun onClick(tileNumber: Int) {
         val contact = contacts[tileNumber]
         if (contact != null) {

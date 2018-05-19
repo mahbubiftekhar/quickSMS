@@ -31,7 +31,8 @@
         <activity android:name=".log.LogActivity" />
         <activity android:name=".settings.SettingsActivity" />
         <activity android:name=".BaseActivity" />
-        <activity android:name=".settings.AboutDevelopersActivity"></activity>
+        <activity android:name=".settings.AboutDevelopersActivity" />
+        <activity android:name=".settings.ContactUsActivity"></activity>
     </application>
 
 </manifest>
