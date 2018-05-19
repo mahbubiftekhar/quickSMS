@@ -28,19 +28,18 @@ class SplashActivity : BaseActivity() {
         setContentView(R.layout.activity_splash)
         supportActionBar?.hide() //hide actionbar
 
-        // Setup Ads
+        /*// Setup Ads
         MobileAds.initialize(this, "ca-app-pub-2206499302575732~5712613107")
         mAdView = findViewById(R.id.adView)
         val adRequest = AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
         val adView = AdView(this)
         adView.adSize = AdSize.BANNER
-        adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
+        adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"*/
 
         if (getPermissions(this, requiredPermissions)) {
             // Already got permissions
             doAsync{
-                Thread.sleep(10000)
                 sendContactsToMain()
 
             }
