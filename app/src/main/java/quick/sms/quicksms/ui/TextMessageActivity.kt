@@ -69,17 +69,22 @@ class TextMessageActivity : BaseActivity() {
 
     override fun extendedOptions(item: MenuItem) = when (item.itemId) {
         R.id.make_call -> {
-            println(1)
-            makeCall(phoneNumber)
+            try {
+                makeCall(phoneNumber)
+            } catch (e: Exception) {
+
+            }
             true
         }
         R.id.add_message -> {
-            println(2)
-            popUpAddMessage()
+            try {
+                popUpAddMessage()
+            } catch (e: Exception) {
+
+            }
             true
         }
         else -> {
-            println(3)
             super.extendedOptions(item)
         }
     }
@@ -120,6 +125,7 @@ class TextMessageActivity : BaseActivity() {
     }
 
     private fun loadID() = prefs.getInt("DBHELPERID", 0)
+
     fun incrementID() {
         editor.putIntAndCommit("DBHELPERID", loadID() + 1)
     }
@@ -152,10 +158,10 @@ class TextMessageActivity : BaseActivity() {
                     if (a) {
                         this@TextMessageActivity.toast("Message sent")
                     }
-                    if(vibrateBool()){
+                    if (vibrateBool()) {
                         vibrate()
                     }
-                    if(soundBool()){
+                    if (soundBool()) {
                         makeSound()
                     }
                     doAsync {
@@ -180,11 +186,10 @@ class TextMessageActivity : BaseActivity() {
                     //The user has doubleCheck off, so just send anyways. Whats the worse than can happen?
                     sendMessage()
                 }
-                true
             }
             buttonDynamic.setOnLongClickListener {
                 alert(value) {
-                    title = "What would you like to do to this message"
+                    title = "What would you like to do to this message?"
                     positiveButton("Delete") {
                         doAsync {
                             deleteData(buttonDynamic.id.toString())
@@ -229,10 +234,10 @@ class TextMessageActivity : BaseActivity() {
     }
 
     fun addData(recipientId: Long, message: String) {
-        if(vibrateBool()){
+        if (vibrateBool()) {
             vibrate()
         }
-        if(soundBool()){
+        if (soundBool()) {
             makeSound()
         }
         val databaseID = loadID()
@@ -245,10 +250,10 @@ class TextMessageActivity : BaseActivity() {
     }
 
     fun updateData(id: String, recipientId: Long, message: String) {
-        if(vibrateBool()){
+        if (vibrateBool()) {
             vibrate()
         }
-        if(soundBool()){
+        if (soundBool()) {
             makeSound()
         }
         messages[id.toInt()] = message

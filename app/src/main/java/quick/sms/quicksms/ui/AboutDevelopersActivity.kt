@@ -10,7 +10,6 @@ import kotlinx.android.synthetic.main.activity_about_developers.*
 
 
 class AboutDevelopersActivity : AppCompatActivity() {
-    lateinit var mAdView : AdView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,13 +21,11 @@ class AboutDevelopersActivity : AppCompatActivity() {
         // Create an ad request. If you're running this on a physical device, check your logcat to
         // learn how to enable test ads for it. Look for a line like this one:
         // "Use AdRequest.Builder.addTestDevice("ABCDEF012345") to get test ads on this device."
-        val adRequest = AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build()
-
+        val adRequest = AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build()
         // Start loading the ad in the background.
         adView.loadAd(adRequest)
     }
+
     // Called when leaving the activity
     public override fun onPause() {
         adView.pause()
@@ -46,6 +43,4 @@ class AboutDevelopersActivity : AppCompatActivity() {
         adView.destroy()
         super.onDestroy()
     }
-
-
 }

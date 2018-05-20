@@ -18,7 +18,6 @@ class MainActivity : BaseActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
     private lateinit var contactsList: List<Contact>
-    private var mShareActionProvider: ShareActionProvider? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

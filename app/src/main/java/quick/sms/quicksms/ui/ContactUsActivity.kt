@@ -14,8 +14,6 @@ import java.util.regex.Pattern
 
 class ContactUsActivity : AppCompatActivity() {
 
-    private val activity: Activity? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contact_us)

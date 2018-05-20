@@ -11,8 +11,6 @@ import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.Contact
 
 class SplashActivity : BaseActivity() {
-    lateinit var mAdView: AdView
-
     private val requiredPermissions = arrayOf(
             Manifest.permission.SEND_SMS,
             Manifest.permission.CALL_PHONE,
@@ -31,7 +29,7 @@ class SplashActivity : BaseActivity() {
             println(3)
         } else {
             println(4)
-            getPermissions(this,requiredPermissions)
+            getPermissions(this, requiredPermissions)
         }
     }
 
