@@ -72,6 +72,11 @@ class MainActivity : BaseActivity() {
             startActivity<ContactUsActivity>()
             true
         }
+        R.id.contactLog ->{
+            //View the log activity
+            startActivity<LogActivity>()
+            true
+        }
 
         else -> {
             super.extendedOptions(item)

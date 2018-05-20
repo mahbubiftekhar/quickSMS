@@ -23,23 +23,20 @@ class SplashActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         supportActionBar?.hide() //hide actionbar
-
-        /*// Setup Ads
-        MobileAds.initialize(this, "ca-app-pub-2206499302575732~5712613107")
-        mAdView = findViewById(R.id.adView)
-        val adRequest = AdRequest.Builder().build()
-        mAdView.loadAd(adRequest)
-        val adView = AdView(this)
-        adView.adSize = AdSize.BANNER
-        adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"*/
-
+        println(1)
         if (getPermissions(this, requiredPermissions)) {
             // Already got permissions
+            println(2)
             sendContactsToMain()
+            println(3)
+        } else {
+            println(4)
+            getPermissions(this,requiredPermissions)
         }
     }
 
     private fun sendContactsToMain() {
+        println(5)
         Contact.getContacts(this) {
             startActivity<MainActivity>("contacts" to it)
             finish() //This will prevent the user getting back into this activity
@@ -48,24 +45,27 @@ class SplashActivity : BaseActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
                                             grantResults: IntArray) {
-        val grantResultsBool = grantResults.asSequence()
-                .map { it == PackageManager.PERMISSION_GRANTED }.toList()
+        val grantResultsBool = grantResults.asSequence().map { it == PackageManager.PERMISSION_GRANTED }.toList()
         if (grantResultsBool.all { it }) {
+            println(6)
             sendContactsToMain()
         } else {
+            println(7)
             if (android.os.Build.VERSION.SDK_INT >= 23) {
+                println(8)
                 // Infinite looping from auto-denied permissions isn't a problem before api 23
-                if (! grantResultsBool.zip(permissions)
+                if (!grantResultsBool.zip(permissions)
                                 .filter { !it.first }.map { it.second }
                                 .all { shouldShowRequestPermissionRationale(it) }) {
-                    // shouldShowRequestPermissionRationale returns true if the user has denied a
-                    // permission but not ticked the "don't ask again" box, false if they have and
-                    // false if they have never denied the permission. The last point is why this
-                    // is here and not in getPermissions
+                    /* shouldShowRequestPermissionRationale returns true if the user has denied a
+                    permission but not ticked the "don't ask again" box, false if they have and
+                    false if they have never denied the permission. The last point is why this
+                    is here and not in getPermissions */
                     return
                 }
             }
-            toast("You must accept all permissions to continue")
+            println(9)
+            toast("You must accept all permissions to use quickSMS")
             getPermissions(this, requiredPermissions)
         }
     }

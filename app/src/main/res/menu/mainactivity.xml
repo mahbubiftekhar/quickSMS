@@ -36,6 +36,10 @@
                 app:showAsAction="ifRoom"
                 android:titleCondensed="About"
                 android:title="@string/contact4" />
+            <item android:id="@+id/contactLog"
+                app:showAsAction="ifRoom"
+                android:titleCondensed="About"
+                android:title="@string/call_log" />
 
         </menu>
 

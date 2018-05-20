@@ -61,8 +61,11 @@ class TextMessageActivity : BaseActivity() {
         }
     }
 
-    override fun menuPrepend(menu: Menu) {
-        menuInflater.inflate(R.menu.textmessage_extras, menu)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate your main_menu into the menu
+        menuInflater.inflate(R.menu.textmessageactivity, menu)
+        // Locate MenuItem with ShareActionProvider
+        return true
     }
 
     override fun extendedOptions(item: MenuItem) = when (item.itemId) {
