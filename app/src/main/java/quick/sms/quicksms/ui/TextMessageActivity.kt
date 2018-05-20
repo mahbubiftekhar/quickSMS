@@ -53,8 +53,8 @@ class TextMessageActivity : BaseActivity() {
             updateTitle()
             receipientID = 42753 //TODO: Remove this, just for continuos development whilst fault is not fixed
             doAsync {
-                println(">>>>>receientID"+receipientID)
-                val result = contactDB.returnAllHashMap(recipientId)
+                println(">>>>>receientID" + receipientID)
+                val result = contactDB.returnAllHashMap(receipientID)
                 uiThread {
                     addButtons(result)
                     messages = result
@@ -91,6 +91,10 @@ class TextMessageActivity : BaseActivity() {
         this.supportActionBar?.title = recipientName
     }
 
+    private fun getrecipientId(): Long {
+        return receipientID
+    }
+
     private fun popUpAddMessage() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Add message")
@@ -98,12 +102,12 @@ class TextMessageActivity : BaseActivity() {
         input.inputType = InputType.TYPE_CLASS_TEXT
         builder.setView(input)
 
-        builder.setPositiveButton("Add") { dialog, _ ->
+        builder.setPositiveButton("Add") { _, _ ->
             val mText = input.text.toString()
             if (mText == "Type Message" || mText == "") {
                 toast("Invalid input, Please try again")
             } else {
-                addData(recipientId, mText)
+                addData(getrecipientId(), mText)
                 toast("MESSAGE ADDED")
             }
         }
@@ -151,6 +155,12 @@ class TextMessageActivity : BaseActivity() {
                     if (a) {
                         this@TextMessageActivity.toast("Message sent")
                     }
+                    if(vibrateBool()){
+                        vibrate()
+                    }
+                    if(soundBool()){
+                        makeSound()
+                    }
                     doAsync {
                         if (receipientID != 1L) {
                             //Here we are adding to the log, checking for not 1L to not add during development
@@ -191,7 +201,7 @@ class TextMessageActivity : BaseActivity() {
                         addButtons(messages)
                     }
                     negativeButton("Edit") {
-                       //buttonDynamic.text IS THE TEXT
+                        //buttonDynamic.text IS THE TEXT
                         //buttonDynamic.id.toString() IS THE button id
                         editDataBuilder(buttonDynamic.text as String, buttonDynamic.id.toString())
                     }
@@ -202,13 +212,19 @@ class TextMessageActivity : BaseActivity() {
         }
     }
 
-    fun editDataBuilder(text:String, buttonID: String){
+    fun editDataBuilder(text: String, buttonID: String) {
         val builder = AlertDialog.Builder(this)
         val input = EditText(this)
         input.setText(text, TextView.BufferType.EDITABLE)
         builder.setView(input)
         builder.setPositiveButton("Save changes") { _, _ ->
-            updateData(buttonID,receipientID, "SOMETHING CHANGED")
+            val mText = input.text.toString()
+            println("&&& here")
+            println("&&& buttonID: $buttonID")
+            println("&&& getrecipientId:" + getrecipientId())
+            println("&&& mText: $mText")
+
+            updateData(buttonID, getrecipientId(), mText)
         }
         builder.setNegativeButton("Discard changes") { dialog, _ ->
             dialog.cancel()
@@ -217,8 +233,12 @@ class TextMessageActivity : BaseActivity() {
     }
 
     fun addData(recipientId: Long, message: String) {
-        vibrate()
-        makeSound()
+        if(vibrateBool()){
+            vibrate()
+        }
+        if(soundBool()){
+            makeSound()
+        }
         val databaseID = loadID()
         incrementID()
         messages[databaseID] = message
@@ -229,8 +249,12 @@ class TextMessageActivity : BaseActivity() {
     }
 
     fun updateData(id: String, recipientId: Long, message: String) {
-        vibrate()
-        makeSound()
+        if(vibrateBool()){
+            vibrate()
+        }
+        if(soundBool()){
+            makeSound()
+        }
         doAsync {
             contactDB.updateData(id, recipientId, message)
         }
