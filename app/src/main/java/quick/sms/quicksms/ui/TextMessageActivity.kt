@@ -33,7 +33,6 @@ class TextMessageActivity : BaseActivity() {
     private lateinit var tilesDB: DatabaseLog
     private val smsManager = SmsManager.getDefault()
     private lateinit var messages: LinkedHashMap<Int, String>
-    private val recipientId = 0L
     private var receipientID: Long = 1L
     private lateinit var recipientName: String
     private lateinit var phoneNumber: String
@@ -50,10 +49,8 @@ class TextMessageActivity : BaseActivity() {
             phoneNumber = contact.numbers[0]
             recipientName = contact.name
             receipientID = contact.id
-            updateTitle()
-            receipientID = 42753 //TODO: Remove this, just for continuos development whilst fault is not fixed
+            updateTitle() //updates the users name on the action bar
             doAsync {
-                println(">>>>>receientID" + receipientID)
                 val result = contactDB.returnAllHashMap(receipientID)
                 uiThread {
                     addButtons(result)
@@ -223,7 +220,6 @@ class TextMessageActivity : BaseActivity() {
             println("&&& buttonID: $buttonID")
             println("&&& getrecipientId:" + getrecipientId())
             println("&&& mText: $mText")
-
             updateData(buttonID, getrecipientId(), mText)
         }
         builder.setNegativeButton("Discard changes") { dialog, _ ->
@@ -255,6 +251,8 @@ class TextMessageActivity : BaseActivity() {
         if(soundBool()){
             makeSound()
         }
+        messages[id.toInt()] = message
+        addButtons(messages)
         doAsync {
             contactDB.updateData(id, recipientId, message)
         }
