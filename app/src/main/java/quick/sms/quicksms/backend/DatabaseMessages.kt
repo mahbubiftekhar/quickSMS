@@ -42,7 +42,7 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
             contentValues.put(COL_1, id)
             contentValues.put(COL_2, recipientId)
             contentValues.put(COL_3, message)
-            db.update(TABLE_NAME, contentValues, "ID = ?", arrayOf(id))
+            db.update(TABLE_NAME, contentValues, "_id=$id", arrayOf(id))
             db.setTransactionSuccessful()
         } catch (e: SQLException) {
             // do some error handling
@@ -70,9 +70,11 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
         db.rawQuery("select * from $TABLE_NAME", null).use {
             val messages: LinkedHashMap<Int, String> = linkedMapOf()
             while (it.moveToNext()) {
+                println(">>>>id  "+it.getInt(it.getColumnIndex("id")))
+                println(">>>>recipient_id  "+it.getInt(it.getColumnIndex("recipient_id")))
+                println(">>>>message  "+it.getInt(it.getColumnIndex("message")))
                 if (recipientId.toString() == it.getString(it.getColumnIndex("recipient_id"))) {
-                    messages[it.getInt(it.getColumnIndex("id"))] =
-                            it.getString(it.getColumnIndex("message"))
+                    messages[it.getInt(it.getColumnIndex("id"))] = it.getString(it.getColumnIndex("message"))
                 }
             }
             return messages

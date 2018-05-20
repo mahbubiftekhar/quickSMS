@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.preference.PreferenceManager
 import android.support.v7.app.AlertDialog
 import android.telephony.SmsManager
 import android.text.InputType
@@ -50,8 +49,10 @@ class TextMessageActivity : BaseActivity() {
         if (contact is Contact) {
             phoneNumber = contact.numbers[0]
             recipientName = contact.name
+            receipientID = contact.id
             updateTitle()
             doAsync {
+                println(">>>>>receientID"+receipientID)
                 val result = contactDB.returnAllHashMap(recipientId)
                 uiThread {
                     addButtons(result)
@@ -137,43 +138,82 @@ class TextMessageActivity : BaseActivity() {
             buttonDynamic.layoutParams = params
             buttonDynamic.id = key
             buttonDynamic.setOnClickListener {
-                smsManager.sendTextMessage(phoneNumber, null, value,
-                        null, null)
-                this@TextMessageActivity.toast("Message sent")
-                doAsync {
-                    if (receipientID != 1L) {
-                        //Here we are adding to the log, checking for not 1L to not add during development
-                        addToLog(receipientID, buttonDynamic.text as String, recipientName, phoneNumber)
+                fun sendMessage() {
+                    var a = false
+                    try {
+                        smsManager.sendTextMessage(phoneNumber, null, value,
+                                null, null)
+                    } catch (e: Exception) {
+                        toast("Sorry, Message not sent")
+                        a = true
+                    }
+                    if (a) {
+                        this@TextMessageActivity.toast("Message sent")
+                    }
+                    doAsync {
+                        if (receipientID != 1L) {
+                            //Here we are adding to the log, checking for not 1L to not add during development
+                            addToLog(receipientID, buttonDynamic.text as String, recipientName, phoneNumber)
+                        }
                     }
                 }
+                if (doubleCheckBool()) {
+                    //User wishes for double check
+                    alert(value) {
+                        title = "Are you sure you want to send the message"
+                        positiveButton("Send") {
+                            sendMessage()
+                        }
+                        negativeButton("Cancel") {
+
+                        }
+                    }.show()
+                } else {
+                    //The user has doubleCheck off, so just send anyways. Whats the worse than can happen?
+                    sendMessage()
+                }
+                true
             }
             buttonDynamic.setOnLongClickListener {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("Delete this message?")
-                val input = EditText(this)
-                input.setText(buttonDynamic.text, TextView.BufferType.EDITABLE)
-                builder.setView(input)
-                builder.setPositiveButton("Yes") { _, _ ->
-                    doAsync {
-                        deleteData(buttonDynamic.id.toString())
+                alert(value) {
+                    title = "What would you like to do to this message"
+                    positiveButton("Delete") {
+                        doAsync {
+                            deleteData(buttonDynamic.id.toString())
+                        }
+                        // TODO: Why does this throw?
+                        //Basically during testing I passed invalid removes at some point by accident and I got fed up on nullpointers
+                        try {
+                            messages.remove(buttonDynamic.id)
+                        } catch (e: NullPointerException) {
+                            println("NullPointerException, TextMessageActivity")
+                        }
+                        addButtons(messages)
                     }
-                    // TODO: Why does this throw?
-                    //Basically during testing I passed invalid removes at some point by accident and I got fed up on nullpointers
-                    try {
-                        messages.remove(buttonDynamic.id)
-                    } catch (e: NullPointerException) {
-                        println("NullPointerException, TextMessageActivity")
+                    negativeButton("Edit") {
+                       //buttonDynamic.text IS THE TEXT
+                        //buttonDynamic.id.toString() IS THE button id
+                        editDataBuilder(buttonDynamic.text as String, buttonDynamic.id.toString())
                     }
-                    addButtons(messages)
-                }
-                builder.setNegativeButton("No") { dialog, _ ->
-                    dialog.cancel()
-                }
-                builder.show()
+                }.show()
                 true
             }
             llMain.addView(buttonDynamic)
         }
+    }
+
+    fun editDataBuilder(text:String, buttonID: String){
+        val builder = AlertDialog.Builder(this)
+        val input = EditText(this)
+        input.setText(text, TextView.BufferType.EDITABLE)
+        builder.setView(input)
+        builder.setPositiveButton("Save changes") { _, _ ->
+            updateData(buttonID,receipientID, "SOMETHING CHANGED")
+        }
+        builder.setNegativeButton("Discard changes") { dialog, _ ->
+            dialog.cancel()
+        }
+        builder.show()
     }
 
     fun addData(recipientId: Long, message: String) {
