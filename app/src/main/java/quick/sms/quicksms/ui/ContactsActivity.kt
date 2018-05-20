@@ -1,8 +1,7 @@
-package quick.sms.quicksms.contacts
+package quick.sms.quicksms.ui
 
 import android.app.Activity
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
 import org.jetbrains.anko.*

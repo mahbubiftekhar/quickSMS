@@ -1,5 +1,6 @@
-package Util.MVP.Android
+package Util.Android.MVP
 
+import Util.MVP.Android.Interfaces
 import android.content.Context
 import com.tinmegali.mvp.mvp.*
 

@@ -52,7 +52,6 @@ dependencies {
     // Json Serializer
     implementation 'com.google.code.gson:gson:2.8.4'
 
-
     // Kotlin reflection
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 

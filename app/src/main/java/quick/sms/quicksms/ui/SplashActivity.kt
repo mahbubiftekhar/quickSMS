@@ -1,18 +1,14 @@
-package quick.sms.quicksms.splash
+package quick.sms.quicksms.ui
 
 import Util.Android.getPermissions
 import android.Manifest
 import android.content.pm.PackageManager
 import org.jetbrains.anko.*
 import android.os.Bundle
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.Contact
-import quick.sms.quicksms.main.MainActivity
 
 class SplashActivity : BaseActivity() {
     lateinit var mAdView: AdView
@@ -39,11 +35,7 @@ class SplashActivity : BaseActivity() {
 
         if (getPermissions(this, requiredPermissions)) {
             // Already got permissions
-            doAsync{
-                sendContactsToMain()
-
-            }
-
+            sendContactsToMain()
         }
     }
 

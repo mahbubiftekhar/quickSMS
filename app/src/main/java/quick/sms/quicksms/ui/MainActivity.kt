@@ -1,4 +1,4 @@
-package quick.sms.quicksms.main
+package quick.sms.quicksms.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,13 +11,8 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onLongClick
 import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.backend.DatabaseTiles
-import quick.sms.quicksms.contacts.ContactsActivity
-import quick.sms.quicksms.textmessage.TextMessageActivity
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
-import quick.sms.quicksms.settings.AboutDevelopersActivity
-import quick.sms.quicksms.settings.ContactUsActivity
-import quick.sms.quicksms.settings.SettingsActivity
 
 class MainActivity : BaseActivity() {
 

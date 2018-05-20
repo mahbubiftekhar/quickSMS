@@ -1,4 +1,4 @@
-package quick.sms.quicksms.textmessage
+package quick.sms.quicksms.ui
 
 import Util.Android.editor
 import Util.Android.prefs

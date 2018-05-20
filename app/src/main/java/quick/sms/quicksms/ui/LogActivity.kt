@@ -1,4 +1,4 @@
-package quick.sms.quicksms.log
+package quick.sms.quicksms.ui
 
 import android.annotation.SuppressLint
 import android.support.v7.app.AppCompatActivity
@@ -8,8 +8,6 @@ import quick.sms.quicksms.R
 import org.jetbrains.anko.*
 import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.allLogs
-import android.view.MenuInflater
-
 
 
 var allLogsLocal = ArrayList<DatabaseLog.Log>()

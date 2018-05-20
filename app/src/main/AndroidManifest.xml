@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".splash.SplashActivity"
+            android:name=".ui.SplashActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,14 +25,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".main.MainActivity" />
-        <activity android:name=".textmessage.TextMessageActivity" />
-        <activity android:name=".contacts.ContactsActivity" />
-        <activity android:name=".log.LogActivity" />
-        <activity android:name=".settings.SettingsActivity" />
+        <activity android:name=".ui.MainActivity" />
+        <activity android:name=".ui.TextMessageActivity" />
+        <activity android:name=".ui.ContactsActivity" />
+        <activity android:name=".ui.LogActivity" />
+        <activity android:name=".ui.SettingsActivity" />
         <activity android:name=".BaseActivity" />
-        <activity android:name=".settings.AboutDevelopersActivity" />
-        <activity android:name=".settings.ContactUsActivity"></activity>
+        <activity android:name=".ui.AboutDevelopersActivity" />
+        <activity android:name=".ui.ContactUsActivity"></activity>
     </application>
 
 </manifest>

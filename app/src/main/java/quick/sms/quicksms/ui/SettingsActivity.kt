@@ -1,6 +1,5 @@
-package quick.sms.quicksms.settings
+package quick.sms.quicksms.ui
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceFragment
 import quick.sms.quicksms.BaseActivity
