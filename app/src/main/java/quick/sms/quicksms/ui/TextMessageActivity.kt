@@ -51,6 +51,7 @@ class TextMessageActivity : BaseActivity() {
             recipientName = contact.name
             receipientID = contact.id
             updateTitle()
+            receipientID = 42753 //TODO: Remove this, just for continuos development whilst fault is not fixed
             doAsync {
                 println(">>>>>receientID"+receipientID)
                 val result = contactDB.returnAllHashMap(recipientId)
@@ -181,7 +182,6 @@ class TextMessageActivity : BaseActivity() {
                         doAsync {
                             deleteData(buttonDynamic.id.toString())
                         }
-                        // TODO: Why does this throw?
                         //Basically during testing I passed invalid removes at some point by accident and I got fed up on nullpointers
                         try {
                             messages.remove(buttonDynamic.id)

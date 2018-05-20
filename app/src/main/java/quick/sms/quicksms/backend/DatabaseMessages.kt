@@ -42,7 +42,9 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
             contentValues.put(COL_1, id)
             contentValues.put(COL_2, recipientId)
             contentValues.put(COL_3, message)
-            db.update(TABLE_NAME, contentValues, "_id=$id", arrayOf(id))
+            print(">>> $message")
+            db.update(TABLE_NAME, contentValues, "id=$id", arrayOf(id))
+            db.close()
             db.setTransactionSuccessful()
         } catch (e: SQLException) {
             // do some error handling
@@ -71,8 +73,8 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
             val messages: LinkedHashMap<Int, String> = linkedMapOf()
             while (it.moveToNext()) {
                 println(">>>>id  "+it.getInt(it.getColumnIndex("id")))
-                println(">>>>recipient_id  "+it.getInt(it.getColumnIndex("recipient_id")))
-                println(">>>>message  "+it.getInt(it.getColumnIndex("message")))
+                println(">>>>recipient_id  "+it.getLong(it.getColumnIndex("recipient_id")))
+                println(">>>>message  "+it.getString(it.getColumnIndex("message")))
                 if (recipientId.toString() == it.getString(it.getColumnIndex("recipient_id"))) {
                     messages[it.getInt(it.getColumnIndex("id"))] = it.getString(it.getColumnIndex("message"))
                 }
