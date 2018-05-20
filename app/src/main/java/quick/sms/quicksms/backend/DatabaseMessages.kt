@@ -42,9 +42,7 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
             contentValues.put(COL_1, id)
             contentValues.put(COL_2, recipientId)
             contentValues.put(COL_3, message)
-            print("&&&& $message")
             db.update(TABLE_NAME, contentValues, "id = ?", arrayOf(id))
-            db.close()
             db.setTransactionSuccessful()
         } catch (e: SQLException) {
             // do some error handling
