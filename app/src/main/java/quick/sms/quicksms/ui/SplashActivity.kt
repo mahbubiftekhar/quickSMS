@@ -46,10 +46,25 @@ class SplashActivity : BaseActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        val grantResultsBool = grantResults.asSequence()
+                .map { it == PackageManager.PERMISSION_GRANTED }.toList()
+        if (grantResultsBool.all { it }) {
             sendContactsToMain()
         } else {
+            if (android.os.Build.VERSION.SDK_INT >= 23) {
+                // Infinite looping from auto-denied permissions isn't a problem before api 23
+                if (! grantResultsBool.zip(permissions)
+                                .filter { !it.first }.map { it.second }
+                                .all { shouldShowRequestPermissionRationale(it) }) {
+                    // shouldShowRequestPermissionRationale returns true if the user has denied a
+                    // permission but not ticked the "don't ask again" box, false if they have and
+                    // false if they have never denied the permission. The last point is why this
+                    // is here and not in getPermissions
+                    return
+                }
+            }
             toast("You must accept all permissions to continue")
             getPermissions(this, requiredPermissions)
         }
