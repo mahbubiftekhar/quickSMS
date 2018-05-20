@@ -2,9 +2,11 @@ package quick.sms.quicksms.ui
 
 import Util.Android.getPermissions
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import org.jetbrains.anko.*
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import com.google.android.gms.ads.AdView
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
@@ -22,7 +24,7 @@ class SplashActivity : BaseActivity() {
         setContentView(R.layout.activity_splash)
         supportActionBar?.hide() //hide actionbar
         println(1)
-        if (getPermissions(this, requiredPermissions)) {
+        /*if (getPermissions(this, requiredPermissions)) {
             // Already got permissions
             println(2)
             sendContactsToMain()
@@ -30,9 +32,23 @@ class SplashActivity : BaseActivity() {
         } else {
             println(4)
             getPermissions(this, requiredPermissions)
-        }
+        } */
+        requestPermissions()
     }
 
+    private fun requestPermissions(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED && android.os.Build.VERSION.SDK_INT >= 23
+        ) {
+            println(">>>>> here1")
+            getPermissions(this, requiredPermissions)
+        } else {
+            println(">>>>> here2")
+            sendContactsToMain()
+        }
+    }
     private fun sendContactsToMain() {
         println(5)
         Contact.getContacts(this) {
@@ -41,8 +57,7 @@ class SplashActivity : BaseActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         val grantResultsBool = grantResults.asSequence().map { it == PackageManager.PERMISSION_GRANTED }.toList()
         if (grantResultsBool.all { it }) {
             println(6)

@@ -134,8 +134,7 @@ class TextMessageActivity : BaseActivity() {
         val llMain = findViewById<LinearLayout>(R.id.ll_main_layout)
         llMain.removeAllViews()
         llMain.removeAllViewsInLayout()
-        val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT)
+        val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         params.setMargins(1, 35, 1, 0)
         for ((key, value) in textMessages) {
             val buttonDynamic = Button(this)
