@@ -141,10 +141,17 @@ class MainActivity : BaseActivity() {
         fun _LinearLayout.tile(row: Int, col: Int, rowLen: Int) {
             imageButton {
                 val index = (row - 1) * rowLen + col
-                imageURI = alreadyAssigned[index]?.image?.let {
+                lateinit var color : String
+                val image = alreadyAssigned[index]?.image?.let {
                     Uri.parse(it)
                 }
-                backgroundColor = Color.parseColor("#303F9F")
+                if (image == null) {
+                    color = "#303F9F"
+                } else {
+                    imageURI = image
+                    color = "#FFFFFF"
+                }
+                backgroundColor = Color.parseColor(color)
                 onClick {
                     tileCallBack(index)
                 }
