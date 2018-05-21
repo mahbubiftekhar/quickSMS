@@ -19,7 +19,6 @@ class MainActivity : BaseActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
     private lateinit var contactsList: List<Contact>
-    private var mShareActionProvider: ShareActionProvider? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +70,11 @@ class MainActivity : BaseActivity() {
         R.id.contactButton ->{
             //Contact form
             startActivity<ContactUsActivity>()
+            true
+        }
+        R.id.contactLog ->{
+            //View the log activity
+            startActivity<LogActivity>()
             true
         }
 

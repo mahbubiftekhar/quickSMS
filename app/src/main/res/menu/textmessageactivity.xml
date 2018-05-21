@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="quick.SMS.contacts">
+
+
+
+    <item
+        android:id="@+id/make_call"
+        android:icon="@drawable/default_image"
+        android:orderInCategory="100"
+        android:title="@string/phone_call"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/add_message"
+        android:orderInCategory="100"
+        android:title="@string/add_message"
+        app:showAsAction="always" />
+
+</menu>
+
+<!-- Search, should appear as action button -->
+
+
