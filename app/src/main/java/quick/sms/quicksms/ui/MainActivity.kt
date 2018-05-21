@@ -43,6 +43,14 @@ class MainActivity : BaseActivity() {
         val adView = AdView(this)
         adView.adSize = AdSize.BANNER
         adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
+        val tiles = DatabaseTiles(this)
+        tiles.insertData(1L,1,0)
+        tiles.insertData(2L,2,0)
+        tiles.insertData(3L,3,0)
+        println("added 3 items")
+        tiles.deleteTile(2)
+        tiles.tileDefragmentator(2)
+        println(">>>>>"+tiles.getAllTiles())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

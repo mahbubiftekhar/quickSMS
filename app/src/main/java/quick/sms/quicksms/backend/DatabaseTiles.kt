@@ -45,13 +45,20 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
 
     fun tileDefragmentator(deletedTile: Int) {
-        val endReached = false
         val db = this.writableDatabase
         try {
             db.beginTransaction()
             //Code to do the deed
-            for(i in deletedTile..11){
-
+            db.rawQuery("select * from $TABLE_NAME", null).use {
+                while (it.moveToNext()) {
+                    if(it.getString(it.getColumnIndex("tileid")).toInt() >deletedTile) {
+                        val contentValues = ContentValues()
+                        contentValues.put(COL_1, it.getLong(it.getColumnIndex("recipient_id")))
+                        contentValues.put(COL_2, it.getInt(it.getColumnIndex("tileid")))
+                        contentValues.put(COL_3, it.getInt(it.getColumnIndex("prefered_number")))
+                        db.update(TABLE_NAME, contentValues, "recipient_id = ?", arrayOf((deletedTile-1).toString()))
+                    }
+                }
             }
             db.setTransactionSuccessful()
         } catch (e: SQLException) {
