@@ -23,7 +23,6 @@ class LogActivity : AppCompatActivity() {
             allLogsLocal = allLogs
             UIcreator()
         }
-
     }
 
     @SuppressLint("SetTextI18n")
