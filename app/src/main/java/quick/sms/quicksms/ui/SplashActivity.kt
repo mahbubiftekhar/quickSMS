@@ -42,10 +42,8 @@ class SplashActivity : BaseActivity() {
                 != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
                 != PackageManager.PERMISSION_GRANTED && android.os.Build.VERSION.SDK_INT >= 23
         ) {
-            println(">>>>> here1")
             getPermissions(this, requiredPermissions)
         } else {
-            println(">>>>> here2")
             sendContactsToMain()
         }
     }

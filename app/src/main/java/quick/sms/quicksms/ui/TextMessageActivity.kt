@@ -220,10 +220,6 @@ class TextMessageActivity : BaseActivity() {
         builder.setView(input)
         builder.setPositiveButton("Save changes") { _, _ ->
             val mText = input.text.toString()
-            println("&&& here")
-            println("&&& buttonID: $buttonID")
-            println("&&& getrecipientId:" + getrecipientId())
-            println("&&& mText: $mText")
             updateData(buttonID, getrecipientId(), mText)
         }
         builder.setNegativeButton("Discard changes") { dialog, _ ->

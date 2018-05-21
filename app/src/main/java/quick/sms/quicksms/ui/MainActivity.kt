@@ -1,6 +1,8 @@
 package quick.sms.quicksms.ui
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
@@ -140,8 +142,9 @@ class MainActivity : BaseActivity() {
             imageButton {
                 val index = (row - 1) * rowLen + col
                 imageURI = alreadyAssigned[index]?.image?.let {
-                    if (it == "NONE") null else Uri.parse(it)
+                    Uri.parse(it)
                 }
+                backgroundColor = Color.parseColor("#303F9F")
                 onClick {
                     tileCallBack(index)
                 }
@@ -150,6 +153,7 @@ class MainActivity : BaseActivity() {
                 }
             }.lparams(height = matchParent, width = 0) {
                 weight = 1f
+                margin = dip(7)
             }
         }
 

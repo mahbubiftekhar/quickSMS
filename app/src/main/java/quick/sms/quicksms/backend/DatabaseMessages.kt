@@ -69,9 +69,6 @@ class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
         db.rawQuery("select * from $TABLE_NAME", null).use {
             val messages: LinkedHashMap<Int, String> = linkedMapOf()
             while (it.moveToNext()) {
-                println(">>>>id  "+it.getInt(it.getColumnIndex("id")))
-                println(">>>>recipient_id  "+it.getLong(it.getColumnIndex("recipient_id")))
-                println(">>>>message  "+it.getString(it.getColumnIndex("message")))
                 if (recipientId.toString() == it.getString(it.getColumnIndex("recipient_id"))) {
                     messages[it.getInt(it.getColumnIndex("id"))] = it.getString(it.getColumnIndex("message"))
                 }
