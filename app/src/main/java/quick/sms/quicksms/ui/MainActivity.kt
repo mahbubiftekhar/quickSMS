@@ -3,18 +3,15 @@ package quick.sms.quicksms.ui
 import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ShareActionProvider
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import kotlinx.android.synthetic.main.activity_about_developers.view.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onLongClick
@@ -56,15 +53,6 @@ class MainActivity : BaseActivity() {
         return true
     }
 
-    fun shareText(view: View) {
-        val intent = Intent(android.content.Intent.ACTION_SEND)
-        intent.type = "text/plain"
-        val shareBodyText = "Your shearing message goes here"
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject/Title")
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
-        startActivity(Intent.createChooser(intent, "Choose sharing method"))
-    }
-
     override fun extendedOptions(item: MenuItem) = when (item.itemId) {
 
         R.id.action_settings -> {
@@ -78,7 +66,7 @@ class MainActivity : BaseActivity() {
             val shareBodyText = "Check it out, quickSMS saves me so much time! Download it from the Google Play store!"
             sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check it out! quickSMS")
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
-            startActivity(Intent.createChooser(sharingIntent, "Shearing Option"))
+            startActivity(Intent.createChooser(sharingIntent, "Sharing Options"))
             true
         }
         R.id.about -> {
@@ -99,10 +87,14 @@ class MainActivity : BaseActivity() {
         R.id.resetApp -> {
             alert("Are you sure you wish to reset the app?") {
                 positiveButton("Yes") {
-                    alert("App will restart automatically if you proceed") {
-                        title = "NOTE: This action is IRREVERSIBLE, are you sure you want to continue?"
+                    alert("Do you wish to proceed?") {
+                        title = "NOTE: This action is IRREVERSIBLE"
                         positiveButton("Yes proceed, RESET APP") {
-                            resetApp()
+                            doAsync{
+                            toast("App will restart automatically")
+                            Thread.sleep(200) //Just to allow time to showt he toast
+                                resetApp()
+                            }
                         }
                         negativeButton("No, cancel") {
 

@@ -18,6 +18,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         onCreate(db)
     }
 
+
     fun insertData(recipient_id: Long, tileid: Int, prefered_number: Int) {
         val db = this.writableDatabase
         try {
@@ -32,6 +33,25 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 contentValues.put(COL_2, tileid)
                 contentValues.put(COL_3, prefered_number)
                 db.update(TABLE_NAME, contentValues, "recipient_id = ?", arrayOf(recipient_id.toString()))
+            }
+            db.setTransactionSuccessful()
+        } catch (e: SQLException) {
+
+        } finally {
+            db.endTransaction()
+        }
+    }
+
+
+
+    fun tileReshuffle(deletedTile: Int) {
+        val endReached = false
+        val db = this.writableDatabase
+        try {
+            db.beginTransaction()
+            //Code to do the deed
+            for(i in deletedTile..11){
+
             }
             db.setTransactionSuccessful()
         } catch (e: SQLException) {
