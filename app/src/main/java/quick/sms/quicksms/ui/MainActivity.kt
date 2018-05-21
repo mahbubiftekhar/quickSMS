@@ -22,6 +22,8 @@ import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.backend.DatabaseTiles
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
+import quick.sms.quicksms.backend.DatabaseLog
+import quick.sms.quicksms.backend.DatabaseMessages
 
 class MainActivity : BaseActivity() {
 
@@ -33,6 +35,10 @@ class MainActivity : BaseActivity() {
         // TODO: There should be a better way to do this
         contactsList = intent.extras.get("contacts") as List<Contact>
         contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
+        verticalLayout() {
+            include<View>(R.xml.advertxml) {
+            }
+        }
         MainLayout(contentResolver, 5, 2, contacts, { onClick(it) }, { assignTile(it) }).setContentView(this)
 
         MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
@@ -74,24 +80,64 @@ class MainActivity : BaseActivity() {
             startActivity(Intent.createChooser(sharingIntent, "Shearing Option"))
             true
         }
-        R.id.about ->{
+        R.id.about -> {
             //About the app and developers
             startActivity<AboutDevelopersActivity>()
             true
         }
-        R.id.contactButton ->{
+        R.id.contactButton -> {
             //Contact form
             startActivity<ContactUsActivity>()
             true
         }
-        R.id.contactLog ->{
+        R.id.contactLog -> {
             //View the log activity
             startActivity<LogActivity>()
+            true
+        }
+        R.id.resetApp -> {
+            alert("Are you sure you wish to reset the app?") {
+                positiveButton("Yes") {
+                    alert("App will restart automatically if you proceed") {
+                        title = "NOTE: This action is IRREVERSIBLE, are you sure you want to continue?"
+                        positiveButton("Yes proceed, RESET APP") {
+                            resetApp()
+                        }
+                        negativeButton("No, cancel") {
+
+                        }
+
+                    }.show()
+                }
+                negativeButton("No") {
+
+                }
+
+            }.show()
             true
         }
 
         else -> {
             super.extendedOptions(item)
+        }
+    }
+
+    private fun resetApp() {
+        /*This is a very dangerous function, hence why its wrapped around two alerts for security*/
+        val contactDB = DatabaseMessages(this)
+        val tilesDB = DatabaseTiles(this)
+        val log = DatabaseLog(this)
+        doAsync {
+            contactDB.deleteEntireDB()
+            tilesDB.deleteEntireDB()
+            log.deleteEntireDB()
+            uiThread {
+                //Restart the app programatically
+                val i = baseContext.packageManager
+                        .getLaunchIntentForPackage(baseContext.packageName)
+                i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(i)
+            }
         }
     }
 
@@ -126,9 +172,8 @@ class MainActivity : BaseActivity() {
     }
 
     private class MainLayout(val cr: ContentResolver, val rows: Int, val cols: Int,
-                             val alreadyAssigned : Map<Int, Contact>,
-                             val tileCallBack: (Int) -> Unit, val assignCallBack: (Int) -> Unit)
-        : AnkoComponent<MainActivity> {
+                             val alreadyAssigned: Map<Int, Contact>,
+                             val tileCallBack: (Int) -> Unit, val assignCallBack: (Int) -> Unit) : AnkoComponent<MainActivity> {
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
             scrollView {
@@ -137,11 +182,9 @@ class MainActivity : BaseActivity() {
                         row(cols, i)
                     }
                 }
-                include<View>(R.xml.advertxml) {
-                    backgroundColor = Color.RED
-                }.lparams(width = matchParent) { margin = dip(12) }
             }
         }
+
 
         fun _LinearLayout.row(nTiles: Int, row: Int) {
             linearLayout {

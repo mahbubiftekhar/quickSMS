@@ -29,19 +29,16 @@ class SplashActivity : BaseActivity() {
         setContentView(R.layout.activity_splash)
         supportActionBar?.hide() //hide actionbar
         doAsync {
-            Thread.sleep(10000)
             requestPermissions()
         }
-            //This part makes the add programatically
-            MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
-            mAdView = findViewById<View>(R.id.adView) as AdView
-            val adRequest = AdRequest.Builder().build()
-            mAdView!!.loadAd(adRequest)
-
-
+        //This part makes the add programatically
+        MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
+        mAdView = findViewById<View>(R.id.adView) as AdView
+        val adRequest = AdRequest.Builder().build()
+        mAdView!!.loadAd(adRequest)
     }
 
-    private fun requestPermissions(){
+    private fun requestPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
@@ -52,6 +49,7 @@ class SplashActivity : BaseActivity() {
             sendContactsToMain()
         }
     }
+
     private fun sendContactsToMain() {
         println(5)
         Contact.getContacts(this) {
