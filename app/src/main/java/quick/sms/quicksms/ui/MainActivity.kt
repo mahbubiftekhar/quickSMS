@@ -113,6 +113,8 @@ class MainActivity : BaseActivity() {
             mutableContacts[tileNumber] = contact
             contacts = mutableContacts.toMap()
         }
+        MainLayout(contentResolver, 5, 2, contacts, { onClick(it) }, { assignTile(it) })
+                .setContentView(this)
     }
 
     private class MainLayout(val cr: ContentResolver, val rows: Int, val cols: Int,
