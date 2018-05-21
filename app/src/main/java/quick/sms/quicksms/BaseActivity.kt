@@ -39,6 +39,10 @@ open class BaseActivity : AppCompatActivity() {
         return settings.getString("actionbarcolour", "#303F9F")
     }
 
+    open fun gettileColour(): String {
+        return settings.getString("tilecolour", "#303F9F")
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         if (excludedActivities.contains(this::class.simpleName)) {
             return true

@@ -25,6 +25,7 @@ import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.DatabaseMessages
 
+var tileColour = ""
 class MainActivity : BaseActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
@@ -32,7 +33,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // TODO: There should be a better way to do this
+        tileColour = gettileColour()
         contactsList = intent.extras.get("contacts") as List<Contact>
         contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
         verticalLayout() {
@@ -206,7 +207,7 @@ class MainActivity : BaseActivity() {
                     Drawable.createFromStream(inStream, it)
                 }
                 if (image == null) {
-                    backgroundColor = Color.parseColor("#303F9F")
+                    backgroundColor = Color.parseColor(tileColour)
                 } else {
                     background = image
                 }
