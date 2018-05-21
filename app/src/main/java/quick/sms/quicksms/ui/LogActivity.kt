@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import quick.sms.quicksms.R
 import org.jetbrains.anko.*
 import quick.sms.quicksms.backend.DatabaseLog
@@ -23,6 +26,11 @@ class LogActivity : AppCompatActivity() {
             allLogsLocal = allLogs
             UIcreator()
         }
+
+        MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
+        val adView = AdView(this)
+        adView.adSize = AdSize.BANNER
+        adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
     }
 
     @SuppressLint("SetTextI18n")

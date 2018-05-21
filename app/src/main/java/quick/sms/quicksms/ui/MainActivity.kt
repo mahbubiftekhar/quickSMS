@@ -11,6 +11,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ShareActionProvider
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
+import kotlinx.android.synthetic.main.activity_about_developers.view.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onLongClick
@@ -30,7 +34,11 @@ class MainActivity : BaseActivity() {
         contactsList = intent.extras.get("contacts") as List<Contact>
         contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
         MainLayout(contentResolver, 5, 2, contacts, { onClick(it) }, { assignTile(it) }).setContentView(this)
-        //startActivity<AboutDevelopersActivity>()
+
+        MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
+        val adView = AdView(this)
+        adView.adSize = AdSize.BANNER
+        adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -129,6 +137,9 @@ class MainActivity : BaseActivity() {
                         row(cols, i)
                     }
                 }
+                include<View>(R.xml.advertxml) {
+                    backgroundColor = Color.RED
+                }.lparams(width = matchParent) { margin = dip(12) }
             }
         }
 

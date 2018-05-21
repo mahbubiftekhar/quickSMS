@@ -1,10 +1,17 @@
 package quick.sms.quicksms
 
 import Util.Android.settings
+import android.os.Bundle
+import android.os.PersistableBundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.startActivity
 import quick.sms.quicksms.ui.SettingsActivity
 
