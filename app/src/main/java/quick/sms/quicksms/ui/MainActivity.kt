@@ -1,8 +1,10 @@
 package quick.sms.quicksms.ui
 
+import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
@@ -27,7 +29,7 @@ class MainActivity : BaseActivity() {
         // TODO: There should be a better way to do this
         contactsList = intent.extras.get("contacts") as List<Contact>
         contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
-        MainLayout(5, 2, contacts, { onClick(it) }, { assignTile(it) }).setContentView(this)
+        MainLayout(contentResolver, 5, 2, contacts, { onClick(it) }, { assignTile(it) }).setContentView(this)
         //startActivity<AboutDevelopersActivity>()
     }
 
@@ -113,7 +115,8 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private class MainLayout(val rows: Int, val cols: Int, val alreadyAssigned : Map<Int, Contact>,
+    private class MainLayout(val cr: ContentResolver, val rows: Int, val cols: Int,
+                             val alreadyAssigned : Map<Int, Contact>,
                              val tileCallBack: (Int) -> Unit, val assignCallBack: (Int) -> Unit)
         : AnkoComponent<MainActivity> {
 
@@ -139,19 +142,19 @@ class MainActivity : BaseActivity() {
         }
 
         fun _LinearLayout.tile(row: Int, col: Int, rowLen: Int) {
-            imageButton {
+            button {
                 val index = (row - 1) * rowLen + col
-                lateinit var color : String
-                val image = alreadyAssigned[index]?.image?.let {
-                    Uri.parse(it)
+                val contact = alreadyAssigned[index]
+                val image = contact?.image?.let {
+                    val inStream = cr.openInputStream(Uri.parse(it))
+                    Drawable.createFromStream(inStream, it)
                 }
                 if (image == null) {
-                    color = "#303F9F"
+                    backgroundColor = Color.parseColor("#303F9F")
                 } else {
-                    imageURI = image
-                    color = "#FFFFFF"
+                    background = image
                 }
-                backgroundColor = Color.parseColor(color)
+                text = contact?.name
                 onClick {
                     tileCallBack(index)
                 }
