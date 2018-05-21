@@ -44,7 +44,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
 
 
-    fun tileReshuffle(deletedTile: Int) {
+    fun tileDefragmentator(deletedTile: Int) {
         val endReached = false
         val db = this.writableDatabase
         try {
