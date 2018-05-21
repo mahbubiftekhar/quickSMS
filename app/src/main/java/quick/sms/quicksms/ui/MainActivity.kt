@@ -1,6 +1,7 @@
 package quick.sms.quicksms.ui
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -25,7 +26,7 @@ class MainActivity : BaseActivity() {
         // TODO: There should be a better way to do this
         contactsList = intent.extras.get("contacts") as List<Contact>
         contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
-        MainLayout(5, 2, { onClick(it) }, { assignTile(it) }).setContentView(this)
+        MainLayout(5, 2, contacts, { onClick(it) }, { assignTile(it) }).setContentView(this)
         //startActivity<AboutDevelopersActivity>()
     }
 
@@ -106,8 +107,9 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private class MainLayout(val rows: Int, val cols: Int, val tileCallBack: (Int) -> Unit,
-                             val assignCallBack: (Int) -> Unit) : AnkoComponent<MainActivity> {
+    private class MainLayout(val rows: Int, val cols: Int, val alreadyAssigned : Map<Int, Contact>,
+                             val tileCallBack: (Int) -> Unit, val assignCallBack: (Int) -> Unit)
+        : AnkoComponent<MainActivity> {
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
             scrollView {
@@ -131,8 +133,11 @@ class MainActivity : BaseActivity() {
         }
 
         fun _LinearLayout.tile(row: Int, col: Int, rowLen: Int) {
-            button {
+            imageButton {
                 val index = (row - 1) * rowLen + col
+                imageURI = alreadyAssigned[index]?.image?.let {
+                    if (it == "NONE") null else Uri.parse(it)
+                }
                 onClick {
                     tileCallBack(index)
                 }
