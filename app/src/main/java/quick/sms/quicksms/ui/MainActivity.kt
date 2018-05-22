@@ -58,7 +58,6 @@ class MainActivity : BaseActivity() {
         // Inflate your main_menu into the menu
         menuInflater.inflate(R.menu.mainactivity, menu)
         // Locate MenuItem with ShareActionProvider
-        val item = menu?.findItem(R.id.menu_item_share)
         return true
     }
 

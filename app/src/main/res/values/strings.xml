@@ -124,4 +124,5 @@
     <string name="contact4">Contact</string>
     <string name="call_log">CALL LOG</string>
     <string name="sms_log">SMS LOG</string>
+    <string name="padding_here">PADDING HERE</string>
 </resources>

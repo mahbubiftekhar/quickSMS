@@ -1,21 +1,24 @@
 package quick.sms.quicksms.ui
 
 import android.annotation.SuppressLint
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import quick.sms.quicksms.R
 import org.jetbrains.anko.*
+import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.backend.DatabaseLog
+import quick.sms.quicksms.backend.DatabaseTiles
 import quick.sms.quicksms.backend.allLogs
 
 
 var allLogsLocal = ArrayList<DatabaseLog.Log>()
 
-class LogActivity : AppCompatActivity() {
+class LogActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log)
@@ -26,11 +29,53 @@ class LogActivity : AppCompatActivity() {
             allLogsLocal = allLogs
             UIcreator()
         }
-
         MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
         val adView = AdView(this)
         adView.adSize = AdSize.BANNER
         adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
+
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate your main_menu into the menu
+        menuInflater.inflate(R.menu.logactivity, menu)
+        // Locate MenuItem with ShareActionProvider
+        return true
+    }
+
+
+    private fun clearLog() {
+        val tilesDataBase = DatabaseTiles(this)
+        tilesDataBase.deleteEntireDB()
+    }
+
+    override fun extendedOptions(item: MenuItem) = when (item.itemId) {
+
+        R.id.clearLogButton -> {
+            alert("This action is irreversible") {
+                title = "Are you sure you want to clear the log?"
+                positiveButton("Yes, clear log") {
+                    //user wishes to clear the log
+                    doAsync {
+                        //Asynchronously clear the log, when finnished redraw the activity
+                        clearLog()
+                        uiThread {
+                            //redraw the activity layout
+                            setContentView(R.layout.activity_log)
+                        }
+                    }
+                }
+                negativeButton("Cancel") {
+                    //User changed their mind
+                }
+
+            }.show()
+            true
+        }
+        else -> {
+            super.extendedOptions(item)
+        }
     }
 
     @SuppressLint("SetTextI18n")

@@ -1,21 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#2072A4">
-
-    <Spinner xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:padding="5dp"
-        android:scrollbarSize="10dp"
-        android:text="@string/all"
-        android:textAlignment="center"
-        android:textColor="#000001" />
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -40,9 +28,9 @@
             <View
                 android:id="@+id/spacerView"
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="PADDING HERE" />
+                android:text="@string/padding_here" />
 
 
         </LinearLayout>
