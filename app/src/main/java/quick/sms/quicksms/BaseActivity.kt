@@ -26,8 +26,6 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onResume() {
         //Setting the action bar colour
-
-
         super.onResume()
     }
 

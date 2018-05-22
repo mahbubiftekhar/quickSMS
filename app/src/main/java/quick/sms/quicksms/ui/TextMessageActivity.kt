@@ -4,6 +4,7 @@ import Util.Android.editor
 import Util.Android.prefs
 import Util.Android.putIntAndCommit
 import android.content.Context
+import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
@@ -41,7 +42,7 @@ class TextMessageActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_text_message)
-        // reading settings preferences
+
         contactDB = DatabaseMessages(this)
         tilesDB = DatabaseLog(this)
         val contact = intent.extras.get("contact")
