@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -17,6 +18,7 @@ import quick.sms.quicksms.backend.allLogs
 
 
 var allLogsLocal = ArrayList<DatabaseLog.Log>()
+private var mAdView: AdView? = null
 
 class LogActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,10 +31,14 @@ class LogActivity : BaseActivity() {
             allLogsLocal = allLogs
             UIcreator()
         }
-        MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
-        val adView = AdView(this)
-        adView.adSize = AdSize.BANNER
-        adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
+        doAsync {
+            MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
+            mAdView = findViewById<View>(R.id.adView) as AdView
+            val adRequest = AdRequest.Builder().build()
+            uiThread {
+                mAdView!!.loadAd(adRequest)
+            }
+        }
 
 
     }

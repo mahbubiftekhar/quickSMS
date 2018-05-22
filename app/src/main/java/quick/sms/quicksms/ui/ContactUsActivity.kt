@@ -9,22 +9,30 @@ import android.widget.EditText
 import android.app.Activity
 import android.view.View
 import android.widget.Button
+import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import java.util.regex.Pattern
 
 
 class ContactUsActivity : AppCompatActivity() {
+    private var mAdView: AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contact_us)
 
-        MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
-        val adView = AdView(this)
-        adView.adSize = AdSize.BANNER
-        adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
+        doAsync {
+            MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
+            mAdView = findViewById<View>(R.id.adView) as AdView
+            val adRequest = AdRequest.Builder().build()
+            uiThread {
+                mAdView!!.loadAd(adRequest)
+            }
+        }
 
         val your_name = findViewById<View>(R.id.your_name) as EditText
         val your_email = findViewById<View>(R.id.your_email) as EditText

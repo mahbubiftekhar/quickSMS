@@ -15,11 +15,15 @@ import android.telephony.SmsManager
 import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.*
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
@@ -39,6 +43,8 @@ class TextMessageActivity : BaseActivity() {
     private lateinit var phoneNumber: String
     private var sound = false
 
+    private var mAdView: AdView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_text_message)
@@ -57,6 +63,14 @@ class TextMessageActivity : BaseActivity() {
                     addButtons(result)
                     messages = result
                 }
+            }
+        }
+        doAsync {
+            MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
+            mAdView = findViewById<View>(R.id.adView) as AdView
+            val adRequest = AdRequest.Builder().build()
+            uiThread {
+                mAdView!!.loadAd(adRequest)
             }
         }
     }

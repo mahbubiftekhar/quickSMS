@@ -4,6 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import quick.sms.quicksms.BaseActivity
@@ -13,12 +17,22 @@ import quick.sms.quicksms.backend.Contact
 class ContactsActivity : BaseActivity() {
 
     private var tileNumber = 0
+    private var mAdView: AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val contacts = intent.extras.get("contacts") as List<Contact>
         tileNumber = intent.getIntExtra("tile_number", 0)
         ContactsLayout(contacts) { selectContact(it) }.setContentView(this)
+
+        doAsync {
+            MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
+            mAdView = findViewById<View>(R.id.adView) as AdView
+            val adRequest = AdRequest.Builder().build()
+            uiThread {
+                mAdView!!.loadAd(adRequest)
+            }
+        }
     }
 
     private fun selectContact(contact: Contact) {
