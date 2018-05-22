@@ -6,6 +6,8 @@
         <item name="Yellow">Yellow</item>
         <item name="White">White</item>
         <item name="Blue">Blue</item>
+        <item name="Pink">Pink</item>
+        <item name="Orange">Orange</item>
         <item name="Green">Green</item>
     </string-array>
     <string-array name="settings_list_preference_values">
@@ -14,6 +16,8 @@
         <item name="Yellow">#ffff33</item>
         <item name="White">#ffffff</item>
         <item name="Blue">#0000FF</item>
+        <item name="Pink">#f22ee8</item>
+        <item name="Orange">#f1992e</item>
         <item name="Green">#008000</item>
     </string-array>
 

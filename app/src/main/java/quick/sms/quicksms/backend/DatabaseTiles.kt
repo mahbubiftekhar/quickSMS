@@ -68,11 +68,12 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         } catch (e: SQLException) {
 
         } finally {
-            db.endTransaction()
+            db.endTransaction() //Ending the transaction applies the changes iff the transaction was set successful
         }
     }
 
     fun getAllTiles(): Map<Long, Int> {
+        //Returns all tile mappings to reccipient_id's
         val db = this.writableDatabase
         db.rawQuery("select * from $TABLE_NAME", null).use {
             val tiles = linkedMapOf<Long, Int>()
@@ -84,6 +85,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     }
 
     fun deleteTile(tileid: Int) {
+        //This function will delete a single tile
         val db = this.writableDatabase
         try {
             db.beginTransaction()

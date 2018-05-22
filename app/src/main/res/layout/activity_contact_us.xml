@@ -4,119 +4,142 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ContactActivity">
+  >
 
-    <ScrollView
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:background="@android:color/white"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="@android:color/white"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/if_you_have_any_questions_issues_or_if_you_want_to_provide_some_suggestions_feel_free_to_drop_us_a_line"
-                android:textAlignment="center"
-                android:paddingBottom="10dp"
-                />
-
-            <TextView
-                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="3dp"
-                android:text="@string/contact_form_name"
-                android:textAllCaps="true"
-                android:textColor="@color/colorPrimary"
-                android:textSize="12sp" />
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/if_you_have_any_questions_issues_or_if_you_want_to_provide_some_suggestions_feel_free_to_drop_us_a_line"
+                    android:textAlignment="center"
+                    android:paddingBottom="10dp"
+                    />
 
-            <EditText
-                android:id="@+id/your_name"
-                android:layout_width="fill_parent"
-                android:layout_height="38dp"
-                android:layout_marginBottom="20dp"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textSize="14sp" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="3dp"
+                    android:text="@string/contact_form_name"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"
+                    tools:ignore="RtlSymmetry" />
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="3dp"
-                android:text="@string/contact_form_email"
-                android:textAllCaps="true"
-                android:textColor="@color/colorPrimary"
-                android:textSize="12sp" />
+                <EditText
+                    android:id="@+id/your_name"
+                    android:layout_width="fill_parent"
+                    android:layout_height="38dp"
+                    android:layout_marginBottom="20dp"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:textSize="14sp"
+                    tools:ignore="LabelFor" />
 
-            <EditText
-                android:id="@+id/your_email"
-                android:layout_width="fill_parent"
-                android:layout_height="38dp"
-                android:layout_marginBottom="20dp"
-                android:inputType="textEmailAddress"
-                android:singleLine="true"
-                android:textSize="14sp" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="3dp"
+                    android:text="@string/contact_form_email"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"
+                    tools:ignore="RtlSymmetry" />
+
+                <EditText
+                    android:id="@+id/your_email"
+                    android:layout_width="fill_parent"
+                    android:layout_height="38dp"
+                    android:layout_marginBottom="20dp"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true"
+                    android:textSize="14sp"
+                    tools:ignore="LabelFor" />
 
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="3dp"
-                android:text="@string/contact_form_subject"
-                android:textAllCaps="true"
-                android:textColor="@color/colorPrimary"
-                android:textSize="12sp" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="3dp"
+                    android:text="@string/contact_form_subject"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"
+                    tools:ignore="RtlSymmetry" />
 
-            <EditText
-                android:id="@+id/your_subject"
-                android:layout_width="fill_parent"
-                android:layout_height="38dp"
-                android:layout_marginBottom="20dp"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textSize="14sp" />
+                <EditText
+                    android:id="@+id/your_subject"
+                    android:layout_width="fill_parent"
+                    android:layout_height="38dp"
+                    android:layout_marginBottom="20dp"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:textSize="14sp" />
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="32dp"
-                android:paddingLeft="3dp"
-                android:text="@string/contact_form_message"
-                android:textAllCaps="true"
-                android:textColor="@color/colorPrimary"
-                android:textSize="12sp" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="32dp"
+                    android:paddingStart="3dp"
+                    android:text="@string/contact_form_message"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"
+                    tools:ignore="RtlSymmetry" />
 
-            <EditText
-                android:id="@+id/your_message"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:height="180dp"
-                android:gravity="top"
-                android:inputType="textMultiLine"
-                android:textSize="14sp" />
+                <EditText
+                    android:id="@+id/your_message"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:height="180dp"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/post_message"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_gravity="center"
-                android:background="@color/colorPrimary"
-                android:paddingBottom="1dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="1dp"
-                android:text="@string/contact_form_button"
-                android:textAllCaps="true"
-                android:textColor="@android:color/white"
-                android:textSize="13sp" />
-        </LinearLayout>
-    </ScrollView>
+                <Button
+                    android:id="@+id/post_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary"
+                    android:paddingBottom="1dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="1dp"
+                    android:text="@string/contact_form_button"
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </ScrollView>
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-2206499302575732/2755153561">
+        </com.google.android.gms.ads.AdView>
+    </RelativeLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>
