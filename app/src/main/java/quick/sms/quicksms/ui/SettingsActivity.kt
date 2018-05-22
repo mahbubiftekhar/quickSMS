@@ -1,5 +1,6 @@
 package quick.sms.quicksms.ui
 
+import Util.Android.BaseApp
 import android.os.Bundle
 import android.preference.PreferenceFragment
 import android.view.View

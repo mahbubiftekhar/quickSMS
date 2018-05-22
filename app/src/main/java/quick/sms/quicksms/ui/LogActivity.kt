@@ -1,5 +1,6 @@
 package quick.sms.quicksms.ui
 
+import Util.Android.BaseApp.Companion.context
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
