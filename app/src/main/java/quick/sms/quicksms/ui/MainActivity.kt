@@ -3,14 +3,15 @@ package quick.sms.quicksms.ui
 import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ShareActionProvider
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onLongClick
@@ -18,7 +19,10 @@ import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.backend.DatabaseTiles
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
+import quick.sms.quicksms.backend.DatabaseLog
+import quick.sms.quicksms.backend.DatabaseMessages
 
+var tileColour = ""
 class MainActivity : BaseActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
@@ -26,11 +30,28 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // TODO: There should be a better way to do this
+        tileColour = gettileColour()
         contactsList = intent.extras.get("contacts") as List<Contact>
         contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
+        verticalLayout {
+            include<View>(R.xml.advertxml) {
+            }
+        }
         MainLayout(contentResolver, 5, 2, contacts, { onClick(it) }, { assignTile(it) }).setContentView(this)
-        //startActivity<AboutDevelopersActivity>()
+
+        MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
+        val adView = AdView(this)
+        adView.adSize = AdSize.BANNER
+        adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
+        val tiles = DatabaseTiles(this)
+        tiles.insertData(10L,1,0)
+        tiles.insertData(20L,2,0)
+        tiles.insertData(30L,3,0)
+        tiles.insertData(40L, 2,0)
+        println(">>>>" + tiles.getAllTiles())
+        tiles.deleteTile(2)
+        tiles.tileDefragmentator(2)
+        println(">>>>" + tiles.getAllTiles())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -39,15 +60,6 @@ class MainActivity : BaseActivity() {
         // Locate MenuItem with ShareActionProvider
         val item = menu?.findItem(R.id.menu_item_share)
         return true
-    }
-
-    fun shareText(view: View) {
-        val intent = Intent(android.content.Intent.ACTION_SEND)
-        intent.type = "text/plain"
-        val shareBodyText = "Your shearing message goes here"
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject/Title")
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
-        startActivity(Intent.createChooser(intent, "Choose sharing method"))
     }
 
     override fun extendedOptions(item: MenuItem) = when (item.itemId) {
@@ -63,27 +75,71 @@ class MainActivity : BaseActivity() {
             val shareBodyText = "Check it out, quickSMS saves me so much time! Download it from the Google Play store!"
             sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check it out! quickSMS")
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
-            startActivity(Intent.createChooser(sharingIntent, "Shearing Option"))
+            startActivity(Intent.createChooser(sharingIntent, "Sharing Options"))
             true
         }
-        R.id.about ->{
+        R.id.about -> {
             //About the app and developers
             startActivity<AboutDevelopersActivity>()
             true
         }
-        R.id.contactButton ->{
+        R.id.contactButton -> {
             //Contact form
             startActivity<ContactUsActivity>()
             true
         }
-        R.id.contactLog ->{
+        R.id.contactLog -> {
             //View the log activity
             startActivity<LogActivity>()
+            true
+        }
+        R.id.resetApp -> {
+            alert("Are you sure you wish to reset the app?") {
+                positiveButton("Yes") {
+                    alert("Do you wish to proceed?") {
+                        title = "NOTE: This action is IRREVERSIBLE"
+                        positiveButton("Yes proceed, RESET APP") {
+                            doAsync{
+                            toast("App will restart automatically")
+                            Thread.sleep(200) //Just to allow time to showt he toast
+                                resetApp()
+                            }
+                        }
+                        negativeButton("No, cancel") {
+
+                        }
+
+                    }.show()
+                }
+                negativeButton("No") {
+
+                }
+
+            }.show()
             true
         }
 
         else -> {
             super.extendedOptions(item)
+        }
+    }
+
+    private fun resetApp() {
+        /*This is a very dangerous function, hence why its wrapped around two alerts for security*/
+        val contactDB = DatabaseMessages(this)
+        val tilesDB = DatabaseTiles(this)
+        val log = DatabaseLog(this)
+        doAsync {
+            contactDB.deleteEntireDB()
+            tilesDB.deleteEntireDB()
+            log.deleteEntireDB()
+            uiThread {
+                //Restart the app programatically
+                val i = baseContext.packageManager
+                        .getLaunchIntentForPackage(baseContext.packageName)
+                i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(i)
+            }
         }
     }
 
@@ -118,9 +174,8 @@ class MainActivity : BaseActivity() {
     }
 
     private class MainLayout(val cr: ContentResolver, val rows: Int, val cols: Int,
-                             val alreadyAssigned : Map<Int, Contact>,
-                             val tileCallBack: (Int) -> Unit, val assignCallBack: (Int) -> Unit)
-        : AnkoComponent<MainActivity> {
+                             val alreadyAssigned: Map<Int, Contact>,
+                             val tileCallBack: (Int) -> Unit, val assignCallBack: (Int) -> Unit) : AnkoComponent<MainActivity> {
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
             scrollView {
@@ -131,6 +186,7 @@ class MainActivity : BaseActivity() {
                 }
             }
         }
+
 
         fun _LinearLayout.row(nTiles: Int, row: Int) {
             linearLayout {
@@ -152,7 +208,7 @@ class MainActivity : BaseActivity() {
                     Drawable.createFromStream(inStream, it)
                 }
                 if (image == null) {
-                    backgroundColor = Color.parseColor("#303F9F")
+                    backgroundColor = Color.parseColor(tileColour)
                 } else {
                     background = image
                 }

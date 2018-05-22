@@ -24,6 +24,7 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
     }
 
 
+
     @SuppressLint("SimpleDateFormat")
     fun insertData(recipientId: Long, message: String, receipientName: String, phoneNumber: String) {
         val db = this.writableDatabase

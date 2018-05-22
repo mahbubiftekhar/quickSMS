@@ -41,6 +41,11 @@
                 android:icon="@android:drawable/ic_dialog_info"
                 android:titleCondensed="About"
                 android:title="@string/sms_log" />
+            <item android:id="@+id/resetApp"
+                app:showAsAction="ifRoom"
+                android:icon="@android:drawable/ic_delete"
+                android:titleCondensed="About"
+                android:title="RESET APP" />
 
         </menu>
 

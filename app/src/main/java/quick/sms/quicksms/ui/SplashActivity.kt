@@ -7,7 +7,11 @@ import android.content.pm.PackageManager
 import org.jetbrains.anko.*
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.view.View
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.Contact
@@ -18,25 +22,23 @@ class SplashActivity : BaseActivity() {
             Manifest.permission.CALL_PHONE,
             Manifest.permission.READ_CONTACTS
     )
+    private var mAdView: AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         supportActionBar?.hide() //hide actionbar
-        println(1)
-        /*if (getPermissions(this, requiredPermissions)) {
-            // Already got permissions
-            println(2)
-            sendContactsToMain()
-            println(3)
-        } else {
-            println(4)
-            getPermissions(this, requiredPermissions)
-        } */
-        requestPermissions()
+        doAsync {
+            requestPermissions()
+        }
+        //This part makes the add programatically
+        MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
+        mAdView = findViewById<View>(R.id.adView) as AdView
+        val adRequest = AdRequest.Builder().build()
+        mAdView!!.loadAd(adRequest)
     }
 
-    private fun requestPermissions(){
+    private fun requestPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
@@ -47,6 +49,7 @@ class SplashActivity : BaseActivity() {
             sendContactsToMain()
         }
     }
+
     private fun sendContactsToMain() {
         println(5)
         Contact.getContacts(this) {
