@@ -3,12 +3,14 @@ package quick.sms.quicksms.ui
 import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.Window
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -23,12 +25,14 @@ import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.DatabaseMessages
 
 var tileColour = ""
+
 class MainActivity : BaseActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
     private lateinit var contactsList: List<Contact>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.requestFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState)
         tileColour = gettileColour()
         contactsList = intent.extras.get("contacts") as List<Contact>
@@ -44,14 +48,15 @@ class MainActivity : BaseActivity() {
         adView.adSize = AdSize.BANNER
         adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
         val tiles = DatabaseTiles(this)
-        tiles.insertData(10L,1,0)
-        tiles.insertData(20L,2,0)
-        tiles.insertData(30L,3,0)
-        tiles.insertData(40L, 2,0)
+        tiles.insertData(10L, 1, 0)
+        tiles.insertData(20L, 2, 0)
+        tiles.insertData(30L, 3, 0)
+        tiles.insertData(40L, 2, 0)
         println(">>>>" + tiles.getAllTiles())
         tiles.deleteTile(2)
         tiles.tileDefragmentator(2)
         println(">>>>" + tiles.getAllTiles())
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -98,9 +103,9 @@ class MainActivity : BaseActivity() {
                     alert("Do you wish to proceed?") {
                         title = "NOTE: This action is IRREVERSIBLE"
                         positiveButton("Yes proceed, RESET APP") {
-                            doAsync{
-                            toast("App will restart automatically")
-                            Thread.sleep(200) //Just to allow time to showt he toast
+                            doAsync {
+                                toast("App will restart automatically")
+                                Thread.sleep(200) //Just to allow time to showt he toast
                                 resetApp()
                             }
                         }

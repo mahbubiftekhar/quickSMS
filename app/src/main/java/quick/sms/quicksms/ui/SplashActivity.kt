@@ -28,14 +28,21 @@ class SplashActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         supportActionBar?.hide() //hide actionbar
+
+        //These are being done async to reduce the load time for the splash screen
         doAsync {
             requestPermissions()
         }
         //This part makes the add programatically
-        MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
-        mAdView = findViewById<View>(R.id.adView) as AdView
-        val adRequest = AdRequest.Builder().build()
-        mAdView!!.loadAd(adRequest)
+        doAsync {
+            MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
+            mAdView = findViewById<View>(R.id.adView) as AdView
+            val adRequest = AdRequest.Builder().build()
+            uiThread {
+                mAdView!!.loadAd(adRequest)
+            }
+        }
+
     }
 
     private fun requestPermissions() {

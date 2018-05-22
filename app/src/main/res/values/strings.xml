@@ -106,7 +106,6 @@
     <string name="title_activity_contacts">contacts</string>
     <string name="phone_call">Phone Call</string>
     <string name="add_message">Add a message</string>
-    <string name="padding_here">PADDING HERE</string>
     <string name="todo">TODO</string>
     <string name="phone">Phone</string>
     <string name="name">Name</string>

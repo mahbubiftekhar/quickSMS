@@ -1,17 +1,13 @@
 package quick.sms.quicksms
 
 import Util.Android.settings
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.startActivity
 import quick.sms.quicksms.ui.SettingsActivity
 
@@ -23,9 +19,31 @@ open class BaseActivity : AppCompatActivity() {
         return settings.getString("backgroundcolour", "#217ca3")
     }
 
+
     open fun soundBool(): Boolean {
         return settings.getBoolean("Sound", true)
     }
+
+    override fun onResume() {
+        //Setting the action bar colour
+
+
+        super.onResume()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+    }
+
+    fun changeActionBarColour() {
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        println(getActionBarColour())
+        super.onCreate(savedInstanceState, persistentState)
+    }
+
 
     open fun vibrateBool(): Boolean {
         return settings.getBoolean("Vibrate", true)
