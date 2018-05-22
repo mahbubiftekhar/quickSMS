@@ -10,14 +10,13 @@ import java.sql.SQLException
 class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL("create table $TABLE_NAME (recipient_id LONG PRIMARY KEY,tileid INTEGER , prefered_number INTEGER)")
+        db.execSQL("create table $TABLE_NAME (recipient_id LONG,tileid INTEGER PRIMARY KEY, prefered_number INTEGER)")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
     }
-
 
     fun insertData(recipient_id: Long, tileid: Int, prefered_number: Int) {
         val db = this.writableDatabase
@@ -32,7 +31,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 contentValues.put(COL_1, recipient_id)
                 contentValues.put(COL_2, tileid)
                 contentValues.put(COL_3, prefered_number)
-                db.update(TABLE_NAME, contentValues, "recipient_id = ?", arrayOf(recipient_id.toString()))
+                db.update(TABLE_NAME, contentValues, "tileid = ?", arrayOf(tileid.toString()))
             }
             db.setTransactionSuccessful()
         } catch (e: SQLException) {
@@ -54,15 +53,19 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                     println("true or false"+(it.getInt(it.getColumnIndex("tileid")) > deletedTile))
                     if (it.getInt(it.getColumnIndex("tileid")) > deletedTile) {
                         val contentValues = ContentValues()
+                        println(">>>tileToMove" + it.getInt(it.getColumnIndex("tileid")))
                         contentValues.put(COL_1, it.getLong(it.getColumnIndex("recipient_id")))
                         contentValues.put(COL_2, it.getInt(it.getColumnIndex("tileid")) - 1)
                         contentValues.put(COL_3, it.getInt(it.getColumnIndex("prefered_number")))
                         val a = db.insertWithOnConflict(TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE)
-                        println(">>>>>"+a)
                         if (a == (-1).toLong()) {
+                            println("in if claws")
                             contentValues.put(COL_1, it.getLong(it.getColumnIndex("recipient_id")))
                             contentValues.put(COL_2, (it.getInt(it.getColumnIndex("tileid")) - 1))
                             contentValues.put(COL_3, it.getInt(it.getColumnIndex("prefered_number")))
+                            println(">>>>>>>asdadfasd"+(it.getInt(it.getColumnIndex("tileid")) - 1))
+                            val a = db.updateWithOnConflict(TABLE_NAME, contentValues, "tileid = ?", arrayOf((it.getInt(it.getColumnIndex("tileid")) - 1).toString()), SQLiteDatabase.CONFLICT_IGNORE)
+                            println(">>>> $a")
                         }
                         db.delete(TABLE_NAME, "tileid = ?", arrayOf(it.getInt(it.getColumnIndex("tileid")).toString()))
                     }
@@ -108,7 +111,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 }
             }
         }
-        return -1
+        return -1 //If not in database return -1
     }
 
     fun deleteTile(tileid: Int) {
