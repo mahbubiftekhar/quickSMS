@@ -33,7 +33,7 @@ class MainActivity : BaseActivity() {
         tileColour = gettileColour()
         contactsList = intent.extras.get("contacts") as List<Contact>
         contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
-        verticalLayout() {
+        verticalLayout {
             include<View>(R.xml.advertxml) {
             }
         }
@@ -44,13 +44,18 @@ class MainActivity : BaseActivity() {
         adView.adSize = AdSize.BANNER
         adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
         val tiles = DatabaseTiles(this)
-        tiles.insertData(1L,1,0)
-        tiles.insertData(2L,2,0)
-        tiles.insertData(3L,3,0)
-        println("added 3 items")
+        tiles.insertData(10L,1,0)
+        tiles.insertData(20L,2,0)
+        tiles.insertData(30L,3,0)
+        println(">>>>>sanity check1  "+tiles.getTile(10L))
+        println(">>>>>sanity check2  "+tiles.getTile(20L))
+        println(">>>>>sanity check3  "+tiles.getTile(30L))
+        println(">>>>> added 3 items")
         tiles.deleteTile(2)
+        println(">>>>> added item 20L")
         tiles.tileDefragmentator(2)
-        println(">>>>>"+tiles.getAllTiles())
+        println(">>>>>RECE  "+tiles.getTile(10L))
+        println(">>>>>RECE  "+tiles.getTile(30L))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

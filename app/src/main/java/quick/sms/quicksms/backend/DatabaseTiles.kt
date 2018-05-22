@@ -10,7 +10,7 @@ import java.sql.SQLException
 class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL("create table $TABLE_NAME (recipient_id LONG PRIMARY KEY,tileid INTEGER, prefered_number INTEGER)")
+        db.execSQL("create table $TABLE_NAME (recipient_id LONG PRIMARY KEY,tileid INTEGER , prefered_number INTEGER)")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -43,7 +43,6 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     }
 
 
-
     fun tileDefragmentator(deletedTile: Int) {
         val db = this.writableDatabase
         try {
@@ -51,12 +50,21 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             //Code to do the deed
             db.rawQuery("select * from $TABLE_NAME", null).use {
                 while (it.moveToNext()) {
-                    if(it.getString(it.getColumnIndex("tileid")).toInt() >deletedTile) {
+                    println(">>>>>> it index" + it.getInt(it.getColumnIndex("tileid")))
+                    println("true or false"+(it.getInt(it.getColumnIndex("tileid")) > deletedTile))
+                    if (it.getInt(it.getColumnIndex("tileid")) > deletedTile) {
                         val contentValues = ContentValues()
                         contentValues.put(COL_1, it.getLong(it.getColumnIndex("recipient_id")))
-                        contentValues.put(COL_2, it.getInt(it.getColumnIndex("tileid")))
+                        contentValues.put(COL_2, it.getInt(it.getColumnIndex("tileid")) - 1)
                         contentValues.put(COL_3, it.getInt(it.getColumnIndex("prefered_number")))
-                        db.update(TABLE_NAME, contentValues, "recipient_id = ?", arrayOf((deletedTile-1).toString()))
+                        val a = db.insertWithOnConflict(TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE)
+                        println(">>>>>"+a)
+                        if (a == (-1).toLong()) {
+                            contentValues.put(COL_1, it.getLong(it.getColumnIndex("recipient_id")))
+                            contentValues.put(COL_2, (it.getInt(it.getColumnIndex("tileid")) - 1))
+                            contentValues.put(COL_3, it.getInt(it.getColumnIndex("prefered_number")))
+                        }
+                        db.delete(TABLE_NAME, "tileid = ?", arrayOf(it.getInt(it.getColumnIndex("tileid")).toString()))
                     }
                 }
             }
