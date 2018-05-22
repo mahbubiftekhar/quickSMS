@@ -1,11 +1,9 @@
 package quick.sms.quicksms.ui
 
-import Util.Android.BaseApp
 import android.os.Bundle
 import android.preference.PreferenceFragment
 import android.view.View
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.doAsync

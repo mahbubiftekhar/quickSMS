@@ -3,11 +3,9 @@ package quick.sms.quicksms.ui
 import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.R.attr.background
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -89,7 +87,7 @@ class MainActivity : BaseActivity() {
         }
         R.id.faqButton -> {
             //Contact form
-            startActivity<faqActivity>()
+            startActivity<FaqActivity>()
             true
         }
         R.id.contactLog -> {
