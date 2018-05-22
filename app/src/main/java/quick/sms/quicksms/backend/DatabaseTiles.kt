@@ -2,7 +2,6 @@ package quick.sms.quicksms.backend
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import java.sql.SQLException
@@ -49,23 +48,17 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             //Code to do the deed
             db.rawQuery("select * from $TABLE_NAME", null).use {
                 while (it.moveToNext()) {
-                    println(">>>>>> it index" + it.getInt(it.getColumnIndex("tileid")))
-                    println("true or false"+(it.getInt(it.getColumnIndex("tileid")) > deletedTile))
                     if (it.getInt(it.getColumnIndex("tileid")) > deletedTile) {
                         val contentValues = ContentValues()
-                        println(">>>tileToMove" + it.getInt(it.getColumnIndex("tileid")))
                         contentValues.put(COL_1, it.getLong(it.getColumnIndex("recipient_id")))
                         contentValues.put(COL_2, it.getInt(it.getColumnIndex("tileid")) - 1)
                         contentValues.put(COL_3, it.getInt(it.getColumnIndex("prefered_number")))
                         val a = db.insertWithOnConflict(TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE)
                         if (a == (-1).toLong()) {
-                            println("in if claws")
                             contentValues.put(COL_1, it.getLong(it.getColumnIndex("recipient_id")))
                             contentValues.put(COL_2, (it.getInt(it.getColumnIndex("tileid")) - 1))
                             contentValues.put(COL_3, it.getInt(it.getColumnIndex("prefered_number")))
-                            println(">>>>>>>asdadfasd"+(it.getInt(it.getColumnIndex("tileid")) - 1))
-                            val a = db.updateWithOnConflict(TABLE_NAME, contentValues, "tileid = ?", arrayOf((it.getInt(it.getColumnIndex("tileid")) - 1).toString()), SQLiteDatabase.CONFLICT_IGNORE)
-                            println(">>>> $a")
+                            db.updateWithOnConflict(TABLE_NAME, contentValues, "tileid = ?", arrayOf((it.getInt(it.getColumnIndex("tileid")) - 1).toString()), SQLiteDatabase.CONFLICT_IGNORE)
                         }
                         db.delete(TABLE_NAME, "tileid = ?", arrayOf(it.getInt(it.getColumnIndex("tileid")).toString()))
                     }
@@ -79,18 +72,6 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         }
     }
 
-    private fun getRecipient(tileid: Int): Long? {
-        val db = this.writableDatabase
-        db.rawQuery("select * from $TABLE_NAME", null).use {
-            while (it.moveToNext()) {
-                if (tileid.toString() == it.getString(it.getColumnIndex("tileid"))) {
-                    return it.getLong(it.getColumnIndex("recipient_id"))
-                }
-            }
-        }
-        return null
-    }
-
     fun getAllTiles(): Map<Long, Int> {
         val db = this.writableDatabase
         db.rawQuery("select * from $TABLE_NAME", null).use {
@@ -100,18 +81,6 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             }
             return tiles
         }
-    }
-
-    fun getTile(recipient_id: Long): Int {
-        val db = this.writableDatabase
-        db.rawQuery("select * from $TABLE_NAME", null).use {
-            while (it.moveToNext()) {
-                if (recipient_id.toString() == it.getString(it.getColumnIndex("recipient_id"))) {
-                    return it.getInt(it.getColumnIndex("tileid"))
-                }
-            }
-        }
-        return -1 //If not in database return -1
     }
 
     fun deleteTile(tileid: Int) {
