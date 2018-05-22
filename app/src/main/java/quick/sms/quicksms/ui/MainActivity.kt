@@ -32,7 +32,7 @@ class MainActivity : BaseActivity() {
     private lateinit var contactsList: List<Contact>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        window.requestFeature(Window.FEATURE_ACTION_BAR);
+        window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
         tileColour = gettileColour()
         contactsList = intent.extras.get("contacts") as List<Contact>
@@ -48,15 +48,14 @@ class MainActivity : BaseActivity() {
         adView.adSize = AdSize.BANNER
         adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
         val tiles = DatabaseTiles(this)
-        tiles.insertData(10L, 1, 0)
+       /* tiles.insertData(10L, 1, 0)
         tiles.insertData(20L, 2, 0)
         tiles.insertData(30L, 3, 0)
         tiles.insertData(40L, 2, 0)
         println(">>>>" + tiles.getAllTiles())
         tiles.deleteTile(2)
         tiles.tileDefragmentator(2)
-        println(">>>>" + tiles.getAllTiles())
-
+        println(">>>>" + tiles.getAllTiles()) */
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -90,6 +89,11 @@ class MainActivity : BaseActivity() {
         R.id.contactButton -> {
             //Contact form
             startActivity<ContactUsActivity>()
+            true
+        }
+        R.id.faqButton -> {
+            //Contact form
+            startActivity<faqActivity>()
             true
         }
         R.id.contactLog -> {

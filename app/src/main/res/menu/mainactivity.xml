@@ -25,22 +25,27 @@
                 app:showAsAction="ifRoom"
                 android:title="@string/settings2" />
 
-            <item android:id="@+id/about"
+            <item android:id="@+id/faqButton"
+                app:showAsAction="ifRoom"
                 android:icon="@android:drawable/ic_dialog_info"
+                android:titleCondensed="About"
+                android:title="FAQ's" />
+            <item android:id="@+id/contactLog"
+                app:showAsAction="ifRoom"
+                android:icon="@android:drawable/ic_input_get"
+                android:titleCondensed="About"
+                android:title="@string/sms_log" />
+            <item android:id="@+id/about"
                 app:showAsAction="ifRoom"
                 android:title="@string/about"
-                android:titleCondensed="About"
+                android:titleCondensed="About App"
                 />
             <item android:id="@+id/contactButton"
                 android:icon="@android:drawable/ic_dialog_email"
                 app:showAsAction="ifRoom"
                 android:titleCondensed="About"
                 android:title="@string/contact4" />
-            <item android:id="@+id/contactLog"
-                app:showAsAction="ifRoom"
-                android:icon="@android:drawable/ic_dialog_info"
-                android:titleCondensed="About"
-                android:title="@string/sms_log" />
+
             <item android:id="@+id/resetApp"
                 app:showAsAction="ifRoom"
                 android:icon="@android:drawable/ic_delete"

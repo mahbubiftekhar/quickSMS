@@ -1,17 +1,18 @@
 package quick.sms.quicksms.ui
 
-import android.support.v7.app.AppCompatActivity
+import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.view.View
+import android.widget.RelativeLayout
 import quick.sms.quicksms.R
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import kotlinx.android.synthetic.main.activity_about_developers.*
+import quick.sms.quicksms.BaseActivity
 
 
-class AboutDevelopersActivity : AppCompatActivity() {
+class AboutDevelopersActivity : BaseActivity() {
     private var mAdView: AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,8 +23,6 @@ class AboutDevelopersActivity : AppCompatActivity() {
         val adView = AdView(this)
         adView.adSize = AdSize.BANNER
         adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
-
-
     }
 
     // Called when leaving the activity
