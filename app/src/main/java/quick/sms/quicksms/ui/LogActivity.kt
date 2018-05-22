@@ -26,11 +26,6 @@ class LogActivity : BaseActivity() {
         setContentView(R.layout.activity_log)
         val tilesDB = DatabaseLog(this)
         val a = tilesDB.returnAll()
-        if (a) {
-            //If the returnAll function was successful we shall launch the UI
-            allLogsLocal = allLogs
-            UIcreator()
-        }
         doAsync {
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
             mAdView = findViewById<View>(R.id.adView) as AdView
@@ -39,8 +34,11 @@ class LogActivity : BaseActivity() {
                 mAdView!!.loadAd(adRequest)
             }
         }
-
-
+        if (a) {
+            //If the returnAll function was successful we shall launch the UI
+            allLogsLocal = allLogs
+            UIcreator()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

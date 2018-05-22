@@ -6,9 +6,11 @@
     android:fitsSystemWindows="true"
   >
 
-    <org.jetbrains.anko._RelativeLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -137,7 +139,7 @@
             ads:adSize="BANNER"
             ads:adUnitId="ca-app-pub-2206499302575732/2755153561">
         </com.google.android.gms.ads.AdView>
-    </org.jetbrains.anko._RelativeLayout>
+    </RelativeLayout>
 
 
 </android.support.design.widget.CoordinatorLayout>
