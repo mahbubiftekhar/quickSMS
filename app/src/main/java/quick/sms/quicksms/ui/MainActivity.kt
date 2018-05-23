@@ -37,7 +37,6 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
-        tileColour = gettileColour()
         backgroundColour = getBackGroundColour()
         actionBarColour = getActionBarColour()
         contactsList = intent.extras.get("contacts") as List<Contact>
@@ -46,12 +45,17 @@ class MainActivity : BaseActivity() {
             include<View>(R.xml.advertxml) {
             }
         }
-        MainLayout(contentResolver, 5, 2, contacts, { onClick(it) }, { assignTile(it) }).setContentView(this)
+        draw()
 
         MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
         val adView = AdView(this)
         adView.adSize = AdSize.BANNER
         adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
+    }
+
+    private fun draw() {
+        MainLayout(contentResolver, 5, 2, contacts, gettileColour(), { onClick(it) },
+                { assignTile(it) }).setContentView(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -173,12 +177,16 @@ class MainActivity : BaseActivity() {
             mutableContacts[tileNumber] = contact
             contacts = mutableContacts.toMap()
         }
-        MainLayout(contentResolver, 5, 2, contacts, { onClick(it) }, { assignTile(it) })
-                .setContentView(this)
+        draw()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        draw()
     }
 
     private class MainLayout(val cr: ContentResolver, val rows: Int, val cols: Int,
-                             val alreadyAssigned: Map<Int, Contact>,
+                             val alreadyAssigned: Map<Int, Contact>, val tileColour : String,
                              val tileCallBack: (Int) -> Unit, val assignCallBack: (Int) -> Unit) : AnkoComponent<MainActivity> {
 
 
