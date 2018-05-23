@@ -11,6 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
+import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -31,6 +32,7 @@ class MainActivity : BaseActivity() {
     private lateinit var contacts: Map<Int, Contact>
     private lateinit var contactsList: List<Contact>
     private lateinit var unassigned: List<Contact>
+    private var mAdView: AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val bundle : Bundle
@@ -51,10 +53,14 @@ class MainActivity : BaseActivity() {
         }
         draw()
 
-        MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
-        val adView = AdView(this)
-        adView.adSize = AdSize.BANNER
-        adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
+        doAsync {
+            MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
+            mAdView = findViewById<View>(R.id.adView) as AdView
+            val adRequest = AdRequest.Builder().build()
+            uiThread {
+                mAdView!!.loadAd(adRequest)
+            }
+        }
     }
 
     private fun draw() {
@@ -252,27 +258,5 @@ class MainActivity : BaseActivity() {
                 margin = dip(7)
             }
         }
-
-        // Ad stuff
-        /*
-<com.google.android.gms.ads.AdView
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
-    </com.google.android.gms.ads.AdView>
-
-The above needs to be done in Anko, I have no idea how to do this
- */
-
-        /*
-        val adView = AdView(this)
-    adView.adSize = AdSize.BANNER
-    adView.adUnitId = "ca-app-pub-3940256099942544/6300978111" //Sample id, need to change to ours
-         */
     }
 }
