@@ -101,9 +101,8 @@ class MainActivity : BaseActivity() {
                     alert("Do you wish to proceed?") {
                         title = "NOTE: This action is IRREVERSIBLE"
                         positiveButton("Yes proceed, RESET APP") {
+                            println(">>>WE ARE GETTING HERE")
                             doAsync {
-                                toast("App will restart automatically")
-                                Thread.sleep(200) //Just to allow time to showt he toast
                                 resetApp()
                             }
                         }
@@ -128,21 +127,22 @@ class MainActivity : BaseActivity() {
 
     private fun resetApp() {
         /*This is a very dangerous function, hence why its wrapped around two alerts for security*/
+        println(">>>> reset App function")
         val contactDB = DatabaseMessages(this)
         val tilesDB = DatabaseTiles(this)
         val log = DatabaseLog(this)
-        doAsync {
-            contactDB.deleteEntireDB()
-            tilesDB.deleteEntireDB()
-            log.deleteEntireDB()
-            uiThread {
-                //Restart the app programatically
-                val i = baseContext.packageManager
-                        .getLaunchIntentForPackage(baseContext.packageName)
-                i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(i)
-            }
+        contactDB.deleteEntireDB()
+        tilesDB.deleteEntireDB()
+        log.deleteEntireDB()
+        runOnUiThread {
+            //Restart the app programatically
+            println(">>>>> Restarting the device")
+            val i = baseContext.packageManager
+                    .getLaunchIntentForPackage(baseContext.packageName)
+            i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(i)
         }
+
     }
 
     private fun onClick(tileNumber: Int) {
