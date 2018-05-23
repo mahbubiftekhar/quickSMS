@@ -31,25 +31,37 @@ class MainActivity : BaseActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
     private lateinit var contactsList: List<Contact>
+    private lateinit var unassigned: List<Contact>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val bundle : Bundle
+        if (savedInstanceState != null) {
+            bundle = savedInstanceState
+        } else {
+            bundle = intent.extras
+        }
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
-        tileColour = gettileColour()
         backgroundColour = getBackGroundColour()
         actionBarColour = getActionBarColour()
-        contactsList = intent.extras.get("contacts") as List<Contact>
-        contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
+        contactsList = bundle.get("contacts") as List<Contact>
+        val (assigned, unassigned) = contactsList.asSequence().partition { it.tile != null }
+        this.unassigned = unassigned
+        contacts = assigned.associateBy { it.tile!! }
         verticalLayout {
-            include<View>(R.xml.advertxml) {
-            }
+            include<View>(R.xml.advertxml) {}
         }
-        MainLayout(contentResolver, 5, 2, contacts, { onClick(it) }, { assignTile(it) }).setContentView(this)
+        draw()
 
         MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
         val adView = AdView(this)
         adView.adSize = AdSize.BANNER
         adView.adUnitId = "ca-app-pub-2206499302575732/2755153561"
+    }
+
+    private fun draw() {
+        MainLayout(contentResolver, 5, 2, contacts, gettileColour(), { onClick(it) },
+                { assignTile(it) }).setContentView(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -166,17 +178,29 @@ class MainActivity : BaseActivity() {
             val mutableContacts = contacts.toMutableMap()
             val tileNumber = data.extras.getInt("tile_number", 0)
             val contact = data.extras.get("chosen_contact") as Contact
+            contact.tile = tileNumber
             val tilesDB = DatabaseTiles(this)
             tilesDB.insertData(contact.id, tileNumber, 0)
             mutableContacts[tileNumber] = contact
             contacts = mutableContacts.toMap()
         }
-        MainLayout(contentResolver, 5, 2, contacts, { onClick(it) }, { assignTile(it) })
-                .setContentView(this)
+        draw()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        draw()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        val allContacts = contacts.values + unassigned
+        println(contacts)
+        outState?.putParcelableArrayList("contacts", ArrayList(allContacts))
     }
 
     private class MainLayout(val cr: ContentResolver, val rows: Int, val cols: Int,
-                             val alreadyAssigned: Map<Int, Contact>,
+                             val alreadyAssigned: Map<Int, Contact>, val tileColour : String,
                              val tileCallBack: (Int) -> Unit, val assignCallBack: (Int) -> Unit) : AnkoComponent<MainActivity> {
 
 
