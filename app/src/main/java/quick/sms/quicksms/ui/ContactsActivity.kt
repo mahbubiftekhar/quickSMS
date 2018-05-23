@@ -21,7 +21,7 @@ class ContactsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val contacts = intent.extras.get("contacts") as List<Contact>
+        val contacts = (intent.extras.get("contacts") as List<Contact>).sortedBy { it.name }
         tileNumber = intent.getIntExtra("tile_number", 0)
         ContactsLayout(contacts) { selectContact(it) }.setContentView(this)
 

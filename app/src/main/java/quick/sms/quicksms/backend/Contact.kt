@@ -12,7 +12,7 @@ import org.jetbrains.anko.*
 @Parcelize
 class Contact(val id: Long, val name: String, val image: String?, val numbers: List<String>, var tile: Int?) : Parcelable {
 
-    override fun toString(): String = "Contact(id=$id, name=$name, image=$image, numbers=$numbers)"
+    override fun toString(): String = "Contact(id=$id, name=$name, image=$image, numbers=$numbers, tile=$tile)"
 
     // Anything that uses context must go in here to preserve parcelable
     companion object {
