@@ -15,5 +15,5 @@ quickSMS has been designed to allow you to send contacts text pre-set text messa
 
 ## Group Members
 
-* **[Alex Shand](https://github.com/alexshand)** - *Android Developer* 
+* **[Alex Shand](https://github.com/Alex-Shand)** - *Android Developer* 
 * **[Mahbub Iftekhar](https://www.mahbubiftekhar.co.uk/)** - *Android Developer*
