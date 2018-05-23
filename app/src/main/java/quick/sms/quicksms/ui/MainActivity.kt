@@ -3,6 +3,7 @@ package quick.sms.quicksms.ui
 import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -23,9 +24,7 @@ import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.DatabaseMessages
 
-var tileColour = ""
 var backgroundColour = ""
-var actionBarColour = ""
 
 class MainActivity : BaseActivity() {
 
@@ -43,7 +42,6 @@ class MainActivity : BaseActivity() {
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
         backgroundColour = getBackGroundColour()
-        actionBarColour = getActionBarColour()
         contactsList = bundle.get("contacts") as List<Contact>
         val (assigned, unassigned) = contactsList.asSequence().partition { it.tile != null }
         this.unassigned = unassigned
@@ -60,6 +58,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun draw() {
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(getActionBarColour())))
         MainLayout(contentResolver, 5, 2, contacts, gettileColour(), { onClick(it) },
                 { assignTile(it) }).setContentView(this)
     }
