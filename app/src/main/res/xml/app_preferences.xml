@@ -34,8 +34,15 @@
         android:entries="@array/settings_list_preference_titles"
         android:entryValues="@array/settings_list_preference_values"
         android:key="tilecolour"
-        android:summary="Default colour for tiles"
+        android:summary="Colour for tiles"
         android:title="Tile Colour" />
+    <ListPreference
+        android:dialogTitle="Tile Text Colour"
+        android:entries="@array/settings_list_preference_titles"
+        android:entryValues="@array/settings_list_preference_values"
+        android:key="TileTextColour"
+        android:summary="Colour for tiles"
+        android:title="Tile Text Colour" />
 
 </PreferenceScreen>
 
