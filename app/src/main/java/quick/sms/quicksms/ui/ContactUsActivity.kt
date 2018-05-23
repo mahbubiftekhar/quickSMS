@@ -6,11 +6,9 @@ import quick.sms.quicksms.R
 import android.content.Intent
 import android.text.TextUtils
 import android.widget.EditText
-import android.app.Activity
 import android.view.View
 import android.widget.Button
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.doAsync
@@ -58,9 +56,7 @@ class ContactUsActivity : AppCompatActivity() {
                 return@OnClickListener
             }
 
-            var onError: Boolean? = false
             if (!isValidEmail(email)) {
-                onError = true
                 your_email.error = "Invalid Email"
                 return@OnClickListener
             }

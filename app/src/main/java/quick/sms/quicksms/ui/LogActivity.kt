@@ -1,13 +1,13 @@
 package quick.sms.quicksms.ui
 
-import Util.Android.BaseApp.Companion.context
 import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import quick.sms.quicksms.R
@@ -25,10 +25,14 @@ class LogActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log)
+        /*
+        getSupportActionBar()?.setBackgroundDrawable(ColorDrawable(getResources()
+                .getColor(R.color.abc_background_cache_hint_selector_material_dark)))
+                */
         val tilesDB = DatabaseLog(this)
         val a = tilesDB.returnAll()
         doAsync {
-            MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
+            MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
             mAdView = findViewById<View>(R.id.adView) as AdView
             val adRequest = AdRequest.Builder().build()
             uiThread {

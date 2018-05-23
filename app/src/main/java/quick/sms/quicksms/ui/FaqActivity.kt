@@ -10,7 +10,7 @@ import org.jetbrains.anko.uiThread
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 
-class faqActivity : BaseActivity() {
+class FaqActivity : BaseActivity() {
     private var mAdView: AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -2,14 +2,12 @@ package quick.sms.quicksms.ui
 
 import Util.Android.getPermissions
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import org.jetbrains.anko.*
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.view.View
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import quick.sms.quicksms.BaseActivity

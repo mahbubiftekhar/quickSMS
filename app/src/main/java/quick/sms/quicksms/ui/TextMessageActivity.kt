@@ -4,7 +4,6 @@ import Util.Android.editor
 import Util.Android.prefs
 import Util.Android.putIntAndCommit
 import android.content.Context
-import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
