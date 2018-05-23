@@ -33,7 +33,7 @@ class MainActivity : BaseActivity() {
     private var mAdView: AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val bundle : Bundle = savedInstanceState ?: intent.extras
+        val bundle: Bundle = savedInstanceState ?: intent.extras
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
         backgroundColour = getBackGroundColour()
@@ -198,7 +198,7 @@ class MainActivity : BaseActivity() {
     }
 
     private class MainLayout(val cr: ContentResolver, val rows: Int, val cols: Int,
-                             val alreadyAssigned: Map<Int, Contact>, val tileColour : String, val textColour : String,
+                             val alreadyAssigned: Map<Int, Contact>, val tileColour: String, val textColour: String,
                              val tileCallBack: (Int) -> Unit, val assignCallBack: (Int) -> Unit) : AnkoComponent<MainActivity> {
 
 
