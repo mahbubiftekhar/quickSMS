@@ -24,6 +24,7 @@ import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.DatabaseMessages
+import java.lang.Math.ceil
 
 var backgroundColour = ""
 
@@ -60,7 +61,7 @@ class MainActivity : BaseActivity() {
 
     private fun draw() {
         setActionBarColour()
-        MainLayout(contentResolver, 5, 2, contacts, gettileColour(), { onClick(it) },
+        MainLayout(contentResolver, contacts, gettileColour(), { onClick(it) },
                 { assignTile(it) }).setContentView(this)
     }
 
@@ -199,10 +200,11 @@ class MainActivity : BaseActivity() {
         outState?.putParcelableArrayList("contacts", ArrayList(allContacts))
     }
 
-    private class MainLayout(val cr: ContentResolver, val rows: Int, val cols: Int,
-                             val alreadyAssigned: Map<Int, Contact>, val tileColour : String,
-                             val tileCallBack: (Int) -> Unit, val assignCallBack: (Int) -> Unit) : AnkoComponent<MainActivity> {
-
+    private class MainLayout(val cr: ContentResolver, val alreadyAssigned: Map<Int, Contact>,
+                             val tileColour : String, val tileCallBack: (Int) -> Unit,
+                             val assignCallBack: (Int) -> Unit) : AnkoComponent<MainActivity> {
+        val nTiles = alreadyAssigned.size
+        val rows = (nTiles / 2) + 1
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
             scrollView {
@@ -210,7 +212,7 @@ class MainActivity : BaseActivity() {
 
                 verticalLayout {
                     for (i in 1..rows) {
-                        row(cols, i)
+                        row(2, i)
                     }
                 }
             }
@@ -241,12 +243,16 @@ class MainActivity : BaseActivity() {
                 } else {
                     background = image
                 }
-                text = contact?.name
+                text = contact?.name ?: "Add Tile"
                 onClick {
-                    tileCallBack(index)
+                    if (contact != null) {
+                        tileCallBack(index)
+                    } else {
+                        assignCallBack(index)
+                    }
                 }
                 onLongClick {
-                    assignCallBack(index)
+
                 }
             }.lparams(height = matchParent, width = 0) {
                 weight = 1f
