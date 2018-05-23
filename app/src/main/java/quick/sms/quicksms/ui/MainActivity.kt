@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.design.R.attr.background
 import android.view.Menu
 import android.view.MenuItem
@@ -33,17 +34,25 @@ class MainActivity : BaseActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
     private lateinit var contactsList: List<Contact>
+    private lateinit var unassigned: List<Contact>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val bundle : Bundle
+        if (savedInstanceState != null) {
+            bundle = savedInstanceState
+        } else {
+            bundle = intent.extras
+        }
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
         backgroundColour = getBackGroundColour()
         actionBarColour = getActionBarColour()
-        contactsList = intent.extras.get("contacts") as List<Contact>
-        contacts = contactsList.asSequence().filter { it.tile != null }.associateBy { it.tile!! }
+        contactsList = bundle.get("contacts") as List<Contact>
+        val (assigned, unassigned) = contactsList.asSequence().partition { it.tile != null }
+        this.unassigned = unassigned
+        contacts = assigned.associateBy { it.tile!! }
         verticalLayout {
-            include<View>(R.xml.advertxml) {
-            }
+            include<View>(R.xml.advertxml) {}
         }
         draw()
 
@@ -172,6 +181,7 @@ class MainActivity : BaseActivity() {
             val mutableContacts = contacts.toMutableMap()
             val tileNumber = data.extras.getInt("tile_number", 0)
             val contact = data.extras.get("chosen_contact") as Contact
+            contact.tile = tileNumber
             val tilesDB = DatabaseTiles(this)
             tilesDB.insertData(contact.id, tileNumber, 0)
             mutableContacts[tileNumber] = contact
@@ -183,6 +193,13 @@ class MainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         draw()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        val allContacts = contacts.values + unassigned
+        println(contacts)
+        outState?.putParcelableArrayList("contacts", ArrayList(allContacts))
     }
 
     private class MainLayout(val cr: ContentResolver, val rows: Int, val cols: Int,
