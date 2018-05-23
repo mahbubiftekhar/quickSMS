@@ -24,6 +24,7 @@ private var mAdView: AdView? = null
 class LogActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setActionBarColour()
         setContentView(R.layout.activity_log)
         /*
         getSupportActionBar()?.setBackgroundDrawable(ColorDrawable(getResources()

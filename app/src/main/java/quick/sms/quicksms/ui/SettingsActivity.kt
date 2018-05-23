@@ -16,6 +16,7 @@ class SettingsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setActionBarColour()
         fragmentManager.beginTransaction().replace(android.R.id.content, SettingsFragment()).commit()
         doAsync {
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")

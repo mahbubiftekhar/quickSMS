@@ -1,6 +1,8 @@
 package quick.sms.quicksms
 
 import Util.Android.settings
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -19,6 +21,10 @@ open class BaseActivity : AppCompatActivity() {
         return settings.getString("backgroundcolour", "#217ca3")
     }
 
+    open fun setActionBarColour(){
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(getActionBarColour())))
+
+    }
 
     open fun soundBool(): Boolean {
         return settings.getBoolean("Sound", true)

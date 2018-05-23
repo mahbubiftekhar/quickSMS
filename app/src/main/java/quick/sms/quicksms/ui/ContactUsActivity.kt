@@ -13,14 +13,16 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import quick.sms.quicksms.BaseActivity
 import java.util.regex.Pattern
 
 
-class ContactUsActivity : AppCompatActivity() {
+class ContactUsActivity : BaseActivity() {
     private var mAdView: AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setActionBarColour()
         setContentView(R.layout.activity_contact_us)
 
         doAsync {

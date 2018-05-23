@@ -1,5 +1,7 @@
 package quick.sms.quicksms.ui
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import com.google.android.gms.ads.AdRequest
@@ -15,6 +17,7 @@ class FaqActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setActionBarColour()
         setContentView(R.layout.activity_faq_actovoty)
 
         doAsync {

@@ -35,12 +35,7 @@ class MainActivity : BaseActivity() {
     private var mAdView: AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val bundle : Bundle
-        if (savedInstanceState != null) {
-            bundle = savedInstanceState
-        } else {
-            bundle = intent.extras
-        }
+        val bundle : Bundle = savedInstanceState ?: intent.extras
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
         backgroundColour = getBackGroundColour()
@@ -64,7 +59,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun draw() {
-        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(getActionBarColour())))
+        setActionBarColour()
         MainLayout(contentResolver, 5, 2, contacts, gettileColour(), { onClick(it) },
                 { assignTile(it) }).setContentView(this)
     }
