@@ -1,6 +1,6 @@
 package quick.sms.quicksms.ui
 
-import Util.Android.getPermissions
+import quick.sms.quicksms.backend.getPermissions
 import android.Manifest
 import android.content.pm.PackageManager
 import org.jetbrains.anko.*
