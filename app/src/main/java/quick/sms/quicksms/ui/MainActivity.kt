@@ -3,6 +3,7 @@ package quick.sms.quicksms.ui
 import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.Window
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.*
@@ -22,6 +24,7 @@ import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.DatabaseMessages
+import java.lang.Math.ceil
 
 var backgroundColour = ""
 
@@ -58,8 +61,8 @@ class MainActivity : BaseActivity() {
 
     private fun draw() {
         setActionBarColour()
-        MainLayout(contentResolver, 5, 2, contacts, gettileColour(), getTileTextColour(), { onClick(it) },
-                { assignTile(it) }).setContentView(this)
+        MainLayout(contentResolver, contacts, gettileColour(), { onClick(it) },
+                { assignTile(it) }, { deleteTile(it) }).setContentView(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -165,10 +168,28 @@ class MainActivity : BaseActivity() {
     }
 
     private fun assignTile(tileNumber: Int) {
-        println(tileNumber)
         startActivityForResult<ContactsActivity>(1,
                 "tile_number" to tileNumber,
                 "contacts" to contactsList)
+    }
+
+    private fun deleteFromContacts(tileNumber: Int) {
+        val highestContact = contacts.size
+        val mutableContacts = contacts.toMutableMap()
+        for (i in tileNumber+1..highestContact) {
+            mutableContacts[i-1] = mutableContacts[i]!!
+        }
+        mutableContacts.remove(highestContact)
+        contacts = mutableContacts.toMap()
+    }
+
+    private fun deleteTile(tileNumber: Int) {
+        val contact = contacts[tileNumber]
+        if (contact != null) {
+            DatabaseTiles(this).tileDefragmentator(tileNumber)
+            deleteFromContacts(tileNumber)
+            draw()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -197,10 +218,12 @@ class MainActivity : BaseActivity() {
         outState?.putParcelableArrayList("contacts", ArrayList(allContacts))
     }
 
-    private class MainLayout(val cr: ContentResolver, val rows: Int, val cols: Int,
-                             val alreadyAssigned: Map<Int, Contact>, val tileColour: String, val textColour: String,
-                             val tileCallBack: (Int) -> Unit, val assignCallBack: (Int) -> Unit) : AnkoComponent<MainActivity> {
-
+    private class MainLayout(val cr: ContentResolver, val alreadyAssigned: Map<Int, Contact>,
+                             val tileColour : String, val tileCallBack: (Int) -> Unit,
+                             val assignCallBack: (Int) -> Unit, val deleteCallback: (Int) -> Unit)
+        : AnkoComponent<MainActivity> {
+        val nTiles = alreadyAssigned.size
+        val rows = (nTiles / 2) + 1
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
             scrollView {
@@ -208,7 +231,7 @@ class MainActivity : BaseActivity() {
 
                 verticalLayout {
                     for (i in 1..rows) {
-                        row(cols, i)
+                        row(2, i)
                     }
                 }
             }
@@ -239,14 +262,16 @@ class MainActivity : BaseActivity() {
                 } else {
                     background = image
                 }
-                text = contact?.name
-                textColor = Color.parseColor(textColour)
-
+                text = contact?.name ?: "Add Tile"
                 onClick {
-                    tileCallBack(index)
+                    if (contact != null) {
+                        tileCallBack(index)
+                    } else {
+                        assignCallBack(index)
+                    }
                 }
                 onLongClick {
-                    assignCallBack(index)
+                    deleteCallback(index)
                 }
             }.lparams(height = matchParent, width = 0) {
                 weight = 1f

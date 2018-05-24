@@ -1,8 +1,6 @@
 package quick.sms.quicksms.ui
 
-import Util.Android.editor
-import Util.Android.prefs
-import Util.Android.putIntAndCommit
+import quick.sms.quicksms.backend.putIntAndCommit
 import android.content.Context
 import android.media.RingtoneManager
 import android.os.Build
@@ -29,6 +27,8 @@ import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.DatabaseMessages
+import quick.sms.quicksms.editor
+import quick.sms.quicksms.prefs
 
 @Suppress("DEPRECATION")
 class TextMessageActivity : BaseActivity() {

@@ -1,11 +1,9 @@
 package quick.sms.quicksms
 
-import Util.Android.settings
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -50,7 +48,6 @@ open class BaseActivity : AppCompatActivity() {
         println(getActionBarColour())
         super.onCreate(savedInstanceState, persistentState)
     }
-
 
     open fun vibrateBool(): Boolean {
         return settings.getBoolean("Vibrate", true)
