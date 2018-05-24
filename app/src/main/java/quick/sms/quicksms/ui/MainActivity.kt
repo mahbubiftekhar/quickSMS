@@ -22,7 +22,6 @@ import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.DatabaseMessages
-import java.lang.Math.ceil
 
 var backgroundColour = ""
 
@@ -277,5 +276,6 @@ class MainActivity : BaseActivity() {
                 margin = dip(7)
             }
         }
+
     }
 }

@@ -2,11 +2,11 @@ package quick.sms.quicksms.ui
 
 import android.annotation.SuppressLint
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ScrollView
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -14,7 +14,6 @@ import quick.sms.quicksms.R
 import org.jetbrains.anko.*
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.backend.DatabaseLog
-import quick.sms.quicksms.backend.DatabaseTiles
 import quick.sms.quicksms.backend.allLogs
 
 
@@ -40,10 +39,15 @@ class LogActivity : BaseActivity() {
                 mAdView!!.loadAd(adRequest)
             }
         }
-        if (a) {
+        if (a && allLogs.size > 0) {
             //If the returnAll function was successful we shall launch the UI
             allLogsLocal = allLogs
-            UIcreator()
+            UIcreator(getBackGroundColour(),getTileTextColour())
+        } else {
+            println(">>>>> in the iff condition")
+            //If their is no logs, we need to display to the user this so they arent confused
+            allLogsLocal = allLogs
+            NoLogs(getBackGroundColour(),getTileTextColour())
         }
     }
 
@@ -56,13 +60,15 @@ class LogActivity : BaseActivity() {
 
 
     private fun clearLog() {
-        val tilesDataBase = DatabaseTiles(this)
+        //This function will delete the entire log database
+        val tilesDataBase = DatabaseLog(this)
         tilesDataBase.deleteEntireDB()
     }
 
     override fun extendedOptions(item: MenuItem) = when (item.itemId) {
 
         R.id.clearLogButton -> {
+            //Button to allow the user to clear the log
             alert("This action is irreversible") {
                 title = "Are you sure you want to clear the log?"
                 positiveButton("Yes, clear log") {
@@ -89,8 +95,23 @@ class LogActivity : BaseActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    fun UIcreator(): View {
+    fun NoLogs(backgroundColour: String, textColour: String): View {
+        return verticalLayout {
+            backgroundColor = Color.parseColor(backgroundColour) //Setting the background colour
+            textView {
+                text = "SMS Log is empty"
+                textSize = 40f
+                textColor = Color.parseColor(textColour)
+                textAlignment = View.TEXT_ALIGNMENT_CENTER //CENTER can be INHERIT GRAVITY TEXT_START TEXT_END VIEW_START VIEW_END
+            }
+        }
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    fun UIcreator(backgroundColour: String,textColour: String): View {
         return scrollView {
+            backgroundColor = Color.parseColor(backgroundColour) //Setting the background colour
             verticalLayout {
                 allLogsLocal.reverse() // reverse the log
                 for (i in 0 until allLogsLocal.size) {
@@ -115,6 +136,7 @@ class LogActivity : BaseActivity() {
                                 // tvNameMain
                                 text = allLogsLocal[i].message
                                 textSize = sp(9).toFloat()
+                                textColor = Color.parseColor(textColour)
                             }.lparams(width = wrapContent, height = wrapContent) {
                                 topPadding = dip(5)
                             }
@@ -128,10 +150,12 @@ class LogActivity : BaseActivity() {
                             textView {
                                 // textView2
                                 text = "Number: "
+                                textColor = Color.parseColor(textColour)
                             }.lparams(width = wrapContent, height = wrapContent)
                             textView {
                                 // tvTime
                                 text = allLogsLocal[i].phoneNumber
+                                textColor = Color.parseColor(textColour)
                             }.lparams(width = wrapContent, height = wrapContent) {
                                 rightMargin = dip(10)
                             }
@@ -148,10 +172,12 @@ class LogActivity : BaseActivity() {
                             textView {
                                 // textView2
                                 text = "Recipient: "
+                                textColor = Color.parseColor(textColour)
                             }.lparams(width = wrapContent, height = wrapContent)
                             textView {
                                 // tvTime
                                 text = allLogsLocal[i].receipientName
+                                textColor = Color.parseColor(textColour)
                             }.lparams(width = wrapContent, height = wrapContent) {
                                 rightMargin = dip(10)
                             }
@@ -168,12 +194,14 @@ class LogActivity : BaseActivity() {
                             textView {
                                 // tvDate
                                 text = "Date & Time:"
+                                textColor = Color.parseColor(textColour)
                             }.lparams(width = wrapContent, height = wrapContent) {
                                 rightMargin = dip(10)
                             }
                             textView {
                                 // tvTime
                                 text = allLogsLocal[i].timeStamp
+                                textColor = Color.parseColor(textColour)
                             }.lparams(width = wrapContent, height = wrapContent) {
                                 rightMargin = dip(10)
                             }

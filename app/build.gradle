@@ -62,3 +62,8 @@ dependencies {
     implementation "$support_prefix:support-v4:$support_version"
     implementation "$support_prefix:design:$support_version"
 }
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}

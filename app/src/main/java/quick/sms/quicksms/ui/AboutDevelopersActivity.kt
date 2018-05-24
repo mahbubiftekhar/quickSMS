@@ -37,24 +37,25 @@ class AboutDevelopersActivity : BaseActivity() {
         scrollView {
             verticalLayout {
                 textView {
-                    text = "quickSMS"
+                    text = "About quickSMS"
                     textSize = 100f
                     textColor = Color.GREEN
                     textAlignment = View.TEXT_ALIGNMENT_CENTER //CENTER can be INHERIT GRAVITY TEXT_START TEXT_END VIEW_START VIEW_END
                 }
                 imageView(R.drawable.logo) {
                     backgroundColor = Color.TRANSPARENT //Removes gray border
-                    onLongClick {
-                        true
-                    }
                     horizontalPadding = dip(10)
                     verticalPadding = dip(15)
                 }
                 textView {
-                    text = "quickSMS has been designed to make sending text messages quicker and easier. \n It was developed in our spare time around studying at the University of Edinburgh"
+                    text = "quickSMS has been designed to make sending text messages quicker and easier. \n It was developed by two students whilst at the University of Edinburgh"
                     textSize = 30f
                     textColor = Color.RED
                     textAlignment = View.TEXT_ALIGNMENT_CENTER //CENTER can be INHERIT GRAVITY TEXT_START TEXT_END VIEW_START VIEW_END
+                }
+                textView{
+                    textSize=10f
+
                 }
                 textView {
                     text = "Developers"
@@ -63,40 +64,40 @@ class AboutDevelopersActivity : BaseActivity() {
                     textAlignment = View.TEXT_ALIGNMENT_CENTER //CENTER can be INHERIT GRAVITY TEXT_START TEXT_END VIEW_START VIEW_END
 
                 }
+
+
                 textView {
-                    text = "Alex Shand"
+                    text = "Alex Shand - Android Developer"
                     textSize = 30f
                     textColor = Color.BLACK
                     textAlignment = View.TEXT_ALIGNMENT_CENTER //CENTER can be INHERIT GRAVITY TEXT_START TEXT_END VIEW_START VIEW_END
                     onClick {
-                        onClick {
-                            val websites = listOf("GitHub", "LinkEdin")
-                            selector("Select which website you wish to visit", websites, { _, i ->
-                                try {
-                                    when {
-                                    /*websites[i] == "Website" -> //If the user selected website
-                                        launchWeb("https://www.mahbubiftekhar.co.uk/")*/
-                                        websites[i] == "LinkEdin" -> {
-                                            launchWeb("https://www.linkedin.com/in/alex-shand-3a9993150/")
-                                        }
-                                        else -> //Else send them to Github
-                                            launchWeb("https://github.com/Alex-Shand")
+                        val websites = listOf("GitHub", "LinkEdin")
+                        selector("Would you like to visit Alex's GitHub repository or LinkedIn?", websites, { _, i ->
+                            try {
+                                when {
+                                /*websites[i] == "Website" -> //If the user selected website
+                                    launchWeb("https://www.mahbubiftekhar.co.uk/")*/
+                                    websites[i] == "LinkEdin" -> {
+                                        launchWeb("https://www.linkedin.com/in/alex-shand-3a9993150/")
                                     }
-                                } catch (e: Exception) {
-
+                                    else -> //Else send them to Github
+                                        launchWeb("https://github.com/Alex-Shand")
                                 }
-                            })
-                        }
+                            } catch (e: Exception) {
+
+                            }
+                        })
                     }
                 }
                 textView {
-                    text = "Mahbub Iftekhar"
+                    text = "Mahbub Iftekhar - Android Developer"
                     textSize = 30f
                     textColor = Color.BLACK
                     textAlignment = View.TEXT_ALIGNMENT_CENTER //CENTER can be INHERIT GRAVITY TEXT_START TEXT_END VIEW_START VIEW_END
                     onClick {
                         val websites = listOf("Website", "GitHub", "LinkEdin")
-                        selector("Select which website you wish to visit", websites, { _, i ->
+                        selector("Would you like to visit Mahbub's Website, GitHub repository or LinkedIn?", websites, { _, i ->
                             try {
                                 when {
                                     websites[i] == "Website" -> //If the user selected website
