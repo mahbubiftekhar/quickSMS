@@ -1,11 +1,9 @@
 package quick.sms.quicksms.backend
 
-import Util.Android.toList
 import android.content.ContentResolver
 import android.content.Context
 import android.os.Parcelable
 import android.provider.ContactsContract
-import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import org.jetbrains.anko.*
 

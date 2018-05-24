@@ -1,4 +1,4 @@
-package Util.Android
+package quick.sms.quicksms.backend
 
 import android.content.SharedPreferences
 
