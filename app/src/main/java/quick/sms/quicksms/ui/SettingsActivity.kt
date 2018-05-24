@@ -26,7 +26,6 @@ class SettingsActivity : BaseActivity() {
                 mAdView!!.loadAd(adRequest)
             }
         }
-        colourCheckFunction()
     }
 
     class SettingsFragment : PreferenceFragment() {

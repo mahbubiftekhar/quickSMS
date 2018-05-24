@@ -39,12 +39,12 @@ open class BaseActivity : AppCompatActivity() {
 
     open fun textAndTileColour(): Boolean {
         //This fucntion is to say if the user has both tileColour and text color the same
-        return getTileTextColour() != gettileColour()
+        return getTileTextColour() == gettileColour()
     }
 
     open fun tileAndBackground(): Boolean {
         //This fucntion is to say if the user has both tileColour and backgorund color the same
-        return getBackGroundColour() != gettileColour()
+        return getBackGroundColour() == gettileColour()
     }
 
     open fun colourCheckFunction() {
@@ -68,13 +68,13 @@ open class BaseActivity : AppCompatActivity() {
         //This function shows dialogs dependent on the use as per colourCheckFunction
         val dialogText: String = when (dialogVersion) {
             1 -> {
-                "You are using the same colours for your background, tiles and text"
+                "You are using the same colours for your the background, tiles and text \n"
             }
             2 -> {
-                "You are using the same colours for your tiles and text"
+                "You are using the same colours for your the tiles and text \n"
             }
             else -> {
-                "You are using the same colours for your background and tiles"
+                "You are using the same colours for your the background and tiles \n"
             }
         }
         alert("You can disable this warning in settings") {
