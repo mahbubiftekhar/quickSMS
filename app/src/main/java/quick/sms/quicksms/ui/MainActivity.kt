@@ -62,7 +62,7 @@ class MainActivity : BaseActivity() {
     private fun draw() {
         setActionBarColour()
         MainLayout(contentResolver, contacts, gettileColour(), { onClick(it) },
-                { assignTile(it) }).setContentView(this)
+                { assignTile(it) }, { deleteTile(it) }).setContentView(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -168,10 +168,20 @@ class MainActivity : BaseActivity() {
     }
 
     private fun assignTile(tileNumber: Int) {
-        println(tileNumber)
         startActivityForResult<ContactsActivity>(1,
                 "tile_number" to tileNumber,
                 "contacts" to contactsList)
+    }
+
+    private fun deleteFromContacts(tileNumber: Int) {
+
+    }
+
+    private fun deleteTile(tileNumber: Int) {
+        val contact = contacts[tileNumber]
+        if (contact != null) {
+
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -202,7 +212,8 @@ class MainActivity : BaseActivity() {
 
     private class MainLayout(val cr: ContentResolver, val alreadyAssigned: Map<Int, Contact>,
                              val tileColour : String, val tileCallBack: (Int) -> Unit,
-                             val assignCallBack: (Int) -> Unit) : AnkoComponent<MainActivity> {
+                             val assignCallBack: (Int) -> Unit, val deleteCallback: (Int) -> Unit)
+        : AnkoComponent<MainActivity> {
         val nTiles = alreadyAssigned.size
         val rows = (nTiles / 2) + 1
 
@@ -252,7 +263,7 @@ class MainActivity : BaseActivity() {
                     }
                 }
                 onLongClick {
-
+                    deleteCallback(index)
                 }
             }.lparams(height = matchParent, width = 0) {
                 weight = 1f
