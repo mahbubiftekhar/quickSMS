@@ -5,6 +5,7 @@ import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -15,6 +16,7 @@ import android.view.Window
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import kotlinx.android.synthetic.main.notification_template_lines_media.view.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onLongClick
@@ -239,15 +241,18 @@ class MainActivity : BaseActivity() {
             }
         }
 
-
+        @SuppressLint("SetTextI18n")
         fun _LinearLayout.row(nTiles: Int, row: Int) {
-            linearLayout {
-                for (i in 1..nTiles) {
-                    tile(row, i, nTiles)
+            verticalLayout {
+                linearLayout {
+                    for (i in 1..nTiles) {
+                        tile(row, i, nTiles)
+                    }
+
+                }.lparams(height = dip(180), width = matchParent) {
+                    weight = 1f
+                    padding = dip(7)
                 }
-            }.lparams(height = dip(180), width = matchParent) {
-                weight = 1f
-                padding = dip(7)
             }
         }
 

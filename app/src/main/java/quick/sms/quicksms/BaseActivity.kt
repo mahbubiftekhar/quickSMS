@@ -17,23 +17,32 @@ open class BaseActivity : AppCompatActivity() {
     private val excludedActivities = setOf("SettingsActivity", "SplashActivity", "MainActivity")
 
     open fun getBackGroundColour(): String {
+        //gets the users selected background colour
         return settings.getString("backgroundcolour", "#217ca3")
     }
 
+    open fun showName(): Boolean {
+        //gets whether the user wants the contacts name for contacts with images
+        return settings.getBoolean("ShowName", false)
+    }
     open fun setActionBarColour() {
+        //gets the users selected actionbar colour
         supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(getActionBarColour())))
     }
 
     open fun getTileTextColour(): String {
+        //gets the users selected text colour
         return settings.getString("TileTextColour", "#000000")
     }
 
     open fun soundBool(): Boolean {
+        //Check if user wants sound
         return settings.getBoolean("Sound", true)
     }
 
 
     open fun colourWarning(): Boolean {
+        //Check if user wants the colour warning, this is a warning if conflicting colours are selected
         return settings.getBoolean("ColourCombination", true)
     }
 
