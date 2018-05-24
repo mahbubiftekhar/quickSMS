@@ -1,18 +1,18 @@
 package quick.sms.quicksms.ui
 
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.*
@@ -24,9 +24,8 @@ import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.DatabaseMessages
-import java.lang.Math.ceil
+import quick.sms.quicksms.context
 
-var backgroundColour = ""
 
 class MainActivity : BaseActivity() {
 
@@ -39,7 +38,6 @@ class MainActivity : BaseActivity() {
         val bundle: Bundle = savedInstanceState ?: intent.extras
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
-        backgroundColour = getBackGroundColour()
         contactsList = bundle.get("contacts") as List<Contact>
         val (assigned, unassigned) = contactsList.asSequence().partition { it.tile != null }
         this.unassigned = unassigned
@@ -61,7 +59,7 @@ class MainActivity : BaseActivity() {
 
     private fun draw() {
         setActionBarColour()
-        MainLayout(contentResolver, contacts, gettileColour(), { onClick(it) },
+        MainLayout(contentResolver, contacts, getBackGroundColour(), gettileColour(), getTileTextColour(), { onClick(it) },
                 { assignTile(it) }, { deleteTile(it) }).setContentView(this)
     }
 
@@ -138,6 +136,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    @SuppressLint("ApplySharedPref")
     private fun resetApp() {
         /*This is a very dangerous function, hence why its wrapped around two alerts for security*/
         println(">>>> reset App function")
@@ -147,6 +146,7 @@ class MainActivity : BaseActivity() {
         contactDB.deleteEntireDB()
         tilesDB.deleteEntireDB()
         log.deleteEntireDB()
+        PreferenceManager.getDefaultSharedPreferences(context).edit().clear().commit() //Resetting shared preferences
         runOnUiThread {
             //Restart the app programatically
             println(">>>>> Restarting the device")
@@ -176,8 +176,8 @@ class MainActivity : BaseActivity() {
     private fun deleteFromContacts(tileNumber: Int) {
         val highestContact = contacts.size
         val mutableContacts = contacts.toMutableMap()
-        for (i in tileNumber+1..highestContact) {
-            mutableContacts[i-1] = mutableContacts[i]!!
+        for (i in tileNumber + 1..highestContact) {
+            mutableContacts[i - 1] = mutableContacts[i]!!
         }
         mutableContacts.remove(highestContact)
         contacts = mutableContacts.toMap()
@@ -204,11 +204,13 @@ class MainActivity : BaseActivity() {
             contacts = mutableContacts.toMap()
         }
         draw()
+        colourCheckFunction()
     }
 
     override fun onResume() {
         super.onResume()
         draw()
+        colourCheckFunction()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -218,8 +220,8 @@ class MainActivity : BaseActivity() {
         outState?.putParcelableArrayList("contacts", ArrayList(allContacts))
     }
 
-    private class MainLayout(val cr: ContentResolver, val alreadyAssigned: Map<Int, Contact>,
-                             val tileColour : String, val tileCallBack: (Int) -> Unit,
+    private class MainLayout(val cr: ContentResolver, val alreadyAssigned: Map<Int, Contact>, val backgroundColour: String,
+                             val tileColour: String, val textColour: String, val tileCallBack: (Int) -> Unit,
                              val assignCallBack: (Int) -> Unit, val deleteCallback: (Int) -> Unit)
         : AnkoComponent<MainActivity> {
         val nTiles = alreadyAssigned.size
@@ -262,7 +264,8 @@ class MainActivity : BaseActivity() {
                 } else {
                     background = image
                 }
-                text = contact?.name ?: "Add Tile"
+                text = contact?.name ?: "Unset"
+                textColor = Color.parseColor(textColour)
                 onClick {
                     if (contact != null) {
                         tileCallBack(index)
@@ -278,5 +281,6 @@ class MainActivity : BaseActivity() {
                 margin = dip(7)
             }
         }
+
     }
 }

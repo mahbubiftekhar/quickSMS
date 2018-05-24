@@ -19,6 +19,7 @@ class FaqActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setActionBarColour()
         setContentView(R.layout.activity_faq_actovoty)
+        colourCheckFunction()
 
         doAsync {
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
