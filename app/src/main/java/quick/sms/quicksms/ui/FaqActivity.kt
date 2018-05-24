@@ -43,7 +43,7 @@ class FaqActivity : BaseActivity() {
                         onClick {
                             alert(f.value){
                                 title = f.key
-                                positiveButton("Close"){
+                                positiveButton(""){
                                 }
                             }.show()
 

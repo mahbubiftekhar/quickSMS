@@ -5,6 +5,7 @@
         <item name="Black">Black</item>
         <item name="Yellow">Yellow</item>
         <item name="White">White</item>
+        <item name="Light Blue">Light Blue</item>
         <item name="Blue">Blue</item>
         <item name="Pink">Pink</item>
         <item name="Orange">Orange</item>
@@ -15,6 +16,7 @@
         <item name="Black">#111111</item>
         <item name="Yellow">#ffff33</item>
         <item name="White">#ffffff</item>
+        <item name="Light Blue">#217ca3</item>
         <item name="Blue">#0000FF</item>
         <item name="Pink">#f22ee8</item>
         <item name="Orange">#f1992e</item>

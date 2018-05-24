@@ -5,6 +5,7 @@ import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -240,7 +241,6 @@ class MainActivity : BaseActivity() {
             }
         }
 
-
         @SuppressLint("SetTextI18n")
         fun _LinearLayout.row(nTiles: Int, row: Int) {
             verticalLayout {
@@ -253,10 +253,6 @@ class MainActivity : BaseActivity() {
                     weight = 1f
                     padding = dip(7)
                 }
-            }
-            textView {
-                text = "More tiles will be automatically made when needed"
-                textAlignment = View.TEXT_ALIGNMENT_CENTER //CENTER can be INHERIT GRAVITY TEXT_START TEXT_END VIEW_START VIEW_END
             }
         }
 
