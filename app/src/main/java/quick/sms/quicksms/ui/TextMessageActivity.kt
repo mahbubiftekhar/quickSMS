@@ -32,13 +32,12 @@ import quick.sms.quicksms.backend.DatabaseMessages
 import quick.sms.quicksms.editor
 import quick.sms.quicksms.prefs
 
-@Suppress("DEPRECATION")
+@Suppress("DEPRECATION", "DEPRECATED_IDENTITY_EQUALS")
 class TextMessageActivity : BaseActivity() {
 
     private lateinit var contactDB: DatabaseMessages
     private lateinit var tilesDB: DatabaseLog
-    private val smsManager = SmsManager.getDefault()
-    private lateinit var messages: LinkedHashMap<Int, String>
+2    private lateinit var messages: LinkedHashMap<Int, String>
     private var receipientID: Long = 1L
     private lateinit var recipientName: String
     private lateinit var phoneNumber: String
