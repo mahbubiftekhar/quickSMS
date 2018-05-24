@@ -10,7 +10,6 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
-import org.jetbrains.anko.sdk25.coroutines.onLongClick
 import quick.sms.quicksms.BaseActivity
 import android.content.Intent
 import android.net.Uri
@@ -53,8 +52,8 @@ class AboutDevelopersActivity : BaseActivity() {
                     textColor = Color.RED
                     textAlignment = View.TEXT_ALIGNMENT_CENTER //CENTER can be INHERIT GRAVITY TEXT_START TEXT_END VIEW_START VIEW_END
                 }
-                textView{
-                    textSize=10f
+                textView {
+                    textSize = 10f
 
                 }
                 textView {
@@ -116,6 +115,7 @@ class AboutDevelopersActivity : BaseActivity() {
                 }
             }
         }
+        colourCheckFunction()
 
     }
 

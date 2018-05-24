@@ -8,6 +8,7 @@ import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
 import quick.sms.quicksms.ui.SettingsActivity
 
@@ -19,16 +20,70 @@ open class BaseActivity : AppCompatActivity() {
         return settings.getString("backgroundcolour", "#217ca3")
     }
 
-    open fun setActionBarColour(){
+    open fun setActionBarColour() {
         supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(getActionBarColour())))
     }
 
-    open fun getTileTextColour(): String{
+    open fun getTileTextColour(): String {
         return settings.getString("TileTextColour", "#000000")
     }
 
     open fun soundBool(): Boolean {
         return settings.getBoolean("Sound", true)
+    }
+
+
+    open fun colourWarning(): Boolean {
+        return settings.getBoolean("ColourCombination", true)
+    }
+
+    open fun textAndTileColour(): Boolean {
+        //This fucntion is to say if the user has both tileColour and text color the same
+        return getTileTextColour() != gettileColour()
+    }
+
+    open fun tileAndBackground(): Boolean {
+        //This fucntion is to say if the user has both tileColour and backgorund color the same
+        return getBackGroundColour() != gettileColour()
+    }
+
+    open fun colourCheckFunction() {
+        if (colourWarning()) { //If the user wants this wanrning
+            if (textAndTileColour() && tileAndBackground()) {
+                //Warn the user that they are using the same colour for background, textColour and tileColour
+                alertDialogPopUo(1)
+            } else if (textAndTileColour()) {
+                //Warn the user if they are using same tile and text colour
+                alertDialogPopUo(2)
+            } else if (tileAndBackground()) {
+                //Warn the user if they are using the same background and tile colour
+                alertDialogPopUo(3)
+            } else {
+                //Do nothing, the colours are fine
+            }
+        }
+    }
+
+    open fun alertDialogPopUo(dialogVersion: Int) {
+        //This function shows dialogs dependent on the use as per colourCheckFunction
+        val dialogText: String = when (dialogVersion) {
+            1 -> {
+                "You are using the same colours for your background, tiles and text"
+            }
+            2 -> {
+                "You are using the same colours for your tiles and text"
+            }
+            else -> {
+                "You are using the same colours for your background and tiles"
+            }
+        }
+        alert("You can disable this warning in settings") {
+            title = dialogText
+            positiveButton("Change settings") {
+                startActivity<SettingsActivity>()
+            }
+        }.show()
+
     }
 
     override fun onResume() {

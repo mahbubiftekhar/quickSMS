@@ -39,7 +39,7 @@ class ContactUsActivity : BaseActivity() {
         val your_subject = findViewById<View>(R.id.your_subject) as EditText
         val your_message = findViewById<View>(R.id.your_message) as EditText
 
-        fun isValidEmail(email:String):Boolean {
+        fun isValidEmail(email: String): Boolean {
             val EMAIL_PATTERN = ("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
             val pattern = Pattern.compile(EMAIL_PATTERN)
             val matcher = pattern.matcher(email)

@@ -173,8 +173,8 @@ class MainActivity : BaseActivity() {
     private fun deleteFromContacts(tileNumber: Int) {
         val highestContact = contacts.size
         val mutableContacts = contacts.toMutableMap()
-        for (i in tileNumber+1..highestContact) {
-            mutableContacts[i-1] = mutableContacts[i]!!
+        for (i in tileNumber + 1..highestContact) {
+            mutableContacts[i - 1] = mutableContacts[i]!!
         }
         mutableContacts.remove(highestContact)
         contacts = mutableContacts.toMap()
@@ -201,11 +201,13 @@ class MainActivity : BaseActivity() {
             contacts = mutableContacts.toMap()
         }
         draw()
+        colourCheckFunction()
     }
 
     override fun onResume() {
         super.onResume()
         draw()
+        colourCheckFunction()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -216,7 +218,7 @@ class MainActivity : BaseActivity() {
     }
 
     private class MainLayout(val cr: ContentResolver, val alreadyAssigned: Map<Int, Contact>,
-                             val tileColour : String, val textColour: String, val tileCallBack: (Int) -> Unit,
+                             val tileColour: String, val textColour: String, val tileCallBack: (Int) -> Unit,
                              val assignCallBack: (Int) -> Unit, val deleteCallback: (Int) -> Unit)
         : AnkoComponent<MainActivity> {
         val nTiles = alreadyAssigned.size

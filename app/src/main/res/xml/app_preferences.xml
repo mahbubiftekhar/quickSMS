@@ -15,6 +15,11 @@
         android:title="Confirm before sending"
         android:summary="Confirm before sending SMS"
         android:defaultValue="false"/>
+    <SwitchPreference
+        android:key="ColourCombination"
+        android:title="Warn if colour combinations conflict"
+        android:summary="Warn if colour combinations conflict"
+        android:defaultValue="true"/>
     <ListPreference
         android:dialogTitle="Action bar colour"
         android:entries="@array/settings_list_preference_titles"

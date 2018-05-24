@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ScrollView
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -42,12 +41,12 @@ class LogActivity : BaseActivity() {
         if (a && allLogs.size > 0) {
             //If the returnAll function was successful we shall launch the UI
             allLogsLocal = allLogs
-            UIcreator(getBackGroundColour(),getTileTextColour())
+            UIcreator(getBackGroundColour(), getTileTextColour())
         } else {
             println(">>>>> in the iff condition")
             //If their is no logs, we need to display to the user this so they arent confused
             allLogsLocal = allLogs
-            NoLogs(getBackGroundColour(),getTileTextColour())
+            NoLogs(getBackGroundColour(), getTileTextColour())
         }
     }
 
@@ -109,7 +108,7 @@ class LogActivity : BaseActivity() {
 
 
     @SuppressLint("SetTextI18n")
-    fun UIcreator(backgroundColour: String,textColour: String): View {
+    fun UIcreator(backgroundColour: String, textColour: String): View {
         return scrollView {
             backgroundColor = Color.parseColor(backgroundColour) //Setting the background colour
             verticalLayout {
