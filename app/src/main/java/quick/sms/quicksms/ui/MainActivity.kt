@@ -3,7 +3,6 @@ package quick.sms.quicksms.ui
 import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -12,7 +11,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.Window
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.*
@@ -61,7 +59,7 @@ class MainActivity : BaseActivity() {
 
     private fun draw() {
         setActionBarColour()
-        MainLayout(contentResolver, contacts, gettileColour(), { onClick(it) },
+        MainLayout(contentResolver, contacts, gettileColour(), getTileTextColour(), { onClick(it) },
                 { assignTile(it) }, { deleteTile(it) }).setContentView(this)
     }
 
@@ -219,7 +217,7 @@ class MainActivity : BaseActivity() {
     }
 
     private class MainLayout(val cr: ContentResolver, val alreadyAssigned: Map<Int, Contact>,
-                             val tileColour : String, val tileCallBack: (Int) -> Unit,
+                             val tileColour : String, val textColour: String, val tileCallBack: (Int) -> Unit,
                              val assignCallBack: (Int) -> Unit, val deleteCallback: (Int) -> Unit)
         : AnkoComponent<MainActivity> {
         val nTiles = alreadyAssigned.size
@@ -262,7 +260,8 @@ class MainActivity : BaseActivity() {
                 } else {
                     background = image
                 }
-                text = contact?.name ?: "Add Tile"
+                text = contact?.name ?: "Unset"
+                textColor = Color.parseColor(textColour)
                 onClick {
                     if (contact != null) {
                         tileCallBack(index)
