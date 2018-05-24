@@ -37,7 +37,7 @@ class TextMessageActivity : BaseActivity() {
 
     private lateinit var contactDB: DatabaseMessages
     private lateinit var tilesDB: DatabaseLog
-2    private lateinit var messages: LinkedHashMap<Int, String>
+    private lateinit var messages: LinkedHashMap<Int, String>
     private var receipientID: Long = 1L
     private lateinit var recipientName: String
     private lateinit var phoneNumber: String
