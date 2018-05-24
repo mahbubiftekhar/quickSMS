@@ -13,7 +13,7 @@ val prefs by lazy { App.prefs }
 val editor by lazy { App.editor }
 val settings by lazy { App.settings }
 
-abstract class App : Application() {
+class App : Application() {
 
     companion object {
         private val PREF_FILE = "shared_prefs"
