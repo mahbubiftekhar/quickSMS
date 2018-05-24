@@ -23,7 +23,10 @@ open class BaseActivity : AppCompatActivity() {
 
     open fun setActionBarColour(){
         supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(getActionBarColour())))
+    }
 
+    open fun getTileTextColour(): String{
+        return settings.getString("TileTextColour", "#000000")
     }
 
     open fun soundBool(): Boolean {

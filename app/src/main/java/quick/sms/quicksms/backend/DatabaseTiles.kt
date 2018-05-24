@@ -46,6 +46,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         try {
             db.beginTransaction()
             //Code to do the deed
+            db.delete(TABLE_NAME, "tileid = ?", arrayOf(deletedTile.toString()))
             db.rawQuery("select * from $TABLE_NAME", null).use {
                 while (it.moveToNext()) {
                     if (it.getInt(it.getColumnIndex("tileid")) > deletedTile) {
