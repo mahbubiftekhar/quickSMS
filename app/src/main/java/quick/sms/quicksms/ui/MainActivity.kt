@@ -174,13 +174,21 @@ class MainActivity : BaseActivity() {
     }
 
     private fun deleteFromContacts(tileNumber: Int) {
-
+        val highestContact = contacts.size
+        val mutableContacts = contacts.toMutableMap()
+        for (i in tileNumber+1..highestContact) {
+            mutableContacts[i-1] = mutableContacts[i]!!
+        }
+        mutableContacts.remove(highestContact)
+        contacts = mutableContacts.toMap()
     }
 
     private fun deleteTile(tileNumber: Int) {
         val contact = contacts[tileNumber]
         if (contact != null) {
-
+            DatabaseTiles(this).tileDefragmentator(tileNumber)
+            deleteFromContacts(tileNumber)
+            draw()
         }
     }
 
