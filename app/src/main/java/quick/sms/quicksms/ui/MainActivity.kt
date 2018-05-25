@@ -179,7 +179,12 @@ class MainActivity : BaseActivity() {
         val highestContact = contacts.keys.max()!!
         val mutableContacts = contacts.toMutableMap()
         for (i in tileNumber + 1..highestContact) {
-            mutableContacts[i - 1] = mutableContacts[i]!!
+            val contact = mutableContacts[i]
+            if (contact != null) {
+                mutableContacts[i - 1] = contact
+            } else {
+                mutableContacts.remove(i-1)
+            }
         }
         mutableContacts.remove(highestContact)
         contacts = mutableContacts.toMap()
