@@ -273,7 +273,7 @@ class MainActivity : BaseActivity() {
                     RoundedBitmapDrawableFactory.create(resources, inStream)
                     //Drawable.createFromStream(inStream, it)
                 }
-                image?.cornerRadius = dip(50).toFloat()
+                image?.cornerRadius = dip(20).toFloat()
                 val name = contact?.name ?: "Unset"
                 if (image == null) {
                     backgroundColor = Color.parseColor(tileColour)
