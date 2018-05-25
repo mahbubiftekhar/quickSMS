@@ -1,6 +1,5 @@
 package quick.sms.quicksms.ui
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import quick.sms.quicksms.R
 import android.content.Intent
@@ -39,7 +38,7 @@ class ContactUsActivity : BaseActivity() {
         val your_subject = findViewById<View>(R.id.your_subject) as EditText
         val your_message = findViewById<View>(R.id.your_message) as EditText
 
-        fun isValidEmail(email:String):Boolean {
+        fun isValidEmail(email: String): Boolean {
             val EMAIL_PATTERN = ("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
             val pattern = Pattern.compile(EMAIL_PATTERN)
             val matcher = pattern.matcher(email)
@@ -49,7 +48,7 @@ class ContactUsActivity : BaseActivity() {
         val email = findViewById<View>(R.id.post_message) as Button
         email.setOnClickListener(View.OnClickListener {
             val name = your_name.text.toString()
-            val email = your_email.text.toString()
+            val email2 = your_email.text.toString()
             val subject = your_subject.text.toString()
             val message = your_message.text.toString()
             if (TextUtils.isEmpty(name)) {
@@ -58,7 +57,7 @@ class ContactUsActivity : BaseActivity() {
                 return@OnClickListener
             }
 
-            if (!isValidEmail(email)) {
+            if (!isValidEmail(email2)) {
                 your_email.error = "Invalid Email"
                 return@OnClickListener
             }
@@ -82,7 +81,7 @@ class ContactUsActivity : BaseActivity() {
             sendEmail.putExtra(android.content.Intent.EXTRA_EMAIL, arrayOf("quickSMS@iftekhar.co.uk"))
             sendEmail.putExtra(android.content.Intent.EXTRA_SUBJECT, subject)
             sendEmail.putExtra(android.content.Intent.EXTRA_TEXT,
-                    "name:" + name + '\n'.toString() + "Email ID:" + email + '\n'.toString() + "Message:" + '\n'.toString() + message)
+                    "name:" + name + '\n'.toString() + "Email ID:" + email2 + '\n'.toString() + "Message:" + '\n'.toString() + message)
 
             /* Send it off to the Activity-Chooser */
             startActivity(Intent.createChooser(sendEmail, "Send mail..."))

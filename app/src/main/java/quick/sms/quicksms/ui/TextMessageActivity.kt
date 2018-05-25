@@ -1,7 +1,12 @@
 package quick.sms.quicksms.ui
 
+import android.app.Activity
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import quick.sms.quicksms.backend.putIntAndCommit
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
@@ -14,10 +19,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -30,17 +32,19 @@ import quick.sms.quicksms.backend.DatabaseMessages
 import quick.sms.quicksms.editor
 import quick.sms.quicksms.prefs
 
-@Suppress("DEPRECATION")
+@Suppress("DEPRECATION", "DEPRECATED_IDENTITY_EQUALS")
 class TextMessageActivity : BaseActivity() {
 
     private lateinit var contactDB: DatabaseMessages
     private lateinit var tilesDB: DatabaseLog
-    private val smsManager = SmsManager.getDefault()
     private lateinit var messages: LinkedHashMap<Int, String>
     private var receipientID: Long = 1L
     private lateinit var recipientName: String
     private lateinit var phoneNumber: String
     private var sound = false
+    private val SENT = "SMS_SENT"
+    private val DELIVERED = "SMS_DELIVERED"
+    private val MAX_SMS_MESSAGE_LENGTH = 160
 
     private var mAdView: AdView? = null
 
@@ -145,6 +149,7 @@ class TextMessageActivity : BaseActivity() {
         editor.putIntAndCommit("DBHELPERID", loadID() + 1)
     }
 
+
     fun addButtons(textMessages: LinkedHashMap<Int, String>) {
         val llMain = findViewById<LinearLayout>(R.id.ll_main_layout)
         llMain.removeAllViews()
@@ -161,23 +166,39 @@ class TextMessageActivity : BaseActivity() {
             buttonDynamic.id = key
             buttonDynamic.setOnClickListener {
                 fun sendMessage() {
-                    var a = false
                     try {
-                        smsManager.sendTextMessage(phoneNumber, null, value,
-                                null, null)
+                        //addToLog(receipientID, buttonDynamic.text as String, recipientName, phoneNumber)
+                        //sendSMS(phoneNumber, value)
+                        val sent = "SMS_SENT"
+                        val piSent = PendingIntent.getBroadcast(applicationContext, 0, Intent(SENT), 0)
+                        val piDelivered = PendingIntent.getBroadcast(applicationContext, 0, Intent(DELIVERED), 0)
+                        registerReceiver(object : BroadcastReceiver() {
+                            override fun onReceive(arg0: Context, arg1: Intent) {
+                                if (resultCode === Activity.RESULT_OK) {
+                                    doAsync {
+                                        addToLog(receipientID, buttonDynamic.text as String, recipientName, phoneNumber)
+                                    }
+                                    Toast.makeText(baseContext, "SMS sent successfully", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    toast("Sorry, couldn't send SMS")
+                                }
+                            }
+                        }, IntentFilter(sent))
+                        val smsManager = SmsManager.getDefault()
+                        val length = (buttonDynamic.text as String).length
+                        return if (length > MAX_SMS_MESSAGE_LENGTH) {
+                            val messagelist = smsManager.divideMessage(buttonDynamic.text as String)
+                            smsManager.sendMultipartTextMessage(phoneNumber, null, messagelist, null, null)
+
+                        } else {
+                            smsManager.sendTextMessage(phoneNumber, null, buttonDynamic.text as String, piSent, piDelivered)
+                        }
                     } catch (e: Exception) {
                         toast("Sorry, Message not sent")
-                        a = true
                     }
-                    if (a) {
-                        this@TextMessageActivity.toast("Message sent")
-                    }
-                    if (vibrateBool()) {
-                        vibrate()
-                    }
-                    if (soundBool()) {
-                        makeSound()
-                    }
+
+                    vibrate()
+                    makeSound()
                     doAsync {
                         if (receipientID != 1L) {
                             //Here we are adding to the log, checking for not 1L to not add during development
@@ -244,12 +265,8 @@ class TextMessageActivity : BaseActivity() {
     }
 
     fun addData(recipientId: Long, message: String) {
-        if (vibrateBool()) {
-            vibrate()
-        }
-        if (soundBool()) {
-            makeSound()
-        }
+        vibrate()
+        makeSound()
         val databaseID = loadID()
         incrementID()
         messages[databaseID] = message
