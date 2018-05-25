@@ -2,11 +2,8 @@ package quick.sms.quicksms.ui
 
 import android.app.Activity
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
+import android.content.*
 import quick.sms.quicksms.backend.putIntAndCommit
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
@@ -15,10 +12,7 @@ import android.os.Vibrator
 import android.support.v7.app.AlertDialog
 import android.telephony.SmsManager
 import android.text.InputType
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -45,8 +39,10 @@ class TextMessageActivity : BaseActivity() {
     private val SENT = "SMS_SENT"
     private val DELIVERED = "SMS_DELIVERED"
     private val MAX_SMS_MESSAGE_LENGTH = 160
+    lateinit var Spinner: Spinner
 
     private var mAdView: AdView? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -149,8 +145,8 @@ class TextMessageActivity : BaseActivity() {
         editor.putIntAndCommit("DBHELPERID", loadID() + 1)
     }
 
-
     fun addButtons(textMessages: LinkedHashMap<Int, String>) {
+
         val llMain = findViewById<LinearLayout>(R.id.ll_main_layout)
         llMain.removeAllViews()
         llMain.removeAllViewsInLayout()
