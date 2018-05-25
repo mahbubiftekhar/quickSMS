@@ -124,4 +124,7 @@
     <string name="call_log">CALL LOG</string>
     <string name="sms_log">SMS LOG</string>
     <string name="padding_here">PADDING HERE</string>
+    <string name="reset_app">RESET APP</string>
+    <string name="faq_s">FAQ\'s</string>
+    <string name="select_number">SELECT NUMBER</string>
 </resources>

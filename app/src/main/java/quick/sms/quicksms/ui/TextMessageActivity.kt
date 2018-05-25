@@ -38,56 +38,33 @@ class TextMessageActivity : BaseActivity() {
     private val DELIVERED = "SMS_DELIVERED"
     private val MAX_SMS_MESSAGE_LENGTH = 160
     lateinit var Spinner: Spinner
+    private var tileID = -1
+    lateinit var contact: Contact
 
     private var mAdView: AdView? = null
-    lateinit var PhoneNumbers: Array<String?>
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setActionBarColour()
         setContentView(R.layout.activity_text_message)
-        Spinner = findViewById<View>(R.id.spinner) as Spinner
-        Spinner.bringToFront()
-
-        /*set click listener*/
 
         contactDB = DatabaseMessages(this)
         logDB = DatabaseLog(this)
         tilesDB = DatabaseTiles(this)
-        val contact = intent.extras.get("contact")
+        doAsync { phoneNumber = tilesDB.getPreferedNum(receipientID) }
+        contact = intent.extras.get("contact") as Contact
+        tileID = intent.getIntExtra("tileID", 0)
         if (contact is Contact) {
-            phoneNumber = contact.numbers[0]
+            println(">>> Contact numbers" + contact.numbers)
             recipientName = contact.name
             receipientID = contact.id
             updateTitle() //updates the users name on the action bar
             doAsync {
                 val result = contactDB.returnAllHashMap(receipientID)
                 uiThread {
-                   // addButtons(result)
+                    // addButtons(result)
                     messages = result
                 }
-            }
-            doAsync {
-                val preferedNumber = tilesDB.getPreferedNum(receipientID)
-                var index = 0
-                if (preferedNumber != "") {
-                    PhoneNumbers[0] = preferedNumber
-                    index++
-                }
-                for (i in 0..contact.numbers.size) {
-                    //Adding phone numbers to the array
-                    if (contact.numbers[i] == preferedNumber) {
-                        //Don't add to the list, its already their
-                    } else {
-                        PhoneNumbers[index] = contact.numbers[i]
-                        index++
-                    }
-                }
-                uiThread {
-                    setUpSpinner() //Setting up the spinner
-                }
-
             }
         }
         doAsync {
@@ -100,26 +77,9 @@ class TextMessageActivity : BaseActivity() {
         }
     }
 
-    private fun setUpSpinner() {
-        println("&&&" + PhoneNumbers)
-        Spinner.bringToFront()
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, PhoneNumbers)
-        Spinner.adapter = adapter
-        Spinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, PhoneNumbers)
-        Spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-
-            }
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate your main_menu into the menu
-        menuInflater.inflate(R.menu.textmessageactivity, menu)
+        menuInflater.inflate(R.menu.textmessage_extras, menu)
         // Locate MenuItem with ShareActionProvider
         return true
     }
@@ -141,9 +101,38 @@ class TextMessageActivity : BaseActivity() {
             }
             true
         }
+        R.id.selectNumber -> {
+            doAsync {
+                val phoneNumbers = mutableListOf<String>()
+                phoneNumbers.add(phoneNumber)
+                println(">>>> all numbers"+contact.numbers)
+                for (i in 0 until contact.numbers.size) {
+                    println(">>>>"+contact.numbers[i])
+                    if (contact.numbers[i] != phoneNumber) {
+                        //Only add it if its not the current prefered number
+                        phoneNumbers.add(contact.numbers[i])
+                    }
+                }
+                uiThread {
+                    selector("Select the number you wish to send messages too", phoneNumbers, { _, i ->
+                        try {
+                            updatePreferedNum(phoneNumbers[i].toInt())
+                        } catch (e: Exception) {
+
+                        }
+                    })
+                }
+            }
+            true
+        }
         else -> {
             super.extendedOptions(item)
         }
+    }
+
+    private fun updatePreferedNum(PreferedNumber: Int) {
+        phoneNumber = PreferedNumber.toString()
+        doAsync { tilesDB.insertData(receipientID, tileID, PreferedNumber) }
     }
 
     private fun updateTitle() {
