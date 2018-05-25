@@ -76,6 +76,7 @@ class TextMessageActivity : BaseActivity() {
                     index++
                 }
                 for (i in 0..contact.numbers.size) {
+                    //Adding phone numbers to the array
                     if (contact.numbers[i] == preferedNumber) {
                         //Don't add to the list, its already their
                     } else {
@@ -84,28 +85,30 @@ class TextMessageActivity : BaseActivity() {
                     }
                 }
                 uiThread {
-                    setUpSpinner()
+                    setUpSpinner() //Setting up the spinner
                 }
 
             }
         }
-        /*doAsync {
+        doAsync {
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
             mAdView = findViewById<View>(R.id.adView) as AdView
             val adRequest = AdRequest.Builder().build()
             uiThread {
                 mAdView!!.loadAd(adRequest)
             }
-        } */
+        }
     }
 
     private fun setUpSpinner() {
+        println("&&&" + PhoneNumbers)
+        Spinner.bringToFront()
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, PhoneNumbers)
         Spinner.adapter = adapter
         Spinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, PhoneNumbers)
         Spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                /*Do nothing on nothing selected*/
+
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

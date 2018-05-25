@@ -15,7 +15,7 @@
         android:textAlignment="center"
         android:textColor="#000001" />
 
-   <!-- <RelativeLayout
+   <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -60,8 +60,6 @@
             ads:adSize="BANNER"
             ads:adUnitId="ca-app-pub-2206499302575732/2755153561">
         </com.google.android.gms.ads.AdView>
-    </RelativeLayout> -->
-
-
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
