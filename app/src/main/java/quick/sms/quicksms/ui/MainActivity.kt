@@ -61,8 +61,9 @@ class MainActivity : BaseActivity() {
 
     private fun draw() {
         setActionBarColour()
-        MainLayout(contentResolver, contacts, getBackGroundColour(), gettileColour(), getTileTextColour(), { onClick(it) },
-                { assignTile(it) }, { deleteTile(it) }).setContentView(this)
+        MainLayout(contentResolver, contacts, getBackGroundColour(), gettileColour(),
+                getTileTextColour(), showName(), { onClick(it) }, { assignTile(it) },
+                { deleteTile(it) }).setContentView(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -228,7 +229,7 @@ class MainActivity : BaseActivity() {
     }
 
     private class MainLayout(val cr: ContentResolver, val alreadyAssigned: Map<Int, Contact>, val backgroundColour: String,
-                             val tileColour: String, val textColour: String, val tileCallBack: (Int) -> Unit,
+                             val tileColour: String, val textColour: String, val showName: Boolean, val tileCallBack: (Int) -> Unit,
                              val assignCallBack: (Int) -> Unit, val deleteCallback: (Int) -> Unit)
         : AnkoComponent<MainActivity> {
         val nTiles = alreadyAssigned.size
@@ -269,12 +270,16 @@ class MainActivity : BaseActivity() {
                     val inStream = cr.openInputStream(Uri.parse(it))
                     Drawable.createFromStream(inStream, it)
                 }
+                val name = contact?.name ?: "Unset"
                 if (image == null) {
                     backgroundColor = Color.parseColor(tileColour)
+                    text = name
                 } else {
                     background = image
+                    if (showName) {
+                        text = name
+                    }
                 }
-                text = contact?.name ?: "Unset"
                 textColor = Color.parseColor(textColour)
                 onClick {
                     if (contact != null) {
