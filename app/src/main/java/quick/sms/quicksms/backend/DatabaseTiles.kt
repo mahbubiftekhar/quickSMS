@@ -17,6 +17,28 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         onCreate(db)
     }
 
+    fun getPreferedNum(receipientID: Long): String {
+        // Given the users ID, return the users prefered phone number
+        //This is being serarched linearly which is slow, but given that the the list will be probably at most 15, it is good for the job
+        val db = this.writableDatabase
+        try {
+            db.beginTransaction()
+            db.rawQuery("select * from $TABLE_NAME", null).use {
+                while (it.moveToNext()) {
+                        if(it.getLong(it.getColumnIndex("recipient_id")) == receipientID){ //If the receipientID matches
+                            return it.getInt(it.getColumnIndex("prefered_number")).toString() //Return the prefered number, else continue
+                        }
+                    }
+                }
+            db.setTransactionSuccessful()
+        } catch (e: SQLException) {
+
+        } finally {
+            db.endTransaction()
+        }
+        return ""
+    }
+
     fun insertData(recipient_id: Long, tileid: Int, prefered_number: Int) {
         val db = this.writableDatabase
         try {

@@ -5,19 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#2072A4">
+    <Spinner xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:padding="5dp"
+        android:scrollbarSize="10dp"
+        android:textAlignment="center"
+        android:textColor="#000001" />
 
-    <RelativeLayout
+   <!-- <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <Spinner xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            android:padding="5dp"
-            android:scrollbarSize="10dp"
-            android:textAlignment="center"
-            android:textColor="#000001" />
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -60,7 +60,7 @@
             ads:adSize="BANNER"
             ads:adUnitId="ca-app-pub-2206499302575732/2755153561">
         </com.google.android.gms.ads.AdView>
-    </RelativeLayout>
+    </RelativeLayout> -->
 
 
 

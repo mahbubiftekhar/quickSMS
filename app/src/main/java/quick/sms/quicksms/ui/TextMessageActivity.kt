@@ -3,7 +3,6 @@ package quick.sms.quicksms.ui
 import android.app.Activity
 import android.app.PendingIntent
 import android.content.*
-import quick.sms.quicksms.backend.putIntAndCommit
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
@@ -20,9 +19,7 @@ import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.*
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
-import quick.sms.quicksms.backend.Contact
-import quick.sms.quicksms.backend.DatabaseLog
-import quick.sms.quicksms.backend.DatabaseMessages
+import quick.sms.quicksms.backend.*
 import quick.sms.quicksms.editor
 import quick.sms.quicksms.prefs
 
@@ -30,7 +27,8 @@ import quick.sms.quicksms.prefs
 class TextMessageActivity : BaseActivity() {
 
     private lateinit var contactDB: DatabaseMessages
-    private lateinit var tilesDB: DatabaseLog
+    private lateinit var logDB: DatabaseLog
+    private lateinit var tilesDB: DatabaseTiles
     private lateinit var messages: LinkedHashMap<Int, String>
     private var receipientID: Long = 1L
     private lateinit var recipientName: String
@@ -42,15 +40,21 @@ class TextMessageActivity : BaseActivity() {
     lateinit var Spinner: Spinner
 
     private var mAdView: AdView? = null
+    lateinit var PhoneNumbers: Array<String?>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setActionBarColour()
         setContentView(R.layout.activity_text_message)
+        Spinner = findViewById<View>(R.id.spinner) as Spinner
+        Spinner.bringToFront()
+
+        /*set click listener*/
 
         contactDB = DatabaseMessages(this)
-        tilesDB = DatabaseLog(this)
+        logDB = DatabaseLog(this)
+        tilesDB = DatabaseTiles(this)
         val contact = intent.extras.get("contact")
         if (contact is Contact) {
             phoneNumber = contact.numbers[0]
@@ -60,17 +64,52 @@ class TextMessageActivity : BaseActivity() {
             doAsync {
                 val result = contactDB.returnAllHashMap(receipientID)
                 uiThread {
-                    addButtons(result)
+                   // addButtons(result)
                     messages = result
                 }
             }
+            doAsync {
+                val preferedNumber = tilesDB.getPreferedNum(receipientID)
+                var index = 0
+                if (preferedNumber != "") {
+                    PhoneNumbers[0] = preferedNumber
+                    index++
+                }
+                for (i in 0..contact.numbers.size) {
+                    if (contact.numbers[i] == preferedNumber) {
+                        //Don't add to the list, its already their
+                    } else {
+                        PhoneNumbers[index] = contact.numbers[i]
+                        index++
+                    }
+                }
+                uiThread {
+                    setUpSpinner()
+                }
+
+            }
         }
-        doAsync {
+        /*doAsync {
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
             mAdView = findViewById<View>(R.id.adView) as AdView
             val adRequest = AdRequest.Builder().build()
             uiThread {
                 mAdView!!.loadAd(adRequest)
+            }
+        } */
+    }
+
+    private fun setUpSpinner() {
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, PhoneNumbers)
+        Spinner.adapter = adapter
+        Spinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, PhoneNumbers)
+        Spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                /*Do nothing on nothing selected*/
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+
             }
         }
     }
@@ -136,7 +175,7 @@ class TextMessageActivity : BaseActivity() {
     }
 
     private fun addToLog(recipient_id: Long, message: String, receipientName: String, phoneNumber: String) {
-        tilesDB.insertData(recipient_id, message, receipientName, phoneNumber)
+        logDB.insertData(recipient_id, message, receipientName, phoneNumber)
     }
 
     private fun loadID() = prefs.getInt("DBHELPERID", 0)
