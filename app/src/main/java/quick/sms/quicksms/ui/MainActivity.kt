@@ -293,6 +293,7 @@ class MainActivity : BaseActivity() {
                     }
                 }
                 onLongClick {
+                    //TODO:An alert here to doubble check would be nice
                     deleteCallback(index)
                 }
             }.lparams(height = matchParent, width = 0) {
