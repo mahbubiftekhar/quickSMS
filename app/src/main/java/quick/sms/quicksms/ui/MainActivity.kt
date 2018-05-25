@@ -9,6 +9,8 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -268,8 +270,10 @@ class MainActivity : BaseActivity() {
                 val contact = alreadyAssigned[index]
                 val image = contact?.image?.let {
                     val inStream = cr.openInputStream(Uri.parse(it))
-                    Drawable.createFromStream(inStream, it)
+                    RoundedBitmapDrawableFactory.create(resources, inStream)
+                    //Drawable.createFromStream(inStream, it)
                 }
+                image?.cornerRadius = dip(50).toFloat()
                 val name = contact?.name ?: "Unset"
                 if (image == null) {
                     backgroundColor = Color.parseColor(tileColour)
