@@ -46,9 +46,6 @@ class MainActivity : BaseActivity() {
         val (assigned, unassigned) = contactsList.asSequence().partition { it.tile != null }
         this.unassigned = unassigned
         contacts = assigned.associateBy { it.tile!! }
-        verticalLayout {
-            include<View>(R.xml.advertxml) {}
-        }
         draw()
 
         doAsync {
@@ -238,14 +235,20 @@ class MainActivity : BaseActivity() {
         val rows = (nTiles / 2) + 1
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
-            scrollView {
-                backgroundColor = Color.parseColor(backgroundColour)
+            verticalLayout {
+                scrollView {
+                    isFillViewport = true
+                    backgroundColor = Color.parseColor(backgroundColour)
 
-                verticalLayout {
-                    for (i in 1..rows) {
-                        row(2, i)
+                    verticalLayout {
+                        for (i in 1..rows) {
+                            row(2, i)
+                        }
                     }
+                }.lparams(width=matchParent, height=0) {
+                    weight = 1.0f
                 }
+                include<View>(R.xml.advertxml) {}
             }
         }
 
