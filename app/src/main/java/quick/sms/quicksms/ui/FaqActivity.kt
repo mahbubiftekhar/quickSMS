@@ -24,6 +24,7 @@ class FaqActivity : BaseActivity() {
         faq["Can I see messages I've sent?"] = "Yes, you can see this in the app 'SMS LOG'"
         faq["I have some suggestions, how can I share them?"] = "We're more than happy to hear you suggestions! User the contact table, accessible from 'options'"
         faq["When I send a message, it says 'Sorry, couldn't send SMS'"] = "This may be due to many reasons e.g. No reception, out of PAYG credit"
+        faq["Can I add my own messages for the contact?"] = ""
 
 
         doAsync {

@@ -18,6 +18,7 @@ import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.Contact
 import java.io.FileNotFoundException
 
+@Suppress("DEPRECATION")
 class ContactsActivity : BaseActivity() {
 
     private var tileNumber = 0

@@ -16,47 +16,47 @@ open class BaseActivity : AppCompatActivity() {
 
     private val excludedActivities = setOf("SettingsActivity", "SplashActivity", "MainActivity")
 
-    open fun getBackGroundColour(): String {
+    fun getBackGroundColour(): String {
         //gets the users selected background colour
         return settings.getString("backgroundcolour", "#217ca3")
     }
 
-    open fun showName(): Boolean {
+    fun showName(): Boolean {
         //gets whether the user wants the contacts name for contacts with images
         return settings.getBoolean("ShowName", false)
     }
-    open fun setActionBarColour() {
+    fun setActionBarColour() {
         //gets the users selected actionbar colour
         supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(getActionBarColour())))
     }
 
-    open fun getTileTextColour(): String {
+    fun getTileTextColour(): String {
         //gets the users selected text colour
         return settings.getString("TileTextColour", "#000000")
     }
 
-    open fun soundBool(): Boolean {
+    fun soundBool(): Boolean {
         //Check if user wants sound
         return settings.getBoolean("Sound", true)
     }
 
 
-    open fun colourWarning(): Boolean {
+    fun colourWarning(): Boolean {
         //Check if user wants the colour warning, this is a warning if conflicting colours are selected
         return settings.getBoolean("ColourCombination", true)
     }
 
-    open fun textAndTileColour(): Boolean {
+    fun textAndTileColour(): Boolean {
         //This fucntion is to say if the user has both tileColour and text color the same
         return getTileTextColour() == gettileColour()
     }
 
-    open fun tileAndBackground(): Boolean {
+    fun tileAndBackground(): Boolean {
         //This fucntion is to say if the user has both tileColour and backgorund color the same
         return getBackGroundColour() == gettileColour()
     }
 
-    open fun colourCheckFunction() {
+    fun colourCheckFunction() {
         if (colourWarning()) { //If the user wants this wanrning
             if (textAndTileColour() && tileAndBackground()) {
                 //Warn the user that they are using the same colour for background, textColour and tileColour
@@ -73,7 +73,7 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    open fun alertDialogPopUo(dialogVersion: Int) {
+    fun alertDialogPopUo(dialogVersion: Int) {
         //This function shows dialogs dependent on the use as per colourCheckFunction
         val dialogText: String = when (dialogVersion) {
             1 -> {
@@ -92,7 +92,6 @@ open class BaseActivity : AppCompatActivity() {
                 startActivity<SettingsActivity>()
             }
         }.show()
-
     }
 
     override fun onResume() {

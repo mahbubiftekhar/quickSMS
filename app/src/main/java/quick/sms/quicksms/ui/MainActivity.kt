@@ -11,11 +11,7 @@ import android.preference.PreferenceManager
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.Window
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onLongClick
@@ -28,13 +24,11 @@ import quick.sms.quicksms.backend.DatabaseMessages
 import quick.sms.quicksms.context
 import java.io.FileNotFoundException
 
-
 class MainActivity : BaseActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
     private lateinit var contactsList: List<Contact>
     private lateinit var unassigned: List<Contact>
-    private var mAdView: AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val bundle: Bundle = savedInstanceState ?: intent.extras
@@ -45,15 +39,6 @@ class MainActivity : BaseActivity() {
         this.unassigned = unassigned
         contacts = assigned.associateBy { it.tile!! }
         draw()
-
-        doAsync {
-            MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
-            mAdView = findViewById<View>(R.id.adView) as AdView
-            val adRequest = AdRequest.Builder().build()
-            uiThread {
-                mAdView!!.loadAd(adRequest)
-            }
-        }
     }
 
     private fun draw() {
@@ -182,7 +167,7 @@ class MainActivity : BaseActivity() {
             if (contact != null) {
                 mutableContacts[i - 1] = contact
             } else {
-                mutableContacts.remove(i-1)
+                mutableContacts.remove(i - 1)
             }
         }
         mutableContacts.remove(highestContact)
@@ -252,10 +237,10 @@ class MainActivity : BaseActivity() {
                             row(2, i)
                         }
                     }
-                }.lparams(width=matchParent, height=0) {
+                }.lparams(width = matchParent, height = 0) {
                     weight = 1.0f
                 }
-                include<View>(R.xml.advertxml) {}
+                //include<View>(R.xml.advertxml) {}
             }
         }
 

@@ -196,6 +196,7 @@ class TextMessageActivity : BaseActivity() {
             buttonDynamic.text = value
             buttonDynamic.layoutParams = params
             buttonDynamic.id = key
+            buttonDynamic.setBackgroundResource(R.drawable.rounded_corners)
             buttonDynamic.setOnClickListener {
                 fun sendMessage() {
                     try {
