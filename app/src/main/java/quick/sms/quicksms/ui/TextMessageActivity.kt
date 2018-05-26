@@ -58,6 +58,8 @@ class TextMessageActivity : BaseActivity() {
         contact = intent.extras.get("contact") as Contact
         tileID = intent.getIntExtra("tileID", 0)
         phoneNumber = tilesDB.getPreferedNum(tileID)
+        phoneNumber = phoneNumber.removeRange(0, 1) //Remove the leading p
+        println("&&&&afterremove0" + phoneNumber)
         println("<<<<" + phoneNumber)
 
         if (contact is Contact) {
@@ -101,13 +103,7 @@ class TextMessageActivity : BaseActivity() {
     override fun extendedOptions(item: MenuItem) = when (item.itemId) {
         R.id.make_call -> {
             try {
-                println(">>>" + returnNoSpaces(getPhoneNumber()))
-                if ((phoneNumber[0])!= '0') {
-                    //If phoneNUmber is not leading with a 0 add it
-                    phoneNumber = "0" + phoneNumber
-
-                }
-                makeCall(getPhoneNumber())
+                makeCall(returnNoSpaces(getPhoneNumber()))
             } catch (e: Exception) {
 
             }
@@ -132,16 +128,16 @@ class TextMessageActivity : BaseActivity() {
             println(">>>> all numbers" + contact.numbers)
             for (i in 0 until contact.numbers.size) {
                 println(">>>>" + contact.numbers[i])
-                if (returnNoSpaces(returnNoSpaces(contact.numbers[i])) != returnNoSpaces(returnNoSpaces(phoneNumber))) {
-                    //Only add it if its not the current prefered number
-                    phoneNumbers.add(contact.numbers[i])
+                if (returnNoSpaces(returnNoSpaces(contact.numbers[i])) != returnNoSpaces(returnNoSpaces(phoneNumber)) && !phoneNumbers.contains(contact.numbers[i])) {
+                    /*Only add it if its not the current prefered numbers and doesn't already contain this phone number */
+                    phoneNumbers.add(returnNoSpaces(contact.numbers[i]))
                 }
             }
 
             selector("Which phone number would you like to send messages to?", phoneNumbers, { _, z ->
                 try {
                     println("<<<<" + returnNoSpaces(phoneNumbers[z]))
-                    updatePreferedNum(returnNoSpaces(phoneNumbers[z]))
+                    updatePreferedNum("p" + returnNoSpaces(phoneNumbers[z]))
                 } catch (e: Exception) {
 
                 }
@@ -155,17 +151,9 @@ class TextMessageActivity : BaseActivity() {
     }
 
     private fun updatePreferedNum(PreferedNumber: String) {
-        println("<<<<< in the function")
         phoneNumber = PreferedNumber
-        println("<<<1")
         val tiles = DatabaseTiles(this)
-        println("<<<2")
         tiles.insertData(receipientID, tileID, PreferedNumber)
-        println("<<<3")
-        val a = tiles.getPreferedNum(tileID)
-        println("&&& from database :$a")
-        println("&&& from whatWasSet :$PreferedNumber")
-
     }
 
     private fun updateTitle() {
@@ -189,7 +177,7 @@ class TextMessageActivity : BaseActivity() {
                 toast("Invalid input, Please try again")
             } else {
                 addData(getrecipientId(), mText)
-                toast("MESSAGE ADDED")
+                toast("Message added successfully")
             }
         }
 
@@ -245,11 +233,6 @@ class TextMessageActivity : BaseActivity() {
                         val length = (buttonDynamic.text as String).length
                         return if (length > MAX_SMS_MESSAGE_LENGTH) {
                             val messagelist = smsManager.divideMessage(buttonDynamic.text as String)
-                            if ((phoneNumber[0]).toInt() != 0) {
-                                //If phoneNUmber is not leading with a 0 add it
-                                phoneNumber = "0" + phoneNumber
-
-                            }
                             smsManager.sendMultipartTextMessage(phoneNumber, null, messagelist, null, null)
 
                         } else {

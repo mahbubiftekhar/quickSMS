@@ -61,6 +61,12 @@ class MainActivity : BaseActivity() {
             startActivity<SettingsActivity>()
             true
         }
+        R.id.sync->{
+            //User wishes to resync so just send them to the splash and let the app do the rest
+            finish()
+            startActivity<SplashActivity>()
+            true
+        }
         R.id.menu_item_share -> {
             //Allow the users to share the app to their friends/family
             val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
