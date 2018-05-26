@@ -11,7 +11,6 @@ import android.view.View
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import kotlinx.android.synthetic.main.notification_template_custom_big.view.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import quick.sms.quicksms.BaseActivity
@@ -62,15 +61,19 @@ class ContactsActivity : BaseActivity() {
         }
 
         fun _LinearLayout.contactView(contact: Contact) {
-            linearLayout {
+            linearLayout{
+                var error = false
                 var photo = contact.image?.let {
                     try {
-                        val inStream = cr.openInputStream(Uri.parse(it))
-                        Drawable.createFromStream(inStream, it)
+                        val inStream = cr.openInputStream(Uri.parse(it));Drawable.createFromStream(inStream, it)
                     } catch (e: Exception) {
-
+                         error = true
+                        println("<<<<<<"+contact)
                     }
-                }//?: resources.getDrawable(R.drawable.default_image, context.theme)
+                }
+                if(error){
+                    println("<<<<<<<"+photo)
+                }
                 if (photo == null) {
                     photo = if (android.os.Build.VERSION.SDK_INT >= 21) {
                         resources.getDrawable(R.drawable.default_image, context.theme)

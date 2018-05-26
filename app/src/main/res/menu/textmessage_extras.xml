@@ -14,7 +14,6 @@
 
     <item
         android:id="@+id/empty"
-        android:icon="@drawable/ic_overflow_holo_dark"
         android:orderInCategory="101"
         android:title="@string/options"
         app:showAsAction="always">
