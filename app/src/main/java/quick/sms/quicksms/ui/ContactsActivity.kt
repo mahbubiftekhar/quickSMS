@@ -1,8 +1,13 @@
 package quick.sms.quicksms.ui
 
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Intent
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
+import android.support.v4.content.ContextCompat.getDrawable
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.Gravity
 import android.view.View
 import com.google.android.gms.ads.AdRequest
@@ -23,7 +28,7 @@ class ContactsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         val contacts = (intent.extras.get("contacts") as List<Contact>).sortedBy { it.name }
         tileNumber = intent.getIntExtra("tile_number", 0)
-        ContactsLayout(contacts) { selectContact(it) }.setContentView(this)
+        ContactsLayout(contentResolver, contacts) { selectContact(it) }.setContentView(this)
 
         doAsync {
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
@@ -43,7 +48,9 @@ class ContactsActivity : BaseActivity() {
         finish()
     }
 
-    private class ContactsLayout(val contacts: List<Contact>, val selectContact: (Contact) -> Unit) : AnkoComponent<ContactsActivity> {
+    private class ContactsLayout(val cr: ContentResolver, val contacts: List<Contact>,
+                                 val selectContact: (Contact) -> Unit)
+        : AnkoComponent<ContactsActivity> {
 
         override fun createView(ui: AnkoContext<ContactsActivity>) = with(ui) {
             scrollView {
@@ -57,7 +64,20 @@ class ContactsActivity : BaseActivity() {
 
         fun _LinearLayout.contactView(contact: Contact) {
             linearLayout {
-                imageView(imageResource = R.drawable.default_image).lparams() {
+                var photo = contact.image?.let {
+                    val inStream = cr.openInputStream(Uri.parse(it))
+                    Drawable.createFromStream(inStream, it)
+                }//?: resources.getDrawable(R.drawable.default_image, context.theme)
+                if (photo == null) {
+                    if (android.os.Build.VERSION.SDK_INT >= 21) {
+                        photo = resources.getDrawable(R.drawable.default_image, context.theme)
+                    } else {
+                        photo = resources.getDrawable(R.drawable.default_image)
+                    }
+                }
+                imageView {
+                    image = photo
+                }.lparams {
                     gravity = Gravity.START
                 }
                 textView(contact.name) {
