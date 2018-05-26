@@ -58,9 +58,9 @@ class TextMessageActivity : BaseActivity() {
         contact = intent.extras.get("contact") as Contact
         tileID = intent.getIntExtra("tileID", 0)
         phoneNumber = tilesDB.getPreferedNum(tileID)
-        phoneNumber = phoneNumber.removeRange(0, 1) //Remove the leading p
-        println("&&&&afterremove0" + phoneNumber)
-        println("<<<<" + phoneNumber)
+        if(phoneNumber.length>1){
+            phoneNumber = phoneNumber.removeRange(0, 1) //Remove the leading p
+        }
 
         if (contact is Contact) {
             println(">>> Contact numbers" + contact.numbers)
