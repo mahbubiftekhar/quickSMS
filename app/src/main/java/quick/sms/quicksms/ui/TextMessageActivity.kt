@@ -52,14 +52,13 @@ class TextMessageActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setActionBarColour()
         setContentView(R.layout.activity_text_message)
-        println("<<<Remove 056" + returnNoSpaces("0 1 4"))
         contactDB = DatabaseMessages(this)
         logDB = DatabaseLog(this)
         tilesDB = DatabaseTiles(this)
         contact = intent.extras.get("contact") as Contact
         tileID = intent.getIntExtra("tileID", 0)
         phoneNumber = tilesDB.getPreferedNum(tileID)
-        println("<<<<"+phoneNumber)
+        println("<<<<" + phoneNumber)
 
         if (contact is Contact) {
             println(">>> Contact numbers" + contact.numbers)
@@ -103,7 +102,12 @@ class TextMessageActivity : BaseActivity() {
         R.id.make_call -> {
             try {
                 println(">>>" + returnNoSpaces(getPhoneNumber()))
-                makeCall(returnNoSpaces(getPhoneNumber()))
+                if ((phoneNumber[0])!= '0') {
+                    //If phoneNUmber is not leading with a 0 add it
+                    phoneNumber = "0" + phoneNumber
+
+                }
+                makeCall(getPhoneNumber())
             } catch (e: Exception) {
 
             }
@@ -159,8 +163,9 @@ class TextMessageActivity : BaseActivity() {
         tiles.insertData(receipientID, tileID, PreferedNumber)
         println("<<<3")
         val a = tiles.getPreferedNum(tileID)
-        println("<<<<<" + a == phoneNumber)
-        println(">>>just set" + phoneNumber)
+        println("&&& from database :$a")
+        println("&&& from whatWasSet :$PreferedNumber")
+
     }
 
     private fun updateTitle() {
@@ -240,6 +245,11 @@ class TextMessageActivity : BaseActivity() {
                         val length = (buttonDynamic.text as String).length
                         return if (length > MAX_SMS_MESSAGE_LENGTH) {
                             val messagelist = smsManager.divideMessage(buttonDynamic.text as String)
+                            if ((phoneNumber[0]).toInt() != 0) {
+                                //If phoneNUmber is not leading with a 0 add it
+                                phoneNumber = "0" + phoneNumber
+
+                            }
                             smsManager.sendMultipartTextMessage(phoneNumber, null, messagelist, null, null)
 
                         } else {
