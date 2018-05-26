@@ -56,11 +56,11 @@ class TextMessageActivity : BaseActivity() {
         contactDB = DatabaseMessages(this)
         logDB = DatabaseLog(this)
         tilesDB = DatabaseTiles(this)
-
-        phoneNumber = tilesDB.getPreferedNum(receipientID)
-
         contact = intent.extras.get("contact") as Contact
         tileID = intent.getIntExtra("tileID", 0)
+        phoneNumber = tilesDB.getPreferedNum(tileID)
+        println("<<<<"+phoneNumber)
+
         if (contact is Contact) {
             println(">>> Contact numbers" + contact.numbers)
             recipientName = contact.name
@@ -136,8 +136,7 @@ class TextMessageActivity : BaseActivity() {
 
             selector("Which phone number would you like to send messages to?", phoneNumbers, { _, z ->
                 try {
-                    println("<<<<")
-                    println("<<<<"+returnNoSpaces(phoneNumbers[z]))
+                    println("<<<<" + returnNoSpaces(phoneNumbers[z]))
                     updatePreferedNum(returnNoSpaces(phoneNumbers[z]))
                 } catch (e: Exception) {
 
@@ -152,10 +151,15 @@ class TextMessageActivity : BaseActivity() {
     }
 
     private fun updatePreferedNum(PreferedNumber: String) {
+        println("<<<<< in the function")
         phoneNumber = PreferedNumber
-        doAsync {
-            tilesDB.insertData(receipientID, tileID, PreferedNumber)
-        }
+        println("<<<1")
+        val tiles = DatabaseTiles(this)
+        println("<<<2")
+        tiles.insertData(receipientID, tileID, PreferedNumber)
+        println("<<<3")
+        val a = tiles.getPreferedNum(tileID)
+        println("<<<<<" + a == phoneNumber)
         println(">>>just set" + phoneNumber)
     }
 
@@ -209,9 +213,7 @@ class TextMessageActivity : BaseActivity() {
         params.setMargins(1, 35, 1, 0)
         for ((key, value) in textMessages) {
             val buttonDynamic = Button(this)
-            buttonDynamic.layoutParams = LinearLayout
-                    .LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT)
+            buttonDynamic.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             buttonDynamic.text = value
             buttonDynamic.layoutParams = params
             buttonDynamic.id = key
@@ -219,8 +221,6 @@ class TextMessageActivity : BaseActivity() {
             buttonDynamic.setOnClickListener {
                 fun sendMessage() {
                     try {
-                        //addToLog(receipientID, buttonDynamic.text as String, recipientName, phoneNumber)
-                        //sendSMS(phoneNumber, value)
                         val sent = "SMS_SENT"
                         val piSent = PendingIntent.getBroadcast(applicationContext, 0, Intent(SENT), 0)
                         val piDelivered = PendingIntent.getBroadcast(applicationContext, 0, Intent(DELIVERED), 0)
