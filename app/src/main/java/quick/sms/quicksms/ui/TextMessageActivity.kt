@@ -128,9 +128,9 @@ class TextMessageActivity : BaseActivity() {
             println(">>>> all numbers" + contact.numbers)
             for (i in 0 until contact.numbers.size) {
                 println(">>>>" + contact.numbers[i])
-                if (returnNoSpaces(returnNoSpaces(contact.numbers[i])) != returnNoSpaces(returnNoSpaces(phoneNumber))) {
-                    //Only add it if its not the current prefered number
-                    phoneNumbers.add(contact.numbers[i])
+                if (returnNoSpaces(returnNoSpaces(contact.numbers[i])) != returnNoSpaces(returnNoSpaces(phoneNumber)) && !phoneNumbers.contains(contact.numbers[i])) {
+                    /*Only add it if its not the current prefered numbers and doesn't already contain this phone number */
+                    phoneNumbers.add(returnNoSpaces(contact.numbers[i]))
                 }
             }
 
@@ -177,7 +177,7 @@ class TextMessageActivity : BaseActivity() {
                 toast("Invalid input, Please try again")
             } else {
                 addData(getrecipientId(), mText)
-                toast("MESSAGE ADDED")
+                toast("Message added successfully")
             }
         }
 

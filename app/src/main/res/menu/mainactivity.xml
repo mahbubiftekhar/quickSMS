@@ -47,7 +47,12 @@
                 android:title="@string/contact4"
                 android:titleCondensed="About"
                 app:showAsAction="ifRoom" />
-
+            <item
+                android:id="@+id/sync"
+                android:icon="@android:drawable/ic_media_rew"
+                android:title="Sync Contacts"
+                android:titleCondensed="About"
+                app:showAsAction="ifRoom" />
             <item
                 android:id="@+id/resetApp"
                 android:icon="@android:drawable/ic_delete"
