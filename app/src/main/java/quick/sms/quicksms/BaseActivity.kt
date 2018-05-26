@@ -92,6 +92,7 @@ open class BaseActivity : AppCompatActivity() {
                 startActivity<SettingsActivity>()
             }
         }.show()
+
     }
 
     override fun onResume() {

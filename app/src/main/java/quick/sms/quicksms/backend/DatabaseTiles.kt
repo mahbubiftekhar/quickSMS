@@ -9,7 +9,7 @@ import java.sql.SQLException
 class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL("create table $TABLE_NAME (recipient_id LONG,tileid INTEGER PRIMARY KEY, prefered_number INTEGER)")
+        db.execSQL("create table $TABLE_NAME (recipient_id LONG,tileid INTEGER PRIMARY KEY, prefered_number TEXT)")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -26,7 +26,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             db.rawQuery("select * from $TABLE_NAME", null).use {
                 while (it.moveToNext()) {
                     if (it.getLong(it.getColumnIndex("recipient_id")) == receipientID) { //If the receipientID matches
-                        return it.getInt(it.getColumnIndex("prefered_number")).toString() //Return the prefered number, else continue
+                        return it.getString(it.getColumnIndex("prefered_number")).toString() //Return the prefered number, else continue
                     }
                 }
             }
@@ -39,7 +39,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return ""
     }
 
-    fun insertData(recipient_id: Long, tileid: Int, prefered_number: Int) {
+    fun insertData(recipient_id: Long, tileid: Int, prefered_number: String) {
         val db = this.writableDatabase
         try {
             db.beginTransaction()
@@ -75,12 +75,12 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                         val contentValues = ContentValues()
                         contentValues.put(COL_1, it.getLong(it.getColumnIndex("recipient_id")))
                         contentValues.put(COL_2, it.getInt(it.getColumnIndex("tileid")) - 1)
-                        contentValues.put(COL_3, it.getInt(it.getColumnIndex("prefered_number")))
+                        contentValues.put(COL_3, it.getString(it.getColumnIndex("prefered_number")))
                         val a = db.insertWithOnConflict(TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE)
                         if (a == (-1).toLong()) {
                             contentValues.put(COL_1, it.getLong(it.getColumnIndex("recipient_id")))
                             contentValues.put(COL_2, (it.getInt(it.getColumnIndex("tileid")) - 1))
-                            contentValues.put(COL_3, it.getInt(it.getColumnIndex("prefered_number")))
+                            contentValues.put(COL_3, it.getString(it.getColumnIndex("prefered_number")))
                             db.updateWithOnConflict(TABLE_NAME, contentValues, "tileid = ?", arrayOf((it.getInt(it.getColumnIndex("tileid")) - 1).toString()), SQLiteDatabase.CONFLICT_IGNORE)
                         }
                         db.delete(TABLE_NAME, "tileid = ?", arrayOf(it.getInt(it.getColumnIndex("tileid")).toString()))

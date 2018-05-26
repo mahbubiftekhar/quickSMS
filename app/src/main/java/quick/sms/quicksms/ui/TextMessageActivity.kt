@@ -44,25 +44,31 @@ class TextMessageActivity : BaseActivity() {
     private var mAdView: AdView? = null
 
     private fun returnNoSpaces(input: String): String {
-        //This function should return the input with all the spaces removed
-        return input.replace("\\s", "")
+        //This function should return the input with all the spaces
+        return input.replace("\\s".toRegex(), "")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setActionBarColour()
         setContentView(R.layout.activity_text_message)
-
+        println("<<<Remove 056" + returnNoSpaces("0 1 4"))
         contactDB = DatabaseMessages(this)
         logDB = DatabaseLog(this)
         tilesDB = DatabaseTiles(this)
-        doAsync { phoneNumber = tilesDB.getPreferedNum(receipientID) }
+
+        phoneNumber = tilesDB.getPreferedNum(receipientID)
+
         contact = intent.extras.get("contact") as Contact
         tileID = intent.getIntExtra("tileID", 0)
         if (contact is Contact) {
             println(">>> Contact numbers" + contact.numbers)
             recipientName = contact.name
             receipientID = contact.id
+            if (phoneNumber == "") {
+                //If no prefered number is set, set it as the first number
+                phoneNumber = contact.numbers[0]
+            }
             updateTitle() //updates the users name on the action bar
             doAsync {
                 val result = contactDB.returnAllHashMap(receipientID)
@@ -89,10 +95,15 @@ class TextMessageActivity : BaseActivity() {
         return true
     }
 
+    private fun getPhoneNumber(): String {
+        return returnNoSpaces(phoneNumber)
+    }
+
     override fun extendedOptions(item: MenuItem) = when (item.itemId) {
         R.id.make_call -> {
             try {
-                makeCall(phoneNumber)
+                println(">>>" + returnNoSpaces(getPhoneNumber()))
+                makeCall(returnNoSpaces(getPhoneNumber()))
             } catch (e: Exception) {
 
             }
@@ -106,28 +117,33 @@ class TextMessageActivity : BaseActivity() {
             }
             true
         }
+        R.id.info -> {
+            //Show the user the current phone number that has been set
+            toast("Current phone number set: $phoneNumber")
+            true
+        }
         R.id.selectNumber -> {
-            doAsync {
-                val phoneNumbers = mutableListOf<String>()
-                phoneNumbers.add(phoneNumber)
-                println(">>>> all numbers" + contact.numbers)
-                for (i in 0 until contact.numbers.size) {
-                    println(">>>>" + contact.numbers[i])
-                    if (returnNoSpaces(contact.numbers[i]) != returnNoSpaces(phoneNumber)) {
-                        //Only add it if its not the current prefered number
-                        phoneNumbers.add(contact.numbers[i])
-                    }
-                }
-                uiThread {
-                    selector("Select the number you wish to send messages too", phoneNumbers, { _, i ->
-                        try {
-                            updatePreferedNum(phoneNumbers[i].toInt())
-                        } catch (e: Exception) {
-
-                        }
-                    })
+            val phoneNumbers = mutableListOf<String>()
+            phoneNumbers.add(returnNoSpaces(phoneNumber))
+            println(">>>> all numbers" + contact.numbers)
+            for (i in 0 until contact.numbers.size) {
+                println(">>>>" + contact.numbers[i])
+                if (returnNoSpaces(returnNoSpaces(contact.numbers[i])) != returnNoSpaces(returnNoSpaces(phoneNumber))) {
+                    //Only add it if its not the current prefered number
+                    phoneNumbers.add(contact.numbers[i])
                 }
             }
+
+            selector("Which phone number would you like to send messages to?", phoneNumbers, { _, i ->
+                try {
+                    println("<<<<")
+                    println("<<<<"+returnNoSpaces(phoneNumber))
+                    updatePreferedNum(returnNoSpaces(phoneNumber))
+                } catch (e: Exception) {
+
+                }
+            })
+
             true
         }
         else -> {
@@ -135,9 +151,12 @@ class TextMessageActivity : BaseActivity() {
         }
     }
 
-    private fun updatePreferedNum(PreferedNumber: Int) {
-        phoneNumber = PreferedNumber.toString()
-        doAsync { tilesDB.insertData(receipientID, tileID, PreferedNumber) }
+    private fun updatePreferedNum(PreferedNumber: String) {
+        phoneNumber = PreferedNumber
+        doAsync {
+            tilesDB.insertData(receipientID, tileID, PreferedNumber)
+        }
+        println(">>>just set" + phoneNumber)
     }
 
     private fun updateTitle() {

@@ -19,19 +19,24 @@
         app:showAsAction="always">
 
         <menu>
-
-            <item
-                android:id="@+id/selectNumber"
-                android:icon="@android:drawable/ic_input_get"
-                android:title="@string/select_number"
-                app:showAsAction="ifRoom" />
-
             <item
                 android:id="@+id/add_message"
                 android:orderInCategory="100"
                 android:icon="@android:drawable/ic_menu_add"
                 android:title="@string/add_message"
                 app:showAsAction="always" />
+            <item
+                android:id="@+id/selectNumber"
+                android:icon="@android:drawable/ic_input_get"
+                android:title="@string/select_number"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/info"
+                android:icon="@android:drawable/ic_dialog_info"
+                android:title="INFO"
+                app:showAsAction="ifRoom"
+                tools:ignore="HardcodedText" />
+
         </menu>
 
     </item>

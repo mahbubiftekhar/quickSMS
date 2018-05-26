@@ -198,7 +198,7 @@ class MainActivity : BaseActivity() {
             val contact = data.extras.get("chosen_contact") as Contact
             contact.tile = tileNumber
             val tilesDB = DatabaseTiles(this)
-            tilesDB.insertData(contact.id, tileNumber, 0)
+            tilesDB.insertData(contact.id, tileNumber, "")
             mutableContacts[tileNumber] = contact
             contacts = mutableContacts.toMap()
         }

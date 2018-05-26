@@ -96,21 +96,7 @@ class AboutDevelopersActivity : BaseActivity() {
                     textAlignment = View.TEXT_ALIGNMENT_CENTER //CENTER can be INHERIT GRAVITY TEXT_START TEXT_END VIEW_START VIEW_END
                     onClick {
                         val websites = listOf("Website", "GitHub", "LinkEdin")
-                        selector("Would you like to visit Mahbub's Website, GitHub repository or LinkedIn?", websites, { _, i ->
-                            try {
-                                when {
-                                    websites[i] == "Website" -> //If the user selected website
-                                        launchWeb("https://www.mahbubiftekhar.co.uk/")
-                                    websites[i] == "LinkEdin" -> {
-                                        launchWeb("https://www.linkedin.com/in/mahbub-iftekhar/")
-                                    }
-                                    else -> //Else send them to Github
-                                        launchWeb("https://github.com/mahbubiftekhar")
-                                }
-                            } catch (e: Exception) {
 
-                            }
-                        })
                     }
                 }
             }
