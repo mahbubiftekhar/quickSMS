@@ -43,6 +43,11 @@ class TextMessageActivity : BaseActivity() {
 
     private var mAdView: AdView? = null
 
+    private fun returnNoSpaces(input: String): String {
+        //This function should return the input with all the spaces removed
+        return input.replace("\\s", "")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setActionBarColour()
@@ -105,10 +110,10 @@ class TextMessageActivity : BaseActivity() {
             doAsync {
                 val phoneNumbers = mutableListOf<String>()
                 phoneNumbers.add(phoneNumber)
-                println(">>>> all numbers"+contact.numbers)
+                println(">>>> all numbers" + contact.numbers)
                 for (i in 0 until contact.numbers.size) {
-                    println(">>>>"+contact.numbers[i])
-                    if (contact.numbers[i] != phoneNumber) {
+                    println(">>>>" + contact.numbers[i])
+                    if (returnNoSpaces(contact.numbers[i]) != returnNoSpaces(phoneNumber)) {
                         //Only add it if its not the current prefered number
                         phoneNumbers.add(contact.numbers[i])
                     }

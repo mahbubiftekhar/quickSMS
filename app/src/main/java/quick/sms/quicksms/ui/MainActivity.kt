@@ -191,14 +191,16 @@ class MainActivity : BaseActivity() {
     private fun deleteTile(tileNumber: Int) {
         val contact = contacts[tileNumber]
         if (contact != null) {
-            alert("Do you want to delete this tile? (Operation is irreversible)",
-                    "Confirm Delete Tile") {
-                yesButton {
+            alert("NOTE: This is irreversible") {
+                title = "Are you sure you want to delete this tile?"
+                positiveButton("Yes, Delete") {
                     DatabaseTiles(this@MainActivity).tileDefragmentator(tileNumber)
                     deleteFromContacts(tileNumber)
                     draw()
                 }
-                noButton {}
+                negativeButton("Cancel") {
+                    //Do nothing, the user changed their mind
+                }
             }.show()
         }
     }
