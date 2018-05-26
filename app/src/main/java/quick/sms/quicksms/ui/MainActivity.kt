@@ -271,12 +271,12 @@ class MainActivity : BaseActivity() {
                 val image = contact?.image?.let {
                     val inStream = cr.openInputStream(Uri.parse(it))
                     RoundedBitmapDrawableFactory.create(resources, inStream)
-                    //Drawable.createFromStream(inStream, it)
                 }
                 image?.cornerRadius = dip(20).toFloat()
                 val name = contact?.name ?: "Unset"
                 if (image == null) {
-                    backgroundColor = Color.parseColor(tileColour)
+                    backgroundResource = R.drawable.rounded_corners
+                    (background as GradientDrawable).setColor(Color.parseColor(tileColour))
                     text = name
                 } else {
                     background = image
