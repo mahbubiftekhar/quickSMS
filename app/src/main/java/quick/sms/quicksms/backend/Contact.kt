@@ -18,8 +18,8 @@ class Contact(val id: Long, val name: String, val image: String?, val numbers: L
             doAsync {
                 val androidDB = ctx.contentResolver
                 val tilesDB = DatabaseTiles(ctx)
-                val numbers = getPhoneNumbers(androidDB) //TODO: We get stuck here Alex, don't know why
-                // I can let you teamViewer into my laptop with the Android 4.4 (API 19) phone plugged in if that helps.
+                val numbers = getPhoneNumbers(androidDB)
+                println(numbers)
                 val tiles = tilesDB.getAllTiles()
                 val contacts = lookupContacts(androidDB, numbers, tiles)
                 uiThread {
@@ -38,7 +38,7 @@ class Contact(val id: Long, val name: String, val image: String?, val numbers: L
             val numbers = mutableMapOf<Long, List<String>>()
             for (number in result) {
                 val id = number.id
-                val numlist = numbers[id] ?: emptyList<String>() + number.number
+                val numlist = (numbers[id] ?: emptyList()) + number.number
                 numbers[id] = numlist
             }
             return numbers.toMap()
