@@ -43,21 +43,31 @@ class TextMessageActivity : BaseActivity() {
 
     private var mAdView: AdView? = null
 
+    private fun returnNoSpaces(input: String): String {
+        //This function should return the input with all the spaces
+        return input.replace("\\s".toRegex(), "")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setActionBarColour()
         setContentView(R.layout.activity_text_message)
-
         contactDB = DatabaseMessages(this)
         logDB = DatabaseLog(this)
         tilesDB = DatabaseTiles(this)
-        doAsync { phoneNumber = tilesDB.getPreferedNum(receipientID) }
         contact = intent.extras.get("contact") as Contact
         tileID = intent.getIntExtra("tileID", 0)
+        phoneNumber = tilesDB.getPreferedNum(tileID)
+        println("<<<<" + phoneNumber)
+
         if (contact is Contact) {
             println(">>> Contact numbers" + contact.numbers)
             recipientName = contact.name
             receipientID = contact.id
+            if (phoneNumber == "") {
+                //If no prefered number is set, set it as the first number
+                phoneNumber = contact.numbers[0]
+            }
             updateTitle() //updates the users name on the action bar
             doAsync {
                 val result = contactDB.returnAllHashMap(receipientID)
@@ -84,10 +94,20 @@ class TextMessageActivity : BaseActivity() {
         return true
     }
 
+    private fun getPhoneNumber(): String {
+        return returnNoSpaces(phoneNumber)
+    }
+
     override fun extendedOptions(item: MenuItem) = when (item.itemId) {
         R.id.make_call -> {
             try {
-                makeCall(phoneNumber)
+                println(">>>" + returnNoSpaces(getPhoneNumber()))
+                if ((phoneNumber[0])!= '0') {
+                    //If phoneNUmber is not leading with a 0 add it
+                    phoneNumber = "0" + phoneNumber
+
+                }
+                makeCall(getPhoneNumber())
             } catch (e: Exception) {
 
             }
@@ -101,28 +121,32 @@ class TextMessageActivity : BaseActivity() {
             }
             true
         }
+        R.id.info -> {
+            //Show the user the current phone number that has been set
+            toast("Current phone number set: $phoneNumber")
+            true
+        }
         R.id.selectNumber -> {
-            doAsync {
-                val phoneNumbers = mutableListOf<String>()
-                phoneNumbers.add(phoneNumber)
-                println(">>>> all numbers"+contact.numbers)
-                for (i in 0 until contact.numbers.size) {
-                    println(">>>>"+contact.numbers[i])
-                    if (contact.numbers[i] != phoneNumber) {
-                        //Only add it if its not the current prefered number
-                        phoneNumbers.add(contact.numbers[i])
-                    }
-                }
-                uiThread {
-                    selector("Select the number you wish to send messages too", phoneNumbers, { _, i ->
-                        try {
-                            updatePreferedNum(phoneNumbers[i].toInt())
-                        } catch (e: Exception) {
-
-                        }
-                    })
+            val phoneNumbers = mutableListOf<String>()
+            phoneNumbers.add(returnNoSpaces(phoneNumber))
+            println(">>>> all numbers" + contact.numbers)
+            for (i in 0 until contact.numbers.size) {
+                println(">>>>" + contact.numbers[i])
+                if (returnNoSpaces(returnNoSpaces(contact.numbers[i])) != returnNoSpaces(returnNoSpaces(phoneNumber))) {
+                    //Only add it if its not the current prefered number
+                    phoneNumbers.add(contact.numbers[i])
                 }
             }
+
+            selector("Which phone number would you like to send messages to?", phoneNumbers, { _, z ->
+                try {
+                    println("<<<<" + returnNoSpaces(phoneNumbers[z]))
+                    updatePreferedNum(returnNoSpaces(phoneNumbers[z]))
+                } catch (e: Exception) {
+
+                }
+            })
+
             true
         }
         else -> {
@@ -130,9 +154,18 @@ class TextMessageActivity : BaseActivity() {
         }
     }
 
-    private fun updatePreferedNum(PreferedNumber: Int) {
-        phoneNumber = PreferedNumber.toString()
-        doAsync { tilesDB.insertData(receipientID, tileID, PreferedNumber) }
+    private fun updatePreferedNum(PreferedNumber: String) {
+        println("<<<<< in the function")
+        phoneNumber = PreferedNumber
+        println("<<<1")
+        val tiles = DatabaseTiles(this)
+        println("<<<2")
+        tiles.insertData(receipientID, tileID, PreferedNumber)
+        println("<<<3")
+        val a = tiles.getPreferedNum(tileID)
+        println("&&& from database :$a")
+        println("&&& from whatWasSet :$PreferedNumber")
+
     }
 
     private fun updateTitle() {
@@ -185,17 +218,14 @@ class TextMessageActivity : BaseActivity() {
         params.setMargins(1, 35, 1, 0)
         for ((key, value) in textMessages) {
             val buttonDynamic = Button(this)
-            buttonDynamic.layoutParams = LinearLayout
-                    .LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT)
+            buttonDynamic.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             buttonDynamic.text = value
             buttonDynamic.layoutParams = params
             buttonDynamic.id = key
+            buttonDynamic.setBackgroundResource(R.drawable.rounded_corners)
             buttonDynamic.setOnClickListener {
                 fun sendMessage() {
                     try {
-                        //addToLog(receipientID, buttonDynamic.text as String, recipientName, phoneNumber)
-                        //sendSMS(phoneNumber, value)
                         val sent = "SMS_SENT"
                         val piSent = PendingIntent.getBroadcast(applicationContext, 0, Intent(SENT), 0)
                         val piDelivered = PendingIntent.getBroadcast(applicationContext, 0, Intent(DELIVERED), 0)
@@ -215,6 +245,11 @@ class TextMessageActivity : BaseActivity() {
                         val length = (buttonDynamic.text as String).length
                         return if (length > MAX_SMS_MESSAGE_LENGTH) {
                             val messagelist = smsManager.divideMessage(buttonDynamic.text as String)
+                            if ((phoneNumber[0]).toInt() != 0) {
+                                //If phoneNUmber is not leading with a 0 add it
+                                phoneNumber = "0" + phoneNumber
+
+                            }
                             smsManager.sendMultipartTextMessage(phoneNumber, null, messagelist, null, null)
 
                         } else {

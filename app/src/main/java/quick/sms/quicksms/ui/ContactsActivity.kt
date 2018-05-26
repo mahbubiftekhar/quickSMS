@@ -6,8 +6,6 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.content.ContextCompat.getDrawable
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.Gravity
 import android.view.View
 import com.google.android.gms.ads.AdRequest
@@ -18,7 +16,9 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.Contact
+import java.io.FileNotFoundException
 
+@Suppress("DEPRECATION")
 class ContactsActivity : BaseActivity() {
 
     private var tileNumber = 0
@@ -63,16 +63,19 @@ class ContactsActivity : BaseActivity() {
         }
 
         fun _LinearLayout.contactView(contact: Contact) {
-            linearLayout {
+            linearLayout{
                 var photo = contact.image?.let {
-                    val inStream = cr.openInputStream(Uri.parse(it))
-                    Drawable.createFromStream(inStream, it)
-                }//?: resources.getDrawable(R.drawable.default_image, context.theme)
+                    try {
+                        val inStream = cr.openInputStream(Uri.parse(it));Drawable.createFromStream(inStream, it)
+                    } catch (e: FileNotFoundException) {
+                        null
+                    }
+                }
                 if (photo == null) {
-                    if (android.os.Build.VERSION.SDK_INT >= 21) {
-                        photo = resources.getDrawable(R.drawable.default_image, context.theme)
+                    photo = if (android.os.Build.VERSION.SDK_INT >= 21) {
+                        resources.getDrawable(R.drawable.default_image, context.theme)
                     } else {
-                        photo = resources.getDrawable(R.drawable.default_image)
+                        resources.getDrawable(R.drawable.default_image)
                     }
                 }
                 imageView {

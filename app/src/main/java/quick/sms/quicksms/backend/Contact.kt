@@ -57,10 +57,12 @@ class Contact(val id: Long, val name: String, val image: String?, val numbers: L
             return result
                     .filter { it.name != null && it.hasNumber == 1L }
                     .map {
-                        Contact(it.id, it.name!!, it.image, numbers[it.id] ?: emptyList(), tiles[it.id])
+                        Contact(it.id, it.name!!, it.image, numbers[it.id]
+                                ?: emptyList(), tiles[it.id])
                     }.sortedBy { it.name }.toList()
         }
     }
+
     private data class PhoneNumber(val id: Long, val number: String)
     private data class NullableContact(val id: Long, val name: String?, val image: String?, val hasNumber: Long)
 }

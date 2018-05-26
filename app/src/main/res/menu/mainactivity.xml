@@ -4,53 +4,56 @@
     tools:context="quick.SMS.contacts">
 
 
-
-    <item android:id="@+id/menu_item_share"
-        android:title="@string/share"
+    <item
+        android:id="@+id/menu_item_share"
         android:icon="@android:drawable/ic_menu_share"
-        app:showAsAction="ifRoom"
-         />
+        android:title="@string/share"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/empty"
-        android:title="@string/options"
         android:orderInCategory="101"
-        app:showAsAction="always"
-      >
+        android:title="@string/options"
+        app:showAsAction="always">
 
         <menu>
 
-            <item android:id="@+id/action_settings"
+            <item
+                android:id="@+id/action_settings"
                 android:icon="@android:drawable/ic_menu_preferences"
-                app:showAsAction="ifRoom"
-                android:title="@string/settings2" />
+                android:title="@string/settings2"
+                app:showAsAction="ifRoom" />
 
-            <item android:id="@+id/faqButton"
-                app:showAsAction="ifRoom"
+            <item
+                android:id="@+id/faqButton"
                 android:icon="@android:drawable/ic_dialog_info"
+                android:title="@string/faq_s"
                 android:titleCondensed="About"
-                android:title="@string/faq_s" />
-            <item android:id="@+id/contactLog"
-                app:showAsAction="ifRoom"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/contactLog"
                 android:icon="@android:drawable/ic_input_get"
+                android:title="@string/sms_log"
                 android:titleCondensed="About"
-                android:title="@string/sms_log" />
-            <item android:id="@+id/about"
-                app:showAsAction="ifRoom"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/about"
                 android:title="@string/about"
                 android:titleCondensed="About App"
-                />
-            <item android:id="@+id/contactButton"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/contactButton"
                 android:icon="@android:drawable/ic_dialog_email"
-                app:showAsAction="ifRoom"
+                android:title="@string/contact4"
                 android:titleCondensed="About"
-                android:title="@string/contact4" />
+                app:showAsAction="ifRoom" />
 
-            <item android:id="@+id/resetApp"
-                app:showAsAction="ifRoom"
+            <item
+                android:id="@+id/resetApp"
                 android:icon="@android:drawable/ic_delete"
+                android:title="@string/reset_app"
                 android:titleCondensed="About"
-                android:title="@string/reset_app" />
+                app:showAsAction="ifRoom" />
 
         </menu>
 

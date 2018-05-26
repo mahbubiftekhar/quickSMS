@@ -4,21 +4,14 @@ import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.Window
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
-import kotlinx.android.synthetic.main.notification_template_lines_media.view.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onLongClick
@@ -29,14 +22,13 @@ import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.DatabaseMessages
 import quick.sms.quicksms.context
-
+import java.io.FileNotFoundException
 
 class MainActivity : BaseActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
     private lateinit var contactsList: List<Contact>
     private lateinit var unassigned: List<Contact>
-    private var mAdView: AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val bundle: Bundle = savedInstanceState ?: intent.extras
@@ -47,15 +39,6 @@ class MainActivity : BaseActivity() {
         this.unassigned = unassigned
         contacts = assigned.associateBy { it.tile!! }
         draw()
-
-        doAsync {
-            MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
-            mAdView = findViewById<View>(R.id.adView) as AdView
-            val adRequest = AdRequest.Builder().build()
-            uiThread {
-                mAdView!!.loadAd(adRequest)
-            }
-        }
     }
 
     private fun draw() {
@@ -184,7 +167,7 @@ class MainActivity : BaseActivity() {
             if (contact != null) {
                 mutableContacts[i - 1] = contact
             } else {
-                mutableContacts.remove(i-1)
+                mutableContacts.remove(i - 1)
             }
         }
         mutableContacts.remove(highestContact)
@@ -194,14 +177,16 @@ class MainActivity : BaseActivity() {
     private fun deleteTile(tileNumber: Int) {
         val contact = contacts[tileNumber]
         if (contact != null) {
-            alert("Do you want to delete this tile? (Operation is irreversible)",
-                    "Confirm Delete Tile") {
-                yesButton {
+            alert("NOTE: This is irreversible") {
+                title = "Are you sure you want to delete this tile?"
+                positiveButton("Yes, Delete") {
                     DatabaseTiles(this@MainActivity).tileDefragmentator(tileNumber)
                     deleteFromContacts(tileNumber)
                     draw()
                 }
-                noButton {}
+                negativeButton("Cancel") {
+                    //Do nothing, the user changed their mind
+                }
             }.show()
         }
     }
@@ -213,7 +198,7 @@ class MainActivity : BaseActivity() {
             val contact = data.extras.get("chosen_contact") as Contact
             contact.tile = tileNumber
             val tilesDB = DatabaseTiles(this)
-            tilesDB.insertData(contact.id, tileNumber, 0)
+            tilesDB.insertData(contact.id, tileNumber, "")
             mutableContacts[tileNumber] = contact
             contacts = mutableContacts.toMap()
         }
@@ -252,10 +237,10 @@ class MainActivity : BaseActivity() {
                             row(2, i)
                         }
                     }
-                }.lparams(width=matchParent, height=0) {
+                }.lparams(width = matchParent, height = 0) {
                     weight = 1.0f
                 }
-                include<View>(R.xml.advertxml) {}
+                //include<View>(R.xml.advertxml) {}
             }
         }
 
@@ -279,8 +264,12 @@ class MainActivity : BaseActivity() {
                 val index = (row - 1) * rowLen + col
                 val contact = alreadyAssigned[index]
                 val image = contact?.image?.let {
-                    val inStream = cr.openInputStream(Uri.parse(it))
-                    RoundedBitmapDrawableFactory.create(resources, inStream)
+                    try {
+                        val inStream = cr.openInputStream(Uri.parse(it))
+                        RoundedBitmapDrawableFactory.create(resources, inStream)
+                    } catch (e: FileNotFoundException) {
+                        null
+                    }
                 }
                 image?.cornerRadius = dip(20).toFloat()
                 val name = contact?.name ?: "Unset"
