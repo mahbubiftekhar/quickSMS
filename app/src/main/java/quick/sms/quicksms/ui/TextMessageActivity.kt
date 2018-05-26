@@ -134,11 +134,11 @@ class TextMessageActivity : BaseActivity() {
                 }
             }
 
-            selector("Which phone number would you like to send messages to?", phoneNumbers, { _, i ->
+            selector("Which phone number would you like to send messages to?", phoneNumbers, { _, z ->
                 try {
                     println("<<<<")
-                    println("<<<<"+returnNoSpaces(phoneNumber))
-                    updatePreferedNum(returnNoSpaces(phoneNumber))
+                    println("<<<<"+returnNoSpaces(phoneNumbers[z]))
+                    updatePreferedNum(returnNoSpaces(phoneNumbers[z]))
                 } catch (e: Exception) {
 
                 }
