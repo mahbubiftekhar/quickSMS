@@ -191,12 +191,19 @@ class MainActivity : BaseActivity() {
     }
 
     private fun deleteTile(tileNumber: Int) {
-        val contact = contacts[tileNumber]
-        if (contact != null) {
-            DatabaseTiles(this).tileDefragmentator(tileNumber)
-            deleteFromContacts(tileNumber)
-            draw()
-        }
+        println("Delete: $tileNumber")
+        alert("Do you want to delete this tile? (Operation is irreversible)",
+                "Confirm Delete Tile") {
+            yesButton {
+                val contact = contacts[tileNumber]
+                if (contact != null) {
+                    DatabaseTiles(this@MainActivity).tileDefragmentator(tileNumber)
+                    deleteFromContacts(tileNumber)
+                    draw()
+                }
+            }
+            noButton {}
+        }.show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -296,7 +303,6 @@ class MainActivity : BaseActivity() {
                     }
                 }
                 onLongClick {
-                    //TODO:An alert here to doubble check would be nice
                     deleteCallback(index)
                 }
             }.lparams(height = matchParent, width = 0) {
