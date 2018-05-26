@@ -191,19 +191,18 @@ class MainActivity : BaseActivity() {
     }
 
     private fun deleteTile(tileNumber: Int) {
-        println("Delete: $tileNumber")
-        alert("Do you want to delete this tile? (Operation is irreversible)",
-                "Confirm Delete Tile") {
-            yesButton {
-                val contact = contacts[tileNumber]
-                if (contact != null) {
+        val contact = contacts[tileNumber]
+        if (contact != null) {
+            alert("Do you want to delete this tile? (Operation is irreversible)",
+                    "Confirm Delete Tile") {
+                yesButton {
                     DatabaseTiles(this@MainActivity).tileDefragmentator(tileNumber)
                     deleteFromContacts(tileNumber)
                     draw()
                 }
-            }
-            noButton {}
-        }.show()
+                noButton {}
+            }.show()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
