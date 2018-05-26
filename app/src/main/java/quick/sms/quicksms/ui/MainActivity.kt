@@ -9,6 +9,8 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -44,9 +46,6 @@ class MainActivity : BaseActivity() {
         val (assigned, unassigned) = contactsList.asSequence().partition { it.tile != null }
         this.unassigned = unassigned
         contacts = assigned.associateBy { it.tile!! }
-        verticalLayout {
-            include<View>(R.xml.advertxml) {}
-        }
         draw()
 
         doAsync {
@@ -61,8 +60,9 @@ class MainActivity : BaseActivity() {
 
     private fun draw() {
         setActionBarColour()
-        MainLayout(contentResolver, contacts, getBackGroundColour(), gettileColour(), getTileTextColour(), { onClick(it) },
-                { assignTile(it) }, { deleteTile(it) }).setContentView(this)
+        MainLayout(contentResolver, contacts, getBackGroundColour(), gettileColour(),
+                getTileTextColour(), showName(), { onClick(it) }, { assignTile(it) },
+                { deleteTile(it) }).setContentView(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -194,9 +194,15 @@ class MainActivity : BaseActivity() {
     private fun deleteTile(tileNumber: Int) {
         val contact = contacts[tileNumber]
         if (contact != null) {
-            DatabaseTiles(this).tileDefragmentator(tileNumber)
-            deleteFromContacts(tileNumber)
-            draw()
+            alert("Do you want to delete this tile? (Operation is irreversible)",
+                    "Confirm Delete Tile") {
+                yesButton {
+                    DatabaseTiles(this@MainActivity).tileDefragmentator(tileNumber)
+                    deleteFromContacts(tileNumber)
+                    draw()
+                }
+                noButton {}
+            }.show()
         }
     }
 
@@ -229,21 +235,27 @@ class MainActivity : BaseActivity() {
     }
 
     private class MainLayout(val cr: ContentResolver, val alreadyAssigned: Map<Int, Contact>, val backgroundColour: String,
-                             val tileColour: String, val textColour: String, val tileCallBack: (Int) -> Unit,
+                             val tileColour: String, val textColour: String, val showName: Boolean, val tileCallBack: (Int) -> Unit,
                              val assignCallBack: (Int) -> Unit, val deleteCallback: (Int) -> Unit)
         : AnkoComponent<MainActivity> {
         val nTiles = alreadyAssigned.size
         val rows = (nTiles / 2) + 1
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
-            scrollView {
-                backgroundColor = Color.parseColor(backgroundColour)
+            verticalLayout {
+                scrollView {
+                    isFillViewport = true
+                    backgroundColor = Color.parseColor(backgroundColour)
 
-                verticalLayout {
-                    for (i in 1..rows) {
-                        row(2, i)
+                    verticalLayout {
+                        for (i in 1..rows) {
+                            row(2, i)
+                        }
                     }
+                }.lparams(width=matchParent, height=0) {
+                    weight = 1.0f
                 }
+                include<View>(R.xml.advertxml) {}
             }
         }
 
@@ -268,14 +280,20 @@ class MainActivity : BaseActivity() {
                 val contact = alreadyAssigned[index]
                 val image = contact?.image?.let {
                     val inStream = cr.openInputStream(Uri.parse(it))
-                    Drawable.createFromStream(inStream, it)
+                    RoundedBitmapDrawableFactory.create(resources, inStream)
                 }
+                image?.cornerRadius = dip(20).toFloat()
+                val name = contact?.name ?: "Unset"
                 if (image == null) {
-                    backgroundColor = Color.parseColor(tileColour)
+                    backgroundResource = R.drawable.rounded_corners
+                    (background as GradientDrawable).setColor(Color.parseColor(tileColour))
+                    text = name
                 } else {
                     background = image
+                    if (showName) {
+                        text = name
+                    }
                 }
-                text = contact?.name ?: "Unset"
                 textColor = Color.parseColor(textColour)
                 onClick {
                     if (contact != null) {
