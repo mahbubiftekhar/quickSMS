@@ -16,6 +16,7 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.Contact
+import java.io.FileNotFoundException
 
 class ContactsActivity : BaseActivity() {
 
@@ -62,17 +63,12 @@ class ContactsActivity : BaseActivity() {
 
         fun _LinearLayout.contactView(contact: Contact) {
             linearLayout{
-                var error = false
                 var photo = contact.image?.let {
                     try {
                         val inStream = cr.openInputStream(Uri.parse(it));Drawable.createFromStream(inStream, it)
-                    } catch (e: Exception) {
-                         error = true
-                        println("<<<<<<"+contact)
+                    } catch (e: FileNotFoundException) {
+                        null
                     }
-                }
-                if(error){
-                    println("<<<<<<<"+photo)
                 }
                 if (photo == null) {
                     photo = if (android.os.Build.VERSION.SDK_INT >= 21) {
@@ -82,10 +78,7 @@ class ContactsActivity : BaseActivity() {
                     }
                 }
                 imageView {
-                    if(photo is Drawable){
-                        //Check that photo is of type drawable
-                        image = photo
-                    }
+                    image = photo
                 }.lparams {
                     gravity = Gravity.START
                 }

@@ -26,6 +26,7 @@ import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.DatabaseMessages
 import quick.sms.quicksms.context
+import java.io.FileNotFoundException
 
 
 class MainActivity : BaseActivity() {
@@ -278,8 +279,12 @@ class MainActivity : BaseActivity() {
                 val index = (row - 1) * rowLen + col
                 val contact = alreadyAssigned[index]
                 val image = contact?.image?.let {
-                    val inStream = cr.openInputStream(Uri.parse(it))
-                    RoundedBitmapDrawableFactory.create(resources, inStream)
+                    try {
+                        val inStream = cr.openInputStream(Uri.parse(it))
+                        RoundedBitmapDrawableFactory.create(resources, inStream)
+                    } catch (e: FileNotFoundException) {
+                        null
+                    }
                 }
                 image?.cornerRadius = dip(20).toFloat()
                 val name = contact?.name ?: "Unset"
