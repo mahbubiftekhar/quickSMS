@@ -56,7 +56,6 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun sendContactsToMain() {
-        println(5)
         Contact.getContacts(this) {
             startActivity<MainActivity>("contacts" to it)
             finish() //This will prevent the user getting back into this activity

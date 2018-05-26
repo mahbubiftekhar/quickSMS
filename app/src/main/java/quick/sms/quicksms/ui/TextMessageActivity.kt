@@ -57,6 +57,7 @@ class TextMessageActivity : BaseActivity() {
         tilesDB = DatabaseLog(this)
         val contact = intent.extras.get("contact")
         if (contact is Contact) {
+            println(contact.numbers)
             phoneNumber = contact.numbers[0]
             recipientName = contact.name
             receipientID = contact.id
