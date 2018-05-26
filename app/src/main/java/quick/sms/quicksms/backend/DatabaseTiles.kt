@@ -25,11 +25,11 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             db.beginTransaction()
             db.rawQuery("select * from $TABLE_NAME", null).use {
                 while (it.moveToNext()) {
-                        if(it.getLong(it.getColumnIndex("recipient_id")) == receipientID){ //If the receipientID matches
-                            return it.getInt(it.getColumnIndex("prefered_number")).toString() //Return the prefered number, else continue
-                        }
+                    if (it.getLong(it.getColumnIndex("recipient_id")) == receipientID) { //If the receipientID matches
+                        return it.getInt(it.getColumnIndex("prefered_number")).toString() //Return the prefered number, else continue
                     }
                 }
+            }
             db.setTransactionSuccessful()
         } catch (e: SQLException) {
 

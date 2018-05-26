@@ -35,15 +35,15 @@ class FaqActivity : BaseActivity() {
             }
         }
 
-        scrollView{
-            verticalLayout{
-                for(f in faq){
-                    button{
+        scrollView {
+            verticalLayout {
+                for (f in faq) {
+                    button {
                         text = f.key
                         onClick {
-                            alert(f.value){
+                            alert(f.value) {
                                 title = f.key
-                                positiveButton(""){
+                                positiveButton("") {
                                 }
                             }.show()
 

@@ -6,8 +6,6 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.content.ContextCompat.getDrawable
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.Gravity
 import android.view.View
 import com.google.android.gms.ads.AdRequest
@@ -69,10 +67,10 @@ class ContactsActivity : BaseActivity() {
                     Drawable.createFromStream(inStream, it)
                 }//?: resources.getDrawable(R.drawable.default_image, context.theme)
                 if (photo == null) {
-                    if (android.os.Build.VERSION.SDK_INT >= 21) {
-                        photo = resources.getDrawable(R.drawable.default_image, context.theme)
+                    photo = if (android.os.Build.VERSION.SDK_INT >= 21) {
+                        resources.getDrawable(R.drawable.default_image, context.theme)
                     } else {
-                        photo = resources.getDrawable(R.drawable.default_image)
+                        resources.getDrawable(R.drawable.default_image)
                     }
                 }
                 imageView {
