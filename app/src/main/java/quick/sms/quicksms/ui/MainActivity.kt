@@ -162,8 +162,9 @@ class MainActivity : BaseActivity() {
 
     private fun onClick(tileNumber: Int) {
         val contact = contacts[tileNumber]
+        println(">>>> before sending" + contact?.numbers)
         if (contact != null) {
-            startActivity<TextMessageActivity>("contact" to contact)
+            startActivity<TextMessageActivity>("contact" to contact, "tileID" to tileNumber) //Passing in contact info and tileNumber
         } else {
             println("No Contact found")
         }

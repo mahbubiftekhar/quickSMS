@@ -29,7 +29,7 @@
                 app:showAsAction="ifRoom"
                 android:icon="@android:drawable/ic_dialog_info"
                 android:titleCondensed="About"
-                android:title="FAQ's" />
+                android:title="@string/faq_s" />
             <item android:id="@+id/contactLog"
                 app:showAsAction="ifRoom"
                 android:icon="@android:drawable/ic_input_get"
@@ -50,13 +50,12 @@
                 app:showAsAction="ifRoom"
                 android:icon="@android:drawable/ic_delete"
                 android:titleCondensed="About"
-                android:title="RESET APP" />
+                android:title="@string/reset_app" />
 
         </menu>
 
     </item>
 </menu>
 
-<!-- Search, should appear as action button -->
 
 

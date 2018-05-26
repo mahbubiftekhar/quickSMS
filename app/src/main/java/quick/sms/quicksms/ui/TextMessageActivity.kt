@@ -2,11 +2,7 @@ package quick.sms.quicksms.ui
 
 import android.app.Activity
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
-import quick.sms.quicksms.backend.putIntAndCommit
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
@@ -15,10 +11,7 @@ import android.os.Vibrator
 import android.support.v7.app.AlertDialog
 import android.telephony.SmsManager
 import android.text.InputType
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -26,9 +19,7 @@ import com.google.android.gms.ads.MobileAds
 import org.jetbrains.anko.*
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
-import quick.sms.quicksms.backend.Contact
-import quick.sms.quicksms.backend.DatabaseLog
-import quick.sms.quicksms.backend.DatabaseMessages
+import quick.sms.quicksms.backend.*
 import quick.sms.quicksms.editor
 import quick.sms.quicksms.prefs
 
@@ -36,7 +27,8 @@ import quick.sms.quicksms.prefs
 class TextMessageActivity : BaseActivity() {
 
     private lateinit var contactDB: DatabaseMessages
-    private lateinit var tilesDB: DatabaseLog
+    private lateinit var logDB: DatabaseLog
+    private lateinit var tilesDB: DatabaseTiles
     private lateinit var messages: LinkedHashMap<Int, String>
     private var receipientID: Long = 1L
     private lateinit var recipientName: String
@@ -45,6 +37,9 @@ class TextMessageActivity : BaseActivity() {
     private val SENT = "SMS_SENT"
     private val DELIVERED = "SMS_DELIVERED"
     private val MAX_SMS_MESSAGE_LENGTH = 160
+    lateinit var Spinner: Spinner
+    private var tileID = -1
+    lateinit var contact: Contact
 
     private var mAdView: AdView? = null
 
@@ -54,18 +49,20 @@ class TextMessageActivity : BaseActivity() {
         setContentView(R.layout.activity_text_message)
 
         contactDB = DatabaseMessages(this)
-        tilesDB = DatabaseLog(this)
-        val contact = intent.extras.get("contact")
+        logDB = DatabaseLog(this)
+        tilesDB = DatabaseTiles(this)
+        doAsync { phoneNumber = tilesDB.getPreferedNum(receipientID) }
+        contact = intent.extras.get("contact") as Contact
+        tileID = intent.getIntExtra("tileID", 0)
         if (contact is Contact) {
-            println(contact.numbers)
-            phoneNumber = contact.numbers[0]
+            println(">>> Contact numbers" + contact.numbers)
             recipientName = contact.name
             receipientID = contact.id
             updateTitle() //updates the users name on the action bar
             doAsync {
                 val result = contactDB.returnAllHashMap(receipientID)
                 uiThread {
-                    addButtons(result)
+                    // addButtons(result)
                     messages = result
                 }
             }
@@ -82,7 +79,7 @@ class TextMessageActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate your main_menu into the menu
-        menuInflater.inflate(R.menu.textmessageactivity, menu)
+        menuInflater.inflate(R.menu.textmessage_extras, menu)
         // Locate MenuItem with ShareActionProvider
         return true
     }
@@ -104,9 +101,38 @@ class TextMessageActivity : BaseActivity() {
             }
             true
         }
+        R.id.selectNumber -> {
+            doAsync {
+                val phoneNumbers = mutableListOf<String>()
+                phoneNumbers.add(phoneNumber)
+                println(">>>> all numbers"+contact.numbers)
+                for (i in 0 until contact.numbers.size) {
+                    println(">>>>"+contact.numbers[i])
+                    if (contact.numbers[i] != phoneNumber) {
+                        //Only add it if its not the current prefered number
+                        phoneNumbers.add(contact.numbers[i])
+                    }
+                }
+                uiThread {
+                    selector("Select the number you wish to send messages too", phoneNumbers, { _, i ->
+                        try {
+                            updatePreferedNum(phoneNumbers[i].toInt())
+                        } catch (e: Exception) {
+
+                        }
+                    })
+                }
+            }
+            true
+        }
         else -> {
             super.extendedOptions(item)
         }
+    }
+
+    private fun updatePreferedNum(PreferedNumber: Int) {
+        phoneNumber = PreferedNumber.toString()
+        doAsync { tilesDB.insertData(receipientID, tileID, PreferedNumber) }
     }
 
     private fun updateTitle() {
@@ -141,7 +167,7 @@ class TextMessageActivity : BaseActivity() {
     }
 
     private fun addToLog(recipient_id: Long, message: String, receipientName: String, phoneNumber: String) {
-        tilesDB.insertData(recipient_id, message, receipientName, phoneNumber)
+        logDB.insertData(recipient_id, message, receipientName, phoneNumber)
     }
 
     private fun loadID() = prefs.getInt("DBHELPERID", 0)
@@ -150,8 +176,8 @@ class TextMessageActivity : BaseActivity() {
         editor.putIntAndCommit("DBHELPERID", loadID() + 1)
     }
 
-
     fun addButtons(textMessages: LinkedHashMap<Int, String>) {
+
         val llMain = findViewById<LinearLayout>(R.id.ll_main_layout)
         llMain.removeAllViews()
         llMain.removeAllViewsInLayout()
