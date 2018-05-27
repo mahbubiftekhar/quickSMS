@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
+
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -40,7 +41,20 @@
             </LinearLayout>
         </ScrollView>
 
-        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="60dp"
+            android:layout_marginEnd="16dp"
+            android:paddingBottom="30dp"
+            android:src="@android:drawable/ic_input_add" />
+
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/adView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,6 +64,7 @@
             ads:adUnitId="ca-app-pub-2206499302575732/2755153561">
 
         </com.google.android.gms.ads.AdView>
+
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

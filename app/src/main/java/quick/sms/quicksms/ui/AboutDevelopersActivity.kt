@@ -64,7 +64,6 @@ class AboutDevelopersActivity : BaseActivity() {
 
                 }
 
-
                 textView {
                     text = "Alex Shand - Android Developer"
                     textSize = 30f

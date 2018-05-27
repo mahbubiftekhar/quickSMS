@@ -61,7 +61,7 @@ class MainActivity : BaseActivity() {
             startActivity<SettingsActivity>()
             true
         }
-        R.id.sync->{
+        R.id.sync -> {
             //User wishes to resync so just send them to the splash and let the app do the rest
             finish()
             startActivity<SplashActivity>()

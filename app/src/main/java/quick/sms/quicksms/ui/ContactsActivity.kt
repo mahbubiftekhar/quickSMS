@@ -60,7 +60,7 @@ class ContactsActivity : BaseActivity() {
         }
 
         fun _LinearLayout.contactView(contact: Contact) {
-            linearLayout{
+            linearLayout {
                 textView(contact.name) {
                     textSize = sp(10).toFloat()
                 }.lparams(width = matchParent) {

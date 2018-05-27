@@ -15,7 +15,7 @@ class BugReportActivity : AppCompatActivity() {
     }
 }
 
-private class BugReportLayout(val exception: Throwable): AnkoComponent<BugReportActivity> {
+private class BugReportLayout(val exception: Throwable) : AnkoComponent<BugReportActivity> {
 
     override fun createView(ui: AnkoContext<BugReportActivity>) = with(ui) {
         verticalLayout {

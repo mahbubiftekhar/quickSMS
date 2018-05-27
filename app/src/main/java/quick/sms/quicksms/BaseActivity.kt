@@ -26,6 +26,7 @@ open class BaseActivity : AppCompatActivity() {
         //gets whether the user wants the contacts name for contacts with images
         return settings.getBoolean("ShowName", false)
     }
+
     fun setActionBarColour() {
         //gets the users selected actionbar colour
         supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(getActionBarColour())))

@@ -22,6 +22,8 @@ import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.*
 import quick.sms.quicksms.editor
 import quick.sms.quicksms.prefs
+import android.support.design.widget.FloatingActionButton
+
 
 @Suppress("DEPRECATION", "DEPRECATED_IDENTITY_EQUALS")
 class TextMessageActivity : BaseActivity() {
@@ -58,10 +60,18 @@ class TextMessageActivity : BaseActivity() {
         contact = intent.extras.get("contact") as Contact
         tileID = intent.getIntExtra("tileID", 0)
         phoneNumber = tilesDB.getPreferedNum(tileID)
-        if(phoneNumber.length>1){
+        if (phoneNumber.length > 1) {
             phoneNumber = phoneNumber.removeRange(0, 1) //Remove the leading p
         }
-        println(">>> getting in here")
+        val fab = findViewById<FloatingActionButton>(R.id.fab)
+        fab.setOnClickListener {
+            //Here we are defining what happens when the action button is pressed
+            try {
+                popUpAddMessage()
+            } catch (e: Exception) {
+
+            }
+        }
         if (contact is Contact) {
             println(">>> Contact numbers" + contact.numbers)
             recipientName = contact.name
@@ -94,10 +104,6 @@ class TextMessageActivity : BaseActivity() {
         menuInflater.inflate(R.menu.textmessage_extras, menu)
         // Locate MenuItem with ShareActionProvider
         return true
-    }
-
-    private fun getPhoneNumber(): String {
-        return returnNoSpaces(phoneNumber)
     }
 
     override fun extendedOptions(item: MenuItem) = when (item.itemId) {
@@ -152,7 +158,7 @@ class TextMessageActivity : BaseActivity() {
 
     private fun updatePreferedNum(PreferedNumber: String) {
         println(">>>> new prefered number is $PreferedNumber")
-        phoneNumber = PreferedNumber.removeRange(0,1)
+        phoneNumber = PreferedNumber.removeRange(0, 1)
         val tiles = DatabaseTiles(this)
         tiles.insertData(receipientID, tileID, PreferedNumber)
     }
@@ -205,6 +211,10 @@ class TextMessageActivity : BaseActivity() {
         llMain.removeAllViewsInLayout()
         val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         params.setMargins(1, 35, 1, 0)
+        if(textMessages.size==0){
+            //Prompt the user to add some messages
+            longToast("Why not add some messages! Click the '+' button! Its really easy to do")
+        }
         for ((key, value) in textMessages) {
             val buttonDynamic = Button(this)
             buttonDynamic.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)

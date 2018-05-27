@@ -7,17 +7,11 @@ import android.text.TextUtils
 import android.widget.EditText
 import android.view.View
 import android.widget.Button
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import quick.sms.quicksms.BaseActivity
 import java.util.regex.Pattern
 
 
 class ContactUsActivity : BaseActivity() {
-    private var mAdView: AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,10 +19,10 @@ class ContactUsActivity : BaseActivity() {
         setContentView(R.layout.activity_contact_us)
 
 
-        val your_name = findViewById<View>(R.id.your_name) as EditText
-        val your_email = findViewById<View>(R.id.your_email) as EditText
-        val your_subject = findViewById<View>(R.id.your_subject) as EditText
-        val your_message = findViewById<View>(R.id.your_message) as EditText
+        val yourName = findViewById<View>(R.id.your_name) as EditText
+        val yourEmail = findViewById<View>(R.id.your_email) as EditText
+        val yourSubject = findViewById<View>(R.id.your_subject) as EditText
+        val yourMessage = findViewById<View>(R.id.your_message) as EditText
 
         fun isValidEmail(email: String): Boolean {
             val EMAIL_PATTERN = ("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
@@ -39,30 +33,30 @@ class ContactUsActivity : BaseActivity() {
 
         val email = findViewById<View>(R.id.post_message) as Button
         email.setOnClickListener(View.OnClickListener {
-            val name = your_name.text.toString()
-            val email2 = your_email.text.toString()
-            val subject = your_subject.text.toString()
-            val message = your_message.text.toString()
+            val name = yourName.text.toString()
+            val email2 = yourEmail.text.toString()
+            val subject = yourSubject.text.toString()
+            val message = yourMessage.text.toString()
             if (TextUtils.isEmpty(name)) {
-                your_name.error = "Enter Your Name"
-                your_name.requestFocus()
+                yourName.error = "Enter Your Name"
+                yourName.requestFocus()
                 return@OnClickListener
             }
 
             if (!isValidEmail(email2)) {
-                your_email.error = "Invalid Email"
+                yourEmail.error = "Invalid Email"
                 return@OnClickListener
             }
 
             if (TextUtils.isEmpty(subject)) {
-                your_subject.error = "Enter Your Subject"
-                your_subject.requestFocus()
+                yourSubject.error = "Enter Your Subject"
+                yourSubject.requestFocus()
                 return@OnClickListener
             }
 
             if (TextUtils.isEmpty(message)) {
-                your_message.error = "Enter Your Message"
-                your_message.requestFocus()
+                yourMessage.error = "Enter Your Message"
+                yourMessage.requestFocus()
                 return@OnClickListener
             }
 
