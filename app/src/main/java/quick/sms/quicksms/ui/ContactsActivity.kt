@@ -3,8 +3,6 @@ package quick.sms.quicksms.ui
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.Intent
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -16,7 +14,6 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.Contact
-import java.io.FileNotFoundException
 
 @Suppress("DEPRECATION")
 class ContactsActivity : BaseActivity() {
