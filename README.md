@@ -14,6 +14,8 @@ Ever found yourself sending the same SMS messages often to the same recipient? q
 
 </div>
 
+## Privacy Policy - quickSMS
+ALthough the app requries to access your contacts, we will NEVER transmit any of these outwidth the app. If you send emails to us with suggestions or bug report we will NEVER store you email or do any marketing. We will NEVER share any of your details to anyone. 
 
 ## Group Members
 
