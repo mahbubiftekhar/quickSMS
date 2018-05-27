@@ -64,25 +64,6 @@ class ContactsActivity : BaseActivity() {
 
         fun _LinearLayout.contactView(contact: Contact) {
             linearLayout{
-                var photo = contact.image?.let {
-                    try {
-                        val inStream = cr.openInputStream(Uri.parse(it));Drawable.createFromStream(inStream, it)
-                    } catch (e: FileNotFoundException) {
-                        null
-                    }
-                }
-                if (photo == null) {
-                    photo = if (android.os.Build.VERSION.SDK_INT >= 21) {
-                        resources.getDrawable(R.drawable.default_image, context.theme)
-                    } else {
-                        resources.getDrawable(R.drawable.default_image)
-                    }
-                }
-                imageView {
-                    image = photo
-                }.lparams {
-                    gravity = Gravity.START
-                }
                 textView(contact.name) {
                     textSize = sp(10).toFloat()
                 }.lparams(width = matchParent) {
