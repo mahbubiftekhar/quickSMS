@@ -6,9 +6,12 @@ Ever found yourself sending the same SMS messages often to the same recipient? q
 
 
 <div style="display:flex;">
-<img alt="App image" src="" width="30%">
-<img alt="App image" src="" width="30%">
-<img alt="App image" src="" width="30%">
+<img alt="App image" src="/APPIMAGES/mainScreen.png" width="30%">
+<img alt="App image" src="/APPIMAGES/textMessageActivity.png" width="30%">
+<img alt="App image" src="/APPIMAGES/setting.png" width="30%">
+<img alt="App image" src="/APPIMAGES/settings2.png" width="30%">
+<img alt="App image" src="/APPIMAGES/splash.png" width="30%">
+
 </div>
 
 
