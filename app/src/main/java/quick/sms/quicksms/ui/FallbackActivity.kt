@@ -7,18 +7,19 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
+import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.DatabaseMessages
 import quick.sms.quicksms.backend.DatabaseTiles
 import quick.sms.quicksms.context
 
-class FallbackActivity : AppCompatActivity() {
+class FallbackActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val exception = intent.extras.get("exception") as Throwable
-        FallbackLayout(::restart, ::resetApp, {}).setContentView(this)
+        FallbackLayout(::restart, ::resetApp, { sendReport(exception) }).setContentView(this)
     }
 
     private fun restart() {
@@ -38,6 +39,10 @@ class FallbackActivity : AppCompatActivity() {
         log.deleteEntireDB()
         PreferenceManager.getDefaultSharedPreferences(context).edit().clear().commit() //Resetting shared preferences
         restart()
+    }
+
+    private fun sendReport(exception: Throwable) {
+
     }
 }
 

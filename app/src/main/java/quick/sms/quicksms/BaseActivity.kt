@@ -14,7 +14,8 @@ import quick.sms.quicksms.ui.SettingsActivity
 
 open class BaseActivity : AppCompatActivity() {
 
-    private val excludedActivities = setOf("SettingsActivity", "SplashActivity", "MainActivity")
+    private val excludedActivities = setOf("SettingsActivity", "SplashActivity", "MainActivity",
+            "FallbackActivity")
 
     fun getBackGroundColour(): String {
         //gets the users selected background colour
