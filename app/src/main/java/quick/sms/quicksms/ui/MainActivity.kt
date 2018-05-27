@@ -31,8 +31,6 @@ class MainActivity : BaseActivity() {
     private lateinit var unassigned: List<Contact>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        println("Throwing")
-        throw RuntimeException()
         val bundle: Bundle = savedInstanceState ?: intent.extras
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)

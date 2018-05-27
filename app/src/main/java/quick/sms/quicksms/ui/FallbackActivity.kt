@@ -42,7 +42,7 @@ class FallbackActivity : BaseActivity() {
     }
 
     private fun sendReport(exception: Throwable) {
-
+        startActivity<BugReportActivity>("exception" to exception)
     }
 }
 

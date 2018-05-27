@@ -50,10 +50,12 @@
         <activity android:name=".ui.FaqActivity" />
         <activity android:name=".ui.FallbackActivity">
             <intent-filter>
-                <action android:name="quick.sms.quicksms.UNCAUGHT_EXCEPTION"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="quick.sms.quicksms.UNCAUGHT_EXCEPTION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.BugReportActivity"></activity>
     </application>
 
 </manifest>
