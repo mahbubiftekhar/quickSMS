@@ -211,7 +211,7 @@ class TextMessageActivity : BaseActivity() {
         llMain.removeAllViewsInLayout()
         val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         params.setMargins(1, 35, 1, 0)
-        if(textMessages.size==0){
+        if (textMessages.size == 0) {
             //Prompt the user to add some messages
             longToast("Why not add some messages! Click the '+' button! Its really easy to do")
         }
