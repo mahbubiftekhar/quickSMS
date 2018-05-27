@@ -221,6 +221,7 @@ class TextMessageActivity : BaseActivity() {
             buttonDynamic.text = value
             buttonDynamic.layoutParams = params
             buttonDynamic.id = key
+            buttonDynamic.allCaps = false //Add case sensitivity
             buttonDynamic.setBackgroundResource(R.drawable.rounded_corners)
             buttonDynamic.setOnClickListener {
                 fun sendMessage() {

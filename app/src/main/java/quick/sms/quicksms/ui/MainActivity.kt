@@ -287,7 +287,9 @@ class MainActivity : BaseActivity() {
                     backgroundResource = R.drawable.rounded_corners
                     (background as GradientDrawable).setColor(Color.parseColor(tileColour))
                     text = name
-                    textSize=60.toFloat()
+                    if(text=="+"){
+                        textSize=60.toFloat()
+                    }
                 } else {
                     background = image
                     if (showName) {

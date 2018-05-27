@@ -119,7 +119,7 @@
                     android:layout_height="32dp"
                     android:layout_gravity="center"
                     android:background="@color/colorPrimary"
-                    android:paddingBottom="50dp"
+                    android:paddingBottom="1dp"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:paddingTop="1dp"
