@@ -61,7 +61,7 @@ class TextMessageActivity : BaseActivity() {
         if(phoneNumber.length>1){
             phoneNumber = phoneNumber.removeRange(0, 1) //Remove the leading p
         }
-
+        println(">>> getting in here")
         if (contact is Contact) {
             println(">>> Contact numbers" + contact.numbers)
             recipientName = contact.name
@@ -74,7 +74,7 @@ class TextMessageActivity : BaseActivity() {
             doAsync {
                 val result = contactDB.returnAllHashMap(receipientID)
                 uiThread {
-                    // addButtons(result)
+                    addButtons(result)
                     messages = result
                 }
             }
