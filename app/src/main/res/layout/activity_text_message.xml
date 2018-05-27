@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#2072A4">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
@@ -50,7 +50,7 @@
             ads:adUnitId="ca-app-pub-2206499302575732/2755153561">
 
         </com.google.android.gms.ads.AdView>
-    </LinearLayout>
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
 
