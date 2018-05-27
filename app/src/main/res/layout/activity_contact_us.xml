@@ -108,7 +108,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:height="180dp"
+                    android:height="160dp"
                     android:gravity="top"
                     android:inputType="textMultiLine"
                     android:textSize="14sp" />
@@ -119,27 +119,16 @@
                     android:layout_height="32dp"
                     android:layout_gravity="center"
                     android:background="@color/colorPrimary"
-                    android:paddingBottom="1dp"
+                    android:paddingBottom="50dp"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:paddingTop="1dp"
                     android:text="@string/contact_form_button"
                     android:textAllCaps="true"
                     android:textColor="@android:color/white"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"/>
+
             </LinearLayout>
         </ScrollView>
-        <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-2206499302575732/2755153561">
-        </com.google.android.gms.ads.AdView>
     </RelativeLayout>
-
-
 </android.support.design.widget.CoordinatorLayout>
