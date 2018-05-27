@@ -103,7 +103,7 @@ class TextMessageActivity : BaseActivity() {
     override fun extendedOptions(item: MenuItem) = when (item.itemId) {
         R.id.make_call -> {
             try {
-                makeCall(returnNoSpaces(getPhoneNumber()))
+                makeCall(returnNoSpaces(phoneNumber))
             } catch (e: Exception) {
 
             }
@@ -151,7 +151,8 @@ class TextMessageActivity : BaseActivity() {
     }
 
     private fun updatePreferedNum(PreferedNumber: String) {
-        phoneNumber = PreferedNumber
+        println(">>>> new prefered number is $PreferedNumber")
+        phoneNumber = PreferedNumber.removeRange(0,1)
         val tiles = DatabaseTiles(this)
         tiles.insertData(receipientID, tileID, PreferedNumber)
     }
