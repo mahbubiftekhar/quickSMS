@@ -126,7 +126,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     open fun gettileColour(): String {
-        return settings.getString("tilecolour", "#303F9F")
+        return settings.getString("tilecolour", "#ffffff")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
