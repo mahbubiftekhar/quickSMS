@@ -127,4 +127,15 @@
     <string name="reset_app">RESET APP</string>
     <string name="faq_s">FAQ\'s</string>
     <string name="select_number">SELECT NUMBER</string>
+    <string name="fallback_text">
+        "Well&#8230; This is embarrassing. It seems quickSMS is experiencing difficulties.\n\n"
+
+        "If this is the first time you've been here consider restarting the app with the first button below.\n\n"
+
+        "If you've been here before you may want to reset quickSMS with the second button, this will clear all of the data you've entered and fixes most problems.\n\n"
+
+        "Finally if you're feeling generous you could send us a bug report to help us make quickSMS better\n\n"
+    </string>
+    <string name="restart_app">Restart App</string>
+    <string name="send_bug_report">Send Bug Report</string>
 </resources>
