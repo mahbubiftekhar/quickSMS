@@ -127,6 +127,10 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    private fun noneSet(){
+        longToast("Make SMS's easy by setting a contact to a tile by clicking on the tile!")
+    }
+
     @SuppressLint("ApplySharedPref")
     private fun resetApp() {
         /*This is a very dangerous function, hence why its wrapped around two alerts for security*/
@@ -278,11 +282,12 @@ class MainActivity : BaseActivity() {
                     }
                 }
                 image?.cornerRadius = dip(20).toFloat()
-                val name = contact?.name ?: "Unset"
+                val name = contact?.name ?: "+"
                 if (image == null) {
                     backgroundResource = R.drawable.rounded_corners
                     (background as GradientDrawable).setColor(Color.parseColor(tileColour))
                     text = name
+                    textSize=60.toFloat()
                 } else {
                     background = image
                     if (showName) {
