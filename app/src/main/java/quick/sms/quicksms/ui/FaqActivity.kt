@@ -24,8 +24,12 @@ class FaqActivity : BaseActivity() {
         faq["Can I see messages I've sent?"] = "Yes, you can see this in the app 'SMS LOG'"
         faq["I have some suggestions, how can I share them?"] = "We're more than happy to hear you suggestions! User the contact table, accessible from 'options'"
         faq["When I send a message, it says 'Sorry, couldn't send SMS'"] = "This may be due to many reasons e.g. No reception, out of PAYG credit"
-        faq["Can I add my own messages for the contact?"] = ""
-
+        faq["Can I add my own messages for the contact?"] = "Yes, simply click on the receipient's tile, click 'options', 'add a message' then type your message and press 'add', its that easy!"
+        faq["Can I remove a recipient?"] = "Yes, simply press on the recipient's tile for 3-4 seconds, then just confirm to delete"
+        faq["My recipient has multiple numbers, can I choose which one I send messages to?"] = "Of course you can! Simply click the tile for that recipient, click 'options', then 'Select Number' and pick the number you want to call and send SMS's to, its that easy!"
+        faq["Can I view the number I have set for a recipient"] = "Of course you can! Simply click the tile for that recipient, click 'optons', then 'Info', a pop up will appear with their number"
+        faq["Can I delete a message I sent?"] = "Unfortunately you cannot un-send a SMS"
+        faq["Can I delete a pre-set message"] = "Yes, press on that message for 3-4 seconds, hit 'delete' and that's it!"
 
         doAsync {
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
