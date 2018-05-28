@@ -211,7 +211,7 @@ class TextMessageActivity : BaseActivity() {
         llMain.removeAllViewsInLayout()
         val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         params.setMargins(1, 35, 1, 0)
-        if (textMessages.size == 0) {
+        if (textMessages.size == 0 && textMessages == null) {
             setContentView(R.layout.textmessagesnocontact)
             doAsync {
                 MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
@@ -372,7 +372,7 @@ class TextMessageActivity : BaseActivity() {
     }
 
     private fun makeSound() {
-        if (sound) {
+        if (soundBool()) {
             try {
                 val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
                 val r = RingtoneManager.getRingtone(applicationContext, notification)
