@@ -6,23 +6,17 @@
 
 
     <TextView
+        android:id="@+id/text2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text="@string/why_not_add_some_messages"
+        android:textColor="@color/colorPrimary"
+        android:text="Why not add some messages? \n\n Just click the '+' symbol on the bottom right"
         android:textAlignment="center"
         android:textSize="@dimen/activity_horizontal_margin"
         tools:ignore="SpUsage" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:text="@string/you_can_do_it_easily_by_clicking_the_symbol_on_the_bottom_right"
-        android:textAlignment="center"
-        android:textSize="@dimen/activity_horizontal_margin"
-        tools:ignore="SpUsage" />
+
 
     <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adView"
