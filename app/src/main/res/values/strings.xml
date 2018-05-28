@@ -56,4 +56,7 @@
 
         "You may use the text box below to provide additional information to help find the error, for example the sequence of actions you took immediately before triggering the error.\n\n"
     </string>
+    <string name="why_not_add_some_messages_click_the_symbol_its_really_easy">Why not add some messages! Click the \'+\' symbol, its really easy</string>
+    <string name="why_not_add_some_messages">Why not add some messages?</string>
+    <string name="you_can_do_it_easily_by_clicking_the_symbol_on_the_bottom_right">You can do it easily by clicking the \'+\' symbol on the bottom right</string>
 </resources>

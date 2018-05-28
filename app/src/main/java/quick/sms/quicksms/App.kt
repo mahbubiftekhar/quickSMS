@@ -49,13 +49,13 @@ class App : Application() {
         context = getApplicationContext();
         // Setup a global uncaught exception handler (Adapted from: https://stackoverflow.com/questions/19897628/need-to-handle-uncaught-exceptions-and-send-to-log-file)
         Thread.setDefaultUncaughtExceptionHandler { _, exception ->
-                println("Caught")
-                if (isUIThread()) {
-                    spawnFallback(exception)
-                } else {
-                    Handler(Looper.getMainLooper()).post { spawnFallback(exception) }
-                }
-                System.exit(1)
+            println("Caught")
+            if (isUIThread()) {
+                spawnFallback(exception)
+            } else {
+                Handler(Looper.getMainLooper()).post { spawnFallback(exception) }
             }
+            System.exit(1)
+        }
     }
 }

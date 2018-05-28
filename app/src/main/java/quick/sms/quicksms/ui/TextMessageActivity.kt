@@ -212,97 +212,113 @@ class TextMessageActivity : BaseActivity() {
         val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         params.setMargins(1, 35, 1, 0)
         if (textMessages.size == 0) {
-            //Prompt the user to add some messages
-            longToast("Why not add some messages! Click the '+' button! Its really easy to do")
-        }
-        for ((key, value) in textMessages) {
-            val buttonDynamic = Button(this)
-            buttonDynamic.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            buttonDynamic.text = value
-            buttonDynamic.layoutParams = params
-            buttonDynamic.id = key
-            buttonDynamic.allCaps = false //Add case sensitivity
-            buttonDynamic.setBackgroundResource(R.drawable.rounded_corners)
-            buttonDynamic.setOnClickListener {
-                fun sendMessage() {
-                    try {
-                        val sent = "SMS_SENT"
-                        val piSent = PendingIntent.getBroadcast(applicationContext, 0, Intent(SENT), 0)
-                        val piDelivered = PendingIntent.getBroadcast(applicationContext, 0, Intent(DELIVERED), 0)
-                        registerReceiver(object : BroadcastReceiver() {
-                            override fun onReceive(arg0: Context, arg1: Intent) {
-                                if (resultCode === Activity.RESULT_OK) {
-                                    doAsync {
-                                        addToLog(receipientID, buttonDynamic.text as String, recipientName, phoneNumber)
+            setContentView(R.layout.textmessagesnocontact)
+            doAsync {
+                MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
+                mAdView = findViewById<View>(R.id.adView) as AdView
+                val adRequest = AdRequest.Builder().build()
+                uiThread {
+                    mAdView!!.loadAd(adRequest)
+                }
+            }
+
+        } else {
+            for ((key, value) in textMessages) {
+                val buttonDynamic = Button(this)
+                buttonDynamic.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                buttonDynamic.text = value
+                buttonDynamic.layoutParams = params
+                buttonDynamic.id = key
+                buttonDynamic.allCaps = false //Add case sensitivity
+                buttonDynamic.setBackgroundResource(R.drawable.rounded_corners)
+                buttonDynamic.setOnClickListener {
+                    fun sendMessage() {
+                        try {
+                            val sent = "SMS_SENT"
+                            val piSent = PendingIntent.getBroadcast(applicationContext, 0, Intent(SENT), 0)
+                            val piDelivered = PendingIntent.getBroadcast(applicationContext, 0, Intent(DELIVERED), 0)
+                            registerReceiver(object : BroadcastReceiver() {
+                                override fun onReceive(arg0: Context, arg1: Intent) {
+                                    if (resultCode === Activity.RESULT_OK) {
+                                        doAsync {
+                                            addToLog(receipientID, buttonDynamic.text as String, recipientName, phoneNumber)
+                                        }
+                                        Toast.makeText(baseContext, "SMS sent successfully", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        toast("Sorry, couldn't send SMS")
                                     }
-                                    Toast.makeText(baseContext, "SMS sent successfully", Toast.LENGTH_SHORT).show()
-                                } else {
-                                    toast("Sorry, couldn't send SMS")
                                 }
+                            }, IntentFilter(sent))
+                            val smsManager = SmsManager.getDefault()
+                            val length = (buttonDynamic.text as String).length
+                            return if (length > MAX_SMS_MESSAGE_LENGTH) {
+                                val messagelist = smsManager.divideMessage(buttonDynamic.text as String)
+                                smsManager.sendMultipartTextMessage(phoneNumber, null, messagelist, null, null)
+
+                            } else {
+                                smsManager.sendTextMessage(phoneNumber, null, buttonDynamic.text as String, piSent, piDelivered)
                             }
-                        }, IntentFilter(sent))
-                        val smsManager = SmsManager.getDefault()
-                        val length = (buttonDynamic.text as String).length
-                        return if (length > MAX_SMS_MESSAGE_LENGTH) {
-                            val messagelist = smsManager.divideMessage(buttonDynamic.text as String)
-                            smsManager.sendMultipartTextMessage(phoneNumber, null, messagelist, null, null)
-
-                        } else {
-                            smsManager.sendTextMessage(phoneNumber, null, buttonDynamic.text as String, piSent, piDelivered)
+                        } catch (e: Exception) {
+                            toast("Sorry, Message not sent")
                         }
-                    } catch (e: Exception) {
-                        toast("Sorry, Message not sent")
+
+                        vibrate()
+                        makeSound()
+                        doAsync {
+                            if (receipientID != 1L) {
+                                //Here we are adding to the log, checking for not 1L to not add during development
+                                addToLog(receipientID, buttonDynamic.text as String, recipientName, phoneNumber)
+                            }
+                        }
                     }
+                    if (doubleCheckBool()) {
+                        //User wishes for double check
+                        alert(value) {
+                            title = "Are you sure you want to send the message"
+                            positiveButton("Send") {
+                                sendMessage()
+                            }
+                            negativeButton("Cancel") {
 
-                    vibrate()
-                    makeSound()
-                    doAsync {
-                        if (receipientID != 1L) {
-                            //Here we are adding to the log, checking for not 1L to not add during development
-                            addToLog(receipientID, buttonDynamic.text as String, recipientName, phoneNumber)
-                        }
+                            }
+                        }.show()
+                    } else {
+                        //The user has doubleCheck off, so just send anyways. Whats the worse than can happen?
+                        sendMessage()
                     }
                 }
-                if (doubleCheckBool()) {
-                    //User wishes for double check
+                buttonDynamic.setOnLongClickListener {
                     alert(value) {
-                        title = "Are you sure you want to send the message"
-                        positiveButton("Send") {
-                            sendMessage()
-                        }
-                        negativeButton("Cancel") {
+                        title = "What would you like to do to this message?"
+                        positiveButton("Delete") {
+                            alert("Are you sure you want to delete this? ") {
+                                positiveButton("Yes") {
+                                    doAsync {
+                                        deleteData(buttonDynamic.id.toString())
+                                    }
+                                    try {
+                                        messages.remove(buttonDynamic.id)
+                                    } catch (e: NullPointerException) {
+                                        println("NullPointerException, TextMessageActivity")
+                                    }
+                                    addButtons(messages)
+                                }
+                                negativeButton("No") {
+                                    //User has changed their mind
+                                }
+                            }.show()
 
+                        }
+                        negativeButton("Edit") {
+                            //buttonDynamic.text IS THE TEXT
+                            //buttonDynamic.id.toString() IS THE button id
+                            editDataBuilder(buttonDynamic.text as String, buttonDynamic.id.toString())
                         }
                     }.show()
-                } else {
-                    //The user has doubleCheck off, so just send anyways. Whats the worse than can happen?
-                    sendMessage()
+                    true
                 }
+                llMain.addView(buttonDynamic)
             }
-            buttonDynamic.setOnLongClickListener {
-                alert(value) {
-                    title = "What would you like to do to this message?"
-                    positiveButton("Delete") {
-                        doAsync {
-                            deleteData(buttonDynamic.id.toString())
-                        }
-                        //Basically during testing I passed invalid removes at some point by accident and I got fed up on nullpointers
-                        try {
-                            messages.remove(buttonDynamic.id)
-                        } catch (e: NullPointerException) {
-                            println("NullPointerException, TextMessageActivity")
-                        }
-                        addButtons(messages)
-                    }
-                    negativeButton("Edit") {
-                        //buttonDynamic.text IS THE TEXT
-                        //buttonDynamic.id.toString() IS THE button id
-                        editDataBuilder(buttonDynamic.text as String, buttonDynamic.id.toString())
-                    }
-                }.show()
-                true
-            }
-            llMain.addView(buttonDynamic)
         }
     }
 
