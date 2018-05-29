@@ -54,6 +54,8 @@ class TextMessageActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setActionBarColour()
         setContentView(R.layout.activity_text_message)
+        val layout = findViewById<RelativeLayout>(R.id.rellayout)
+        layout.setBackgroundColor(Color.parseColor(getBackGroundColour()))//Set the background colour
         contactDB = DatabaseMessages(this)
         logDB = DatabaseLog(this)
         tilesDB = DatabaseTiles(this)
@@ -245,11 +247,11 @@ class TextMessageActivity : BaseActivity() {
         } else {
             val textview = findViewById<View>(R.id.text2) as TextView
             textview.visibility = View.INVISIBLE
-
             for ((key, value) in textMessages) {
                 val buttonDynamic = Button(this)
                 buttonDynamic.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 buttonDynamic.text = value
+                buttonDynamic.textColor = Color.parseColor(getTileTextColour())
                 buttonDynamic.layoutParams = params
                 buttonDynamic.id = key
                 buttonDynamic.allCaps = false //Add case sensitivity

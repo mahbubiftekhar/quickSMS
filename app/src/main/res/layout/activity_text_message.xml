@@ -6,6 +6,7 @@
     android:background="#2072A4">
 
     <RelativeLayout
+        android:id="@+id/rellayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
