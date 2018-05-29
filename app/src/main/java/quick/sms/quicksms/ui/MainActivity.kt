@@ -39,7 +39,6 @@ class MainActivity : BaseActivity() {
         val (assigned, unassigned) = contactsList.asSequence().partition { it.tile != null }
         this.unassigned = unassigned
         contacts = assigned.associateBy { it.tile!! }
-        nTiles = contacts.size
         draw()
     }
 
