@@ -1,5 +1,6 @@
 package quick.sms.quicksms
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 
@@ -25,6 +26,16 @@ open class BaseActivity : AppCompatActivity() {
     fun getBackGroundColour(): String {
         //gets the users selected background colour
         return settings.getString("backgroundcolour", "#217ca3")
+    }
+
+    @SuppressLint("ObsoleteSdkInt")
+    override fun recreate() {
+        if (android.os.Build.VERSION.SDK_INT >= 11) {
+            super.recreate()
+        } else {
+            startActivity(intent)
+            finish()
+        }
     }
 
     fun showName(): Boolean {

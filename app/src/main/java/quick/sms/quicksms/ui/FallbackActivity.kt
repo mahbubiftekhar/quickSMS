@@ -2,7 +2,6 @@ package quick.sms.quicksms.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
 import org.jetbrains.anko.*
@@ -56,7 +55,18 @@ private class FallbackLayout(val restart: () -> Unit, val reset: () -> Unit, val
                 onClick { restart() }
             }
             button(R.string.reset_app) {
-                onClick { reset() }
+                onClick {
+                    alert("This will remove all data such as textMessages and settings") {
+                        title = "Are you sure?"
+                        positiveButton("Yes") {
+                            reset()
+
+                        }
+                        negativeButton("No, Cancel") {
+
+                        }
+                    }
+                }
             }
             button(R.string.send_bug_report) {
                 onClick { send() }

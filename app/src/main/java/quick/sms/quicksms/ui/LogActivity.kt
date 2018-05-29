@@ -3,6 +3,7 @@ package quick.sms.quicksms.ui
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -46,7 +47,7 @@ class LogActivity : BaseActivity() {
             println(">>>>> in the iff condition")
             //If their is no logs, we need to display to the user this so they arent confused
             allLogsLocal = allLogs
-            NoLogs(getBackGroundColour(), getTileTextColour())
+            noLogsToDisplay(getBackGroundColour(), getTileTextColour())
         }
     }
 
@@ -62,6 +63,7 @@ class LogActivity : BaseActivity() {
         //This function will delete the entire log database
         val tilesDataBase = DatabaseLog(this)
         tilesDataBase.deleteEntireDB()
+        recreate() // This will recreate the activity
     }
 
     override fun extendedOptions(item: MenuItem) = when (item.itemId) {
@@ -94,10 +96,11 @@ class LogActivity : BaseActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    fun NoLogs(backgroundColour: String, textColour: String): View {
+    private fun noLogsToDisplay(backgroundColour: String, textColour: String): View {
         return verticalLayout {
             backgroundColor = Color.parseColor(backgroundColour) //Setting the background colour
             textView {
+                this.gravity = Gravity.CENTER
                 text = "SMS Log is empty"
                 textSize = 40f
                 textColor = Color.parseColor(textColour)
@@ -108,7 +111,7 @@ class LogActivity : BaseActivity() {
 
 
     @SuppressLint("SetTextI18n")
-    fun UIcreator(backgroundColour: String, textColour: String): View {
+    private fun UIcreator(backgroundColour: String, textColour: String): View {
         return scrollView {
             backgroundColor = Color.parseColor(backgroundColour) //Setting the background colour
             verticalLayout {

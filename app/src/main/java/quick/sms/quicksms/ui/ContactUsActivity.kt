@@ -25,8 +25,8 @@ class ContactUsActivity : BaseActivity() {
         val yourMessage = findViewById<View>(R.id.your_message) as EditText
 
         fun isValidEmail(email: String): Boolean {
-            val EMAIL_PATTERN = ("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
-            val pattern = Pattern.compile(EMAIL_PATTERN)
+            val emailPattern = ("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
+            val pattern = Pattern.compile(emailPattern)
             val matcher = pattern.matcher(email)
             return matcher.matches()
         }
