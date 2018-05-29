@@ -11,6 +11,7 @@ import android.preference.PreferenceManager
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.Window
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
@@ -233,35 +234,38 @@ class MainActivity : BaseActivity() {
                              val tileColour: String, val textColour: String, val showName: Boolean, val tileCallBack: (Int) -> Unit,
                              val assignCallBack: (Int) -> Unit, val deleteCallback: (Int) -> Unit)
         : AnkoComponent<MainActivity> {
-        val nTiles = alreadyAssigned.size
+        val nTiles = alreadyAssigned.size.let {
+            if (it == 0) 1 else 0
+        }
         val rows = (nTiles / 2) + 1
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
-            verticalLayout {
-                scrollView {
-                    isFillViewport = true
-                    backgroundColor = Color.parseColor(backgroundColour)
+            scrollView {
+                backgroundColor = Color.parseColor(backgroundColour)
 
-                    verticalLayout {
-                        for (i in 1..rows) {
-                            row(2, i)
-                        }
+                verticalLayout {
+                    for (i in 1..rows) {
+                        row(i)
                     }
-                }.lparams(width = matchParent, height = 0) {
-                    weight = 1.0f
                 }
-                //include<View>(R.xml.advertxml) {}
             }
         }
 
         @SuppressLint("SetTextI18n")
-        fun _LinearLayout.row(nTiles: Int, row: Int) {
+        fun _LinearLayout.row(row: Int) {
             verticalLayout {
                 linearLayout {
-                    for (i in 1..nTiles) {
-                        tile(row, i, nTiles)
+                    tile(row, 1)
+                    if (nTiles % 2 == 1 && row == rows) {
+                        imageView {
+                            backgroundColor = Color.parseColor(backgroundColour)
+                        }.lparams(height = matchParent, width = 0) {
+                            weight = 1f
+                            margin = dip(7)
+                        }
+                    } else {
+                        tile(row, 2)
                     }
-
                 }.lparams(height = dip(180), width = matchParent) {
                     weight = 1f
                     padding = dip(7)
@@ -269,9 +273,9 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        fun _LinearLayout.tile(row: Int, col: Int, rowLen: Int) {
+        fun _LinearLayout.tile(row: Int, col: Int) {
             button {
-                val index = (row - 1) * rowLen + col
+                val index = (row - 1) * 2 + col
                 val contact = alreadyAssigned[index]
                 val image = contact?.image?.let {
                     try {
