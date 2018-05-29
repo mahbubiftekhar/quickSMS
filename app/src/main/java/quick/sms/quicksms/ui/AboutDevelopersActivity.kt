@@ -23,7 +23,7 @@ class AboutDevelopersActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setActionBarColour()
         setContentView(R.layout.activity_about_developers)
-        this.supportActionBar?.title = "About quickSMS" //Adding the action bar title programatically
+        this.supportActionBar?.title = "About quickSMS" //Adding the action bar title programmatically
 
         doAsync {
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")

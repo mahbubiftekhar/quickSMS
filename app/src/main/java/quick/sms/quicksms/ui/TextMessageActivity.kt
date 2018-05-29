@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.PendingIntent
 import android.content.*
 import android.graphics.Color
+import android.graphics.Typeface
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
@@ -243,6 +244,7 @@ class TextMessageActivity : BaseActivity() {
                 }
 
             }
+            textview.setTypeface(null, Typeface.BOLD) // Setting it as bold
             textview.visibility = View.VISIBLE
         } else {
             val textview = findViewById<View>(R.id.text2) as TextView
