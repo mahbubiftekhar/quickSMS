@@ -75,7 +75,6 @@ class TextMessageActivity : BaseActivity() {
             }
         }
         if (contact is Contact) {
-            println(">>> Contact numbers" + contact.numbers)
             recipientName = contact.name
             receipientID = contact.id
             if (phoneNumber == "") {
@@ -133,9 +132,7 @@ class TextMessageActivity : BaseActivity() {
         R.id.selectNumber -> {
             val phoneNumbers = mutableListOf<String>()
             phoneNumbers.add(returnNoSpaces(phoneNumber))
-            println(">>>> all numbers" + contact.numbers)
             for (i in 0 until contact.numbers.size) {
-                println(">>>>" + contact.numbers[i])
                 if (returnNoSpaces(returnNoSpaces(contact.numbers[i])) != returnNoSpaces(returnNoSpaces(phoneNumber)) && !phoneNumbers.contains(contact.numbers[i])) {
                     /*Only add it if its not the current prefered numbers and doesn't already contain this phone number */
                     phoneNumbers.add(returnNoSpaces(contact.numbers[i]))
@@ -144,7 +141,6 @@ class TextMessageActivity : BaseActivity() {
 
             selector("Which phone number would you like to send messages to?", phoneNumbers, { _, z ->
                 try {
-                    println("<<<<" + returnNoSpaces(phoneNumbers[z]))
                     updatePreferedNum("p" + returnNoSpaces(phoneNumbers[z]))
                 } catch (e: Exception) {
 
@@ -159,7 +155,6 @@ class TextMessageActivity : BaseActivity() {
     }
 
     private fun updatePreferedNum(PreferedNumber: String) {
-        println(">>>> new prefered number is $PreferedNumber")
         phoneNumber = PreferedNumber.removeRange(0, 1)
         val tiles = DatabaseTiles(this)
         tiles.insertData(receipientID, tileID, PreferedNumber)
@@ -301,9 +296,8 @@ class TextMessageActivity : BaseActivity() {
                         } catch (e: Exception) {
                             toast("Sorry, Message not sent")
                         }
+                        vibrateAndSound()
 
-                        vibrate()
-                        makeSound()
                         doAsync {
                             if (receipientID != 1L) {
                                 //Here we are adding to the log, checking for not 1L to not add during development
@@ -362,6 +356,19 @@ class TextMessageActivity : BaseActivity() {
         }
     }
 
+    private fun vibrateAndSound(){
+        println(">>>>> in here")
+        println(">>>>Vibrate: " + vibrateBool())
+        println(">>>>Sound: " + soundBool())
+        println()
+        if (vibrateBool()) {
+            vibrate()
+        }
+        if (soundBool()) {
+            makeSound()
+        }
+
+    }
     fun editDataBuilder(text: String, buttonID: String) {
         val builder = AlertDialog.Builder(this)
         val input = EditText(this)
