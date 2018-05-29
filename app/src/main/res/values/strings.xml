@@ -45,7 +45,7 @@
 
         "If you've been here before you may want to reset quickSMS with the second button, this will clear all of the data you've entered and fixes most problems.\n\n"
 
-        "Finally if you're feeling generous you could send us a bug report to help us make quickSMS better\n\n"
+        "Finally if you're feeling generous you could send us a bug report to help us make quickSMS better for everyone\n\n"
     </string>
     <string name="restart_app">Restart App</string>
     <string name="send_bug_report">Send Bug Report</string>
@@ -55,9 +55,11 @@
         "The email will contain the Model, Manufacturer and Android Version of your phone along with the error information provided by Android.\n\n"
 
         "You may use the text box below to provide additional information to help find the error, for example the sequence of actions you took immediately before triggering the error.\n\n"
+
     </string>
-    <string name="why_not_add_some_messages_click_the_symbol_its_really_easy">Why not add some messages! Click the \'+\' symbol, its really easy</string>
+    <string name="why_not_add_some_messages_click_the_symbol_its_really_easy">Why not add some messages! /n/n Click the \'+\' symbol at the bottom right, its really easy</string>
     <string name="why_not_add_some_messages">Why not add some messages?</string>
     <string name="you_can_do_it_easily_by_clicking_the_symbol_on_the_bottom_right">You can do it easily by clicking the \'+\' symbol on the bottom right</string>
     <string name="why_not_add_some_messages_n_n_just_click_the_symbol_on_the_bottom_right">Why not add some messages?    Just click the \'+\' symbol on the bottom right</string>
+    <string name="sync_contacts">Sync Contacts</string>
 </resources>

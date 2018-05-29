@@ -135,7 +135,9 @@ class MainActivity : BaseActivity() {
     }
 
     private fun noneSet(){
-        longToast("Make SMS's easy by setting a contact to a tile by clicking on the tile!")
+        relativeLayout(){
+
+        }
     }
 
     @SuppressLint("ApplySharedPref")

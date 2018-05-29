@@ -28,6 +28,7 @@ open class BaseActivity : AppCompatActivity() {
         return settings.getString("backgroundcolour", "#217ca3")
     }
 
+
     @SuppressLint("ObsoleteSdkInt")
     override fun recreate() {
         if (android.os.Build.VERSION.SDK_INT >= 11) {
