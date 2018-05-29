@@ -3,6 +3,7 @@ package quick.sms.quicksms.ui
 import android.app.Activity
 import android.app.PendingIntent
 import android.content.*
+import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
@@ -23,6 +24,7 @@ import quick.sms.quicksms.backend.*
 import quick.sms.quicksms.editor
 import quick.sms.quicksms.prefs
 import android.support.design.widget.FloatingActionButton
+import android.widget.TextView
 
 
 @Suppress("DEPRECATION", "DEPRECATED_IDENTITY_EQUALS")
@@ -211,18 +213,56 @@ class TextMessageActivity : BaseActivity() {
         llMain.removeAllViewsInLayout()
         val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         params.setMargins(1, 35, 1, 0)
-        if (textMessages.size == 0 && textMessages == null) {
-            setContentView(R.layout.textmessagesnocontact)
-            doAsync {
-                MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
-                mAdView = findViewById<View>(R.id.adView) as AdView
-                val adRequest = AdRequest.Builder().build()
-                uiThread {
-                    mAdView!!.loadAd(adRequest)
-                }
-            }
+        if (textMessages.size == 0) {
+            val textview = findViewById<View>(R.id.text2) as TextView
+            when (getBackGroundColour()) {
+            /*  <item name="Red">#ff0000</item>
+              <item name="Black">#111111</item>
+              <item name="Yellow">#ffff33</item>
+              <item name="White">#ffffff</item>
+              <item name="Light Blue">#217ca3</item>
+              <item name="Blue">#0000FF</item>
+              <item name="Pink">#f22ee8</item>
+              <item name="Orange">#f1992e</item>
+              <item name="Green">#008000</item> */
 
+                "#ffff33" -> {
+                    //Whie background, black text
+                    textview.setTextColor(Color.BLACK)
+                }
+                "#217ca3" -> {
+                    //blue background, black text
+                    textview.setTextColor(Color.BLACK)
+                }
+                "#f22ee8<" -> {
+                    //Blue background, black text
+                    textview.setTextColor(Color.BLACK)
+
+                }
+                "#f22ee8" -> {
+                    //Pink background black text
+                    textview.setTextColor(Color.BLACK)
+                }
+                "#f1992e" -> {
+                    //Oange
+                    textview.setTextColor(Color.BLACK)
+                }
+                "#008000" -> {
+                    //Green background black text
+                    textview.setTextColor(Color.BLACK)
+                }
+                else -> {
+                    //Text is white
+                    textview.setTextColor(Color.WHITE)
+
+                }
+
+            }
+            textview.visibility = View.VISIBLE
         } else {
+            val textview = findViewById<View>(R.id.text2) as TextView
+            textview.visibility = View.INVISIBLE
+
             for ((key, value) in textMessages) {
                 val buttonDynamic = Button(this)
                 buttonDynamic.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -338,8 +378,12 @@ class TextMessageActivity : BaseActivity() {
     }
 
     fun addData(recipientId: Long, message: String) {
-        vibrate()
-        makeSound()
+        if (vibrateBool()) {
+            vibrate()
+        }
+        if (soundBool()) {
+            makeSound()
+        }
         val databaseID = loadID()
         incrementID()
         messages[databaseID] = message

@@ -116,11 +116,11 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     open fun vibrateBool(): Boolean {
-        return settings.getBoolean("Vibrate", true)
+        return settings.getBoolean("Vibrate", false)
     }
 
     open fun doubleCheckBool(): Boolean {
-        return settings.getBoolean("DoubleCheck", true)
+        return settings.getBoolean("DoubleCheck", false)
     }
 
     open fun getActionBarColour(): String {
