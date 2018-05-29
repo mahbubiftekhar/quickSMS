@@ -32,7 +32,6 @@ class MainActivity : BaseActivity() {
     private lateinit var unassigned: List<Contact>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        nTiles = 0
         val bundle: Bundle = savedInstanceState ?: intent.extras
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
@@ -40,6 +39,7 @@ class MainActivity : BaseActivity() {
         val (assigned, unassigned) = contactsList.asSequence().partition { it.tile != null }
         this.unassigned = unassigned
         contacts = assigned.associateBy { it.tile!! }
+        nTiles = contacts.size
         draw()
     }
 
