@@ -8,12 +8,11 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.Window
+import android.view.*
 import org.jetbrains.anko.*
+import org.jetbrains.anko.custom.ankoView
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onLongClick
 import quick.sms.quicksms.backend.Contact
@@ -24,6 +23,7 @@ import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.DatabaseMessages
 import quick.sms.quicksms.context
 import java.io.FileNotFoundException
+import java.lang.Math.ceil
 
 class MainActivity : BaseActivity() {
 
@@ -32,6 +32,7 @@ class MainActivity : BaseActivity() {
     private lateinit var unassigned: List<Contact>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        nTiles = 0
         val bundle: Bundle = savedInstanceState ?: intent.extras
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
@@ -44,9 +45,15 @@ class MainActivity : BaseActivity() {
 
     private fun draw() {
         setActionBarColour()
-        MainLayout(contentResolver, contacts, getBackGroundColour(), gettileColour(),
-                getTileTextColour(), showName(), { onClick(it) }, { assignTile(it) },
-                { deleteTile(it) }).setContentView(this)
+        MainLayout(contentResolver, nTiles, contacts, getBackGroundColour(), gettileColour(),
+                getTileTextColour(), showName(), ::onClick, ::assignTile, ::createTile,
+                ::deleteTile).setContentView(this)
+    }
+
+    fun createTile() {
+        nTiles++
+        println(nTiles)
+        draw()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -186,20 +193,21 @@ class MainActivity : BaseActivity() {
     }
 
     private fun deleteTile(tileNumber: Int) {
-        val contact = contacts[tileNumber]
-        if (contact != null) {
-            alert("NOTE: This is irreversible") {
-                title = "Are you sure you want to delete this tile?"
-                positiveButton("Yes, Delete") {
+        alert("NOTE: This is irreversible") {
+            title = "Are you sure you want to delete this tile?"
+            positiveButton("Yes, Delete") {
+                val contact = contacts[tileNumber]
+                if (contact != null) {
                     DatabaseTiles(this@MainActivity).tileDefragmentator(tileNumber)
                     deleteFromContacts(tileNumber)
-                    draw()
                 }
-                negativeButton("Cancel") {
-                    //Do nothing, the user changed their mind
-                }
-            }.show()
-        }
+                nTiles--
+                draw()
+            }
+            negativeButton("Cancel") {
+                //Do nothing, the user changed their mind
+            }
+        }.show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -230,23 +238,40 @@ class MainActivity : BaseActivity() {
         outState?.putParcelableArrayList("contacts", ArrayList(allContacts))
     }
 
-    private class MainLayout(val cr: ContentResolver, val alreadyAssigned: Map<Int, Contact>, val backgroundColour: String,
-                             val tileColour: String, val textColour: String, val showName: Boolean, val tileCallBack: (Int) -> Unit,
-                             val assignCallBack: (Int) -> Unit, val deleteCallback: (Int) -> Unit)
+    private class MainLayout(val cr: ContentResolver, val nTiles: Int,
+                             val alreadyAssigned: Map<Int, Contact>, val backgroundColour: String,
+                             val tileColour: String, val textColour: String, val showName: Boolean,
+                             val tileCallBack: (Int) -> Unit, val assignCallBack: (Int) -> Unit,
+                             val createCallback: () -> Unit, val deleteCallback: (Int) -> Unit)
         : AnkoComponent<MainActivity> {
-        val nTiles = alreadyAssigned.size.let {
-            if (it == 0) 1 else 0
-        }
-        val rows = (nTiles / 2) + 1
+        val rows = ceil(nTiles / 2.0).toInt()
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
-            scrollView {
-                backgroundColor = Color.parseColor(backgroundColour)
+            relativeLayout {
+                scrollView {
+                    backgroundColor = Color.parseColor(backgroundColour)
 
-                verticalLayout {
-                    for (i in 1..rows) {
-                        row(i)
+                    verticalLayout {
+                        for (i in 1..rows) {
+                            row(i)
+                        }
                     }
+                }.lparams {
+                    alignParentTop()
+                    alignParentBottom()
+                    alignParentLeft()
+                    alignParentRight()
+                }
+                floatingActionButton {
+                    imageResource = android.R.drawable.ic_input_add
+                    horizontalGravity = Gravity.END
+                    verticalGravity = Gravity.BOTTOM
+                    onClick { createCallback() }
+                }.lparams {
+                    alignParentBottom()
+                    alignParentEnd()
+                    bottomMargin = dip(60)
+                    marginEnd = dip(16)
                 }
             }
         }
@@ -317,5 +342,8 @@ class MainActivity : BaseActivity() {
             }
         }
 
+        // From https://stackoverflow.com/questions/34215129/convert-mainactivity-with-actionbar-toolbar-and-floatingaction-button-to-anko
+        fun ViewGroup.floatingActionButton(init: FloatingActionButton.() -> Unit) =
+            ankoView({ FloatingActionButton(it) }, theme = 0, init = init)
     }
 }

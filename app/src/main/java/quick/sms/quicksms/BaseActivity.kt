@@ -10,9 +10,14 @@ import android.view.Menu
 import android.view.MenuItem
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
+import quick.sms.quicksms.backend.putIntAndCommit
 import quick.sms.quicksms.ui.SettingsActivity
 
 open class BaseActivity : AppCompatActivity() {
+
+    protected var nTiles
+    get() = prefs.getInt("nTiles", 0)
+    set(value) = editor.putIntAndCommit("nTiles", value)
 
     private val excludedActivities = setOf("SettingsActivity", "SplashActivity", "MainActivity",
             "FallbackActivity")
