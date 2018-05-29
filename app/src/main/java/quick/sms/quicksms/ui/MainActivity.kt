@@ -8,11 +8,11 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
-import android.view.Menu
-import android.view.MenuItem
-import android.view.Window
+import android.view.*
 import org.jetbrains.anko.*
+import org.jetbrains.anko.custom.ankoView
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onLongClick
 import quick.sms.quicksms.backend.Contact
@@ -23,6 +23,7 @@ import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.DatabaseMessages
 import quick.sms.quicksms.context
 import java.io.FileNotFoundException
+import java.lang.Math.ceil
 
 class MainActivity : BaseActivity() {
 
@@ -31,6 +32,7 @@ class MainActivity : BaseActivity() {
     private lateinit var unassigned: List<Contact>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        nTiles = 0
         val bundle: Bundle = savedInstanceState ?: intent.extras
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
@@ -43,9 +45,15 @@ class MainActivity : BaseActivity() {
 
     private fun draw() {
         setActionBarColour()
-        MainLayout(contentResolver, contacts, getBackGroundColour(), gettileColour(),
-                getTileTextColour(), showName(), { onClick(it) }, { assignTile(it) },
-                { deleteTile(it) }).setContentView(this)
+        MainLayout(contentResolver, nTiles, contacts, getBackGroundColour(), gettileColour(),
+                getTileTextColour(), showName(), ::onClick, ::assignTile, ::createTile,
+                ::deleteTile).setContentView(this)
+    }
+
+    fun createTile() {
+        nTiles++
+        println(nTiles)
+        draw()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -185,20 +193,21 @@ class MainActivity : BaseActivity() {
     }
 
     private fun deleteTile(tileNumber: Int) {
-        val contact = contacts[tileNumber]
-        if (contact != null) {
-            alert("NOTE: This is irreversible") {
-                title = "Are you sure you want to delete this tile?"
-                positiveButton("Yes, Delete") {
+        alert("NOTE: This is irreversible") {
+            title = "Are you sure you want to delete this tile?"
+            positiveButton("Yes, Delete") {
+                val contact = contacts[tileNumber]
+                if (contact != null) {
                     DatabaseTiles(this@MainActivity).tileDefragmentator(tileNumber)
                     deleteFromContacts(tileNumber)
-                    draw()
                 }
-                negativeButton("Cancel") {
-                    //Do nothing, the user changed their mind
-                }
-            }.show()
-        }
+                nTiles--
+                draw()
+            }
+            negativeButton("Cancel") {
+                //Do nothing, the user changed their mind
+            }
+        }.show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -229,39 +238,59 @@ class MainActivity : BaseActivity() {
         outState?.putParcelableArrayList("contacts", ArrayList(allContacts))
     }
 
-    private class MainLayout(val cr: ContentResolver, val alreadyAssigned: Map<Int, Contact>, val backgroundColour: String,
-                             val tileColour: String, val textColour: String, val showName: Boolean, val tileCallBack: (Int) -> Unit,
-                             val assignCallBack: (Int) -> Unit, val deleteCallback: (Int) -> Unit)
+    private class MainLayout(val cr: ContentResolver, val nTiles: Int,
+                             val alreadyAssigned: Map<Int, Contact>, val backgroundColour: String,
+                             val tileColour: String, val textColour: String, val showName: Boolean,
+                             val tileCallBack: (Int) -> Unit, val assignCallBack: (Int) -> Unit,
+                             val createCallback: () -> Unit, val deleteCallback: (Int) -> Unit)
         : AnkoComponent<MainActivity> {
-        val nTiles = alreadyAssigned.size
-        val rows = (nTiles / 2) + 1
+        val rows = ceil(nTiles / 2.0).toInt()
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
-            verticalLayout {
+            relativeLayout {
                 scrollView {
-                    isFillViewport = true
                     backgroundColor = Color.parseColor(backgroundColour)
 
                     verticalLayout {
                         for (i in 1..rows) {
-                            row(2, i)
+                            row(i)
                         }
                     }
-                }.lparams(width = matchParent, height = 0) {
-                    weight = 1.0f
+                }.lparams {
+                    alignParentTop()
+                    alignParentBottom()
+                    alignParentLeft()
+                    alignParentRight()
                 }
-                //include<View>(R.xml.advertxml) {}
+                floatingActionButton {
+                    imageResource = android.R.drawable.ic_input_add
+                    horizontalGravity = Gravity.END
+                    verticalGravity = Gravity.BOTTOM
+                    onClick { createCallback() }
+                }.lparams {
+                    alignParentBottom()
+                    alignParentEnd()
+                    bottomMargin = dip(60)
+                    marginEnd = dip(16)
+                }
             }
         }
 
         @SuppressLint("SetTextI18n")
-        fun _LinearLayout.row(nTiles: Int, row: Int) {
+        fun _LinearLayout.row(row: Int) {
             verticalLayout {
                 linearLayout {
-                    for (i in 1..nTiles) {
-                        tile(row, i, nTiles)
+                    tile(row, 1)
+                    if (nTiles % 2 == 1 && row == rows) {
+                        imageView {
+                            backgroundColor = Color.parseColor(backgroundColour)
+                        }.lparams(height = matchParent, width = 0) {
+                            weight = 1f
+                            margin = dip(7)
+                        }
+                    } else {
+                        tile(row, 2)
                     }
-
                 }.lparams(height = dip(180), width = matchParent) {
                     weight = 1f
                     padding = dip(7)
@@ -269,9 +298,9 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        fun _LinearLayout.tile(row: Int, col: Int, rowLen: Int) {
+        fun _LinearLayout.tile(row: Int, col: Int) {
             button {
-                val index = (row - 1) * rowLen + col
+                val index = (row - 1) * 2 + col
                 val contact = alreadyAssigned[index]
                 val image = contact?.image?.let {
                     try {
@@ -313,5 +342,8 @@ class MainActivity : BaseActivity() {
             }
         }
 
+        // From https://stackoverflow.com/questions/34215129/convert-mainactivity-with-actionbar-toolbar-and-floatingaction-button-to-anko
+        fun ViewGroup.floatingActionButton(init: FloatingActionButton.() -> Unit) =
+            ankoView({ FloatingActionButton(it) }, theme = 0, init = init)
     }
 }
