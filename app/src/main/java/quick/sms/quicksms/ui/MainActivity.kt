@@ -142,7 +142,6 @@ class MainActivity : BaseActivity() {
     @SuppressLint("ApplySharedPref")
     private fun resetApp() {
         /*This is a very dangerous function, hence why its wrapped around two alerts for security*/
-        println(">>>> reset App function")
         val contactDB = DatabaseMessages(this)
         val tilesDB = DatabaseTiles(this)
         val log = DatabaseLog(this)
@@ -152,7 +151,6 @@ class MainActivity : BaseActivity() {
         PreferenceManager.getDefaultSharedPreferences(context).edit().clear().commit() //Resetting shared preferences
         runOnUiThread {
             //Restart the app programatically
-            println(">>>>> Restarting the device")
             val i = baseContext.packageManager
                     .getLaunchIntentForPackage(baseContext.packageName)
             i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -163,7 +161,6 @@ class MainActivity : BaseActivity() {
 
     private fun onClick(tileNumber: Int) {
         val contact = contacts[tileNumber]
-        println(">>>> before sending" + contact?.numbers)
         if (contact != null) {
             startActivity<TextMessageActivity>("contact" to contact, "tileID" to tileNumber) //Passing in contact info and tileNumber
         } else {
