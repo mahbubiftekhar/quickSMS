@@ -37,11 +37,9 @@ class TextMessageActivity : BaseActivity() {
     private var receipientID: Long = 1L
     private lateinit var recipientName: String
     private lateinit var phoneNumber: String
-    private var sound = false
     private val SENT = "SMS_SENT"
     private val DELIVERED = "SMS_DELIVERED"
     private val MAX_SMS_MESSAGE_LENGTH = 160
-    lateinit var Spinner: Spinner
     private var tileID = -1
     lateinit var contact: Contact
 
@@ -211,16 +209,6 @@ class TextMessageActivity : BaseActivity() {
         if (textMessages.size == 0) {
             val textview = findViewById<View>(R.id.text2) as TextView
             when (getBackGroundColour()) {
-            /*  <item name="Red">#ff0000</item>
-              <item name="Black">#111111</item>
-              <item name="Yellow">#ffff33</item>
-              <item name="White">#ffffff</item>
-              <item name="Light Blue">#217ca3</item>
-              <item name="Blue">#0000FF</item>
-              <item name="Pink">#f22ee8</item>
-              <item name="Orange">#f1992e</item>
-              <item name="Green">#008000</item> */
-
                 "#ffff33" -> {
                     //Whie background, black text
                     textview.setTextColor(Color.BLACK)
@@ -295,12 +283,12 @@ class TextMessageActivity : BaseActivity() {
                             }
                         } catch (e: Exception) {
                             toast("Sorry, Message not sent")
-                        }
-                        vibrateAndSound()
 
+                        }
                         doAsync {
                             if (receipientID != 1L) {
                                 //Here we are adding to the log, checking for not 1L to not add during development
+                                println(">>>> in here 3")
                                 addToLog(receipientID, buttonDynamic.text as String, recipientName, phoneNumber)
                             }
                         }
@@ -310,6 +298,7 @@ class TextMessageActivity : BaseActivity() {
                         alert(value) {
                             title = "Are you sure you want to send the message"
                             positiveButton("Send") {
+                                vibrateAndSound()
                                 sendMessage()
                             }
                             negativeButton("Cancel") {
@@ -319,6 +308,7 @@ class TextMessageActivity : BaseActivity() {
                     } else {
                         //The user has doubleCheck off, so just send anyways. Whats the worse than can happen?
                         sendMessage()
+                        vibrateAndSound()
                     }
                 }
                 buttonDynamic.setOnLongClickListener {
@@ -356,7 +346,7 @@ class TextMessageActivity : BaseActivity() {
         }
     }
 
-    private fun vibrateAndSound(){
+    private fun vibrateAndSound() {
         println(">>>>> in here")
         println(">>>>Vibrate: " + vibrateBool())
         println(">>>>Sound: " + soundBool())
@@ -369,6 +359,7 @@ class TextMessageActivity : BaseActivity() {
         }
 
     }
+
     fun editDataBuilder(text: String, buttonID: String) {
         val builder = AlertDialog.Builder(this)
         val input = EditText(this)
@@ -385,12 +376,7 @@ class TextMessageActivity : BaseActivity() {
     }
 
     fun addData(recipientId: Long, message: String) {
-        if (vibrateBool()) {
-            vibrate()
-        }
-        if (soundBool()) {
-            makeSound()
-        }
+        vibrateAndSound()
         val databaseID = loadID()
         incrementID()
         messages[databaseID] = message
@@ -401,12 +387,7 @@ class TextMessageActivity : BaseActivity() {
     }
 
     fun updateData(id: String, recipientId: Long, message: String) {
-        if (vibrateBool()) {
-            vibrate()
-        }
-        if (soundBool()) {
-            makeSound()
-        }
+        vibrateAndSound()
         messages[id.toInt()] = message
         addButtons(messages)
         doAsync {
@@ -415,8 +396,7 @@ class TextMessageActivity : BaseActivity() {
     }
 
     private fun deleteData(id: String) {
-        vibrate()
-        makeSound()
+        vibrateAndSound()
         doAsync {
             contactDB.deleteData(id)
         }
@@ -435,11 +415,16 @@ class TextMessageActivity : BaseActivity() {
     }
 
     private fun vibrate() {
-        val v = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            v.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE))
-        } else {
-            v.vibrate(300)
+        try {
+            val v = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                v.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE))
+            } else {
+                v.vibrate(300)
+            }
+        } catch (e: Exception) {
+
         }
+
     }
 }
