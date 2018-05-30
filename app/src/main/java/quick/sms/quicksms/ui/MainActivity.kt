@@ -24,6 +24,13 @@ import quick.sms.quicksms.backend.DatabaseMessages
 import quick.sms.quicksms.context
 import java.io.FileNotFoundException
 import java.lang.Math.ceil
+import android.text.method.TextKeyListener.clear
+import android.R.id.edit
+import android.content.Context
+import android.content.SharedPreferences
+import android.content.Context.MODE_PRIVATE
+
+
 
 class MainActivity : BaseActivity() {
 
@@ -143,7 +150,13 @@ class MainActivity : BaseActivity() {
         contactDB.deleteEntireDB()
         tilesDB.deleteEntireDB()
         log.deleteEntireDB()
-        PreferenceManager.getDefaultSharedPreferences(context).edit().clear().commit() //Resetting shared preferences
+        try{
+            //Resetting shared preferences
+            PreferenceManager.getDefaultSharedPreferences(context).edit().clear().commit() 
+
+        } catch (e:Exception){
+
+        }
         runOnUiThread {
             //Restart the app programatically
             val i = baseContext.packageManager
