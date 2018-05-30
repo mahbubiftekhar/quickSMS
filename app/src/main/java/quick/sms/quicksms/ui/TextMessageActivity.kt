@@ -212,35 +212,12 @@ class TextMessageActivity : BaseActivity() {
         if (textMessages.size == 0) {
             val textview = findViewById<View>(R.id.text2) as TextView
             when (getBackGroundColour()) {
-                "#ffff33" -> {
-                    //Whie background, black text
-                    textview.setTextColor(Color.BLACK)
-                }
-                "#217ca3" -> {
-                    //blue background, black text
-                    textview.setTextColor(Color.BLACK)
-                }
-                "#f22ee8<" -> {
-                    //Blue background, black text
-                    textview.setTextColor(Color.BLACK)
-
-                }
-                "#f22ee8" -> {
-                    //Pink background black text
-                    textview.setTextColor(Color.BLACK)
-                }
-                "#f1992e" -> {
-                    //Oange
-                    textview.setTextColor(Color.BLACK)
-                }
-                "#008000" -> {
-                    //Green background black text
+                // White, light blue, blue, pink, orange, green
+                "#ffffff", "#217ca3", "#0000FF", "#f22ee8", "#f1992e", "#008000" -> {
                     textview.setTextColor(Color.BLACK)
                 }
                 else -> {
-                    //Text is white
                     textview.setTextColor(Color.WHITE)
-
                 }
 
             }
