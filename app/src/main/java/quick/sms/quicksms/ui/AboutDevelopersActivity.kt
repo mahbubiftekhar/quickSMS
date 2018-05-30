@@ -114,7 +114,7 @@ class AboutDevelopersActivity : BaseActivity() {
                 }
             }
         }
-        colourCheckFunction()
+        colourCheck()
 
     }
 

@@ -56,7 +56,7 @@ class TextMessageActivity : BaseActivity() {
         setActionBarColour()
         setContentView(R.layout.activity_text_message)
         val layout = findViewById<RelativeLayout>(R.id.rellayout)
-        layout.setBackgroundColor(Color.parseColor(getBackGroundColour()))//Set the background colour
+        layout.setBackgroundColor(Color.parseColor(backgroundColour))//Set the background colour
         contactDB = DatabaseMessages(this)
         logDB = DatabaseLog(this)
         tilesDB = DatabaseTiles(this)
@@ -211,36 +211,13 @@ class TextMessageActivity : BaseActivity() {
         params.setMargins(1, 35, 1, 0)
         if (textMessages.size == 0) {
             val textview = findViewById<View>(R.id.text2) as TextView
-            when (getBackGroundColour()) {
-                "#ffff33" -> {
-                    //Whie background, black text
-                    textview.setTextColor(Color.BLACK)
-                }
-                "#217ca3" -> {
-                    //blue background, black text
-                    textview.setTextColor(Color.BLACK)
-                }
-                "#f22ee8<" -> {
-                    //Blue background, black text
-                    textview.setTextColor(Color.BLACK)
-
-                }
-                "#f22ee8" -> {
-                    //Pink background black text
-                    textview.setTextColor(Color.BLACK)
-                }
-                "#f1992e" -> {
-                    //Oange
-                    textview.setTextColor(Color.BLACK)
-                }
-                "#008000" -> {
-                    //Green background black text
+            when (backgroundColour) {
+                // White, light blue, blue, pink, orange, green
+                "#ffffff", "#217ca3", "#0000FF", "#f22ee8", "#f1992e", "#008000" -> {
                     textview.setTextColor(Color.BLACK)
                 }
                 else -> {
-                    //Text is white
                     textview.setTextColor(Color.WHITE)
-
                 }
 
             }
@@ -253,7 +230,7 @@ class TextMessageActivity : BaseActivity() {
                 val buttonDynamic = Button(this)
                 buttonDynamic.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 buttonDynamic.text = value
-                buttonDynamic.textColor = Color.parseColor(getTileTextColour())
+                buttonDynamic.textColor = Color.parseColor(tileTextColour)
                 buttonDynamic.layoutParams = params
                 buttonDynamic.id = key
                 buttonDynamic.allCaps = false //Add case sensitivity
@@ -297,7 +274,7 @@ class TextMessageActivity : BaseActivity() {
                             }
                         }
                     }
-                    if (doubleCheckBool()) {
+                    if (shouldDoubleCheck) {
                         //User wishes for double check
                         alert(value) {
                             title = "Are you sure you want to send the message"
@@ -351,14 +328,10 @@ class TextMessageActivity : BaseActivity() {
     }
 
     private fun vibrateAndSound() {
-        println(">>>>> in here")
-        println(">>>>Vibrate: " + vibrateBool())
-        println(">>>>Sound: " + soundBool())
-        println()
-        if (vibrateBool()) {
+        if (shouldVibrate) {
             vibrate()
         }
-        if (soundBool()) {
+        if (shouldMakeSound) {
             makeSound()
         }
 
@@ -407,7 +380,7 @@ class TextMessageActivity : BaseActivity() {
     }
 
     private fun makeSound() {
-        if (soundBool()) {
+        if (shouldMakeSound) {
             try {
                 val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
                 val r = RingtoneManager.getRingtone(applicationContext, notification)
@@ -429,6 +402,5 @@ class TextMessageActivity : BaseActivity() {
         } catch (e: Exception) {
 
         }
-
     }
 }

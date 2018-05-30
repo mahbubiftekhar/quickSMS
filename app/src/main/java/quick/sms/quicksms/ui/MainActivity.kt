@@ -44,9 +44,9 @@ class MainActivity : BaseActivity() {
 
     private fun draw() {
         setActionBarColour()
-        MainLayout(contentResolver, nTiles, contacts, getBackGroundColour(), gettileColour(),
-                getTileTextColour(), showName(), ::onClick, ::assignTile, ::createTile,
-                ::deleteTile).setContentView(this)
+        MainLayout(contentResolver, nTiles, contacts, backgroundColour, tileColour, tileTextColour,
+                showName, ::onClick, ::assignTile, ::createTile, ::deleteTile).setContentView(this)
+        colourCheck()
     }
 
     fun createTile() {
@@ -134,12 +134,6 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun noneSet(){
-        relativeLayout(){
-
-        }
-    }
-
     @SuppressLint("ApplySharedPref")
     private fun resetApp() {
         /*This is a very dangerous function, hence why its wrapped around two alerts for security*/
@@ -220,13 +214,11 @@ class MainActivity : BaseActivity() {
             contacts = mutableContacts.toMap()
         }
         draw()
-        colourCheckFunction()
     }
 
     override fun onResume() {
         super.onResume()
         draw()
-        colourCheckFunction()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -246,19 +238,36 @@ class MainActivity : BaseActivity() {
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
             relativeLayout {
-                scrollView {
-                    backgroundColor = Color.parseColor(backgroundColour)
-
-                    verticalLayout {
-                        for (i in 1..rows) {
-                            row(i)
+                backgroundColor = Color.parseColor(backgroundColour)
+                if (nTiles == 0) {
+                    textView(R.string.add_tile_prompt) {
+                        gravity = Gravity.CENTER
+                        textAlignment = View.TEXT_ALIGNMENT_CENTER
+                        includeFontPadding = false
+                        textSize = sp(10).toFloat()
+                        textColor = when (backgroundColour) {
+                            // White, light blue, blue, pink, orange, green
+                            "#ffffff", "#217ca3", "#0000FF", "#f22ee8", "#f1992e", "#008000" -> {
+                                Color.BLACK
+                            }
+                            else -> {
+                                Color.WHITE
+                            }
                         }
+                    }.lparams(width = matchParent, height = matchParent)
+                } else {
+                    scrollView {
+                        verticalLayout {
+                            for (i in 1..rows) {
+                                row(i)
+                            }
+                        }
+                    }.lparams {
+                        alignParentTop()
+                        alignParentBottom()
+                        alignParentLeft()
+                        alignParentRight()
                     }
-                }.lparams {
-                    alignParentTop()
-                    alignParentBottom()
-                    alignParentLeft()
-                    alignParentRight()
                 }
                 floatingActionButton {
                     imageResource = android.R.drawable.ic_input_add
@@ -274,7 +283,6 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        @SuppressLint("SetTextI18n")
         fun _LinearLayout.row(row: Int) {
             verticalLayout {
                 linearLayout {
@@ -314,7 +322,7 @@ class MainActivity : BaseActivity() {
                     backgroundResource = R.drawable.rounded_corners
                     (background as GradientDrawable).setColor(Color.parseColor(tileColour))
                     text = name
-                    if(text=="+"){
+                    if(text == "+"){
                         textSize=60.toFloat()
                     }
                 } else {
