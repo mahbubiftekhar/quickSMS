@@ -44,9 +44,9 @@ class MainActivity : BaseActivity() {
 
     private fun draw() {
         setActionBarColour()
-        MainLayout(contentResolver, nTiles, contacts, getBackGroundColour(), gettileColour(),
-                getTileTextColour(), showName(), ::onClick, ::assignTile, ::createTile,
-                ::deleteTile).setContentView(this)
+        MainLayout(contentResolver, nTiles, contacts, backgroundColour, tileColour, tileTextColour,
+                showName, ::onClick, ::assignTile, ::createTile, ::deleteTile).setContentView(this)
+        colourCheck()
     }
 
     fun createTile() {
@@ -214,13 +214,11 @@ class MainActivity : BaseActivity() {
             contacts = mutableContacts.toMap()
         }
         draw()
-        colourCheckFunction()
     }
 
     override fun onResume() {
         super.onResume()
         draw()
-        colourCheckFunction()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {

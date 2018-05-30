@@ -16,18 +16,48 @@ import quick.sms.quicksms.ui.SettingsActivity
 
 open class BaseActivity : AppCompatActivity() {
 
-    protected var nTiles
-    get() = prefs.getInt("nTiles", 0)
-    set(value) = editor.putIntAndCommit("nTiles", value)
-
+    // Activities that shouldn't automatically inherit a menu
     private val excludedActivities = setOf("SettingsActivity", "SplashActivity", "MainActivity",
             "FallbackActivity")
 
-    fun getBackGroundColour(): String {
-        //gets the users selected background colour
-        return settings.getString("backgroundcolour", "#217ca3")
-    }
+    // Shared Preference Accessors
+    protected var nTiles
+        get() = prefs.getInt("nTiles", 0)
+        set(value) = editor.putIntAndCommit("nTiles", value)
 
+    protected val showName
+        get() = settings.getBoolean("ShowName", false)
+
+    protected val actionBarColour
+        get() = settings.getString("actionbarcolour", "#303F9F")
+
+    protected val backgroundColour
+        get() = settings.getString("backgroundcolour", "#217ca3")
+
+    protected val tileTextColour
+        get() = settings.getString("TileTextColour", "#000000")
+
+    protected val shouldVibrate
+        get() = settings.getBoolean("Vibrate", false)
+
+    protected val shouldDoubleCheck
+        get() = settings.getBoolean("DoubleCheck", false)
+
+    protected val tileColour
+        get() = settings.getString("tilecolour", "#ffffff")
+
+    protected val shouldMakeSound
+        get() = settings.getBoolean("Sound", true)
+
+    protected val warnColourClash
+        get() = settings.getBoolean("ColourCombination", true)
+
+
+    protected val textAndTileColoursClash
+        get() = tileTextColour == tileColour
+
+    protected val tileAndBackgroundColoursClash
+        get() = backgroundColour == tileColour
 
     @SuppressLint("ObsoleteSdkInt")
     override fun recreate() {
@@ -39,115 +69,38 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    fun showName(): Boolean {
-        //gets whether the user wants the contacts name for contacts with images
-        return settings.getBoolean("ShowName", false)
-    }
-
     fun setActionBarColour() {
         //gets the users selected actionbar colour
-        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(getActionBarColour())))
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(actionBarColour)))
     }
 
-    fun getTileTextColour(): String {
-        //gets the users selected text colour
-        return settings.getString("TileTextColour", "#000000")
-    }
-
-    fun soundBool(): Boolean {
-        //Check if user wants sound
-        return settings.getBoolean("Sound", true)
-    }
-
-
-    fun colourWarning(): Boolean {
-        //Check if user wants the colour warning, this is a warning if conflicting colours are selected
-        return settings.getBoolean("ColourCombination", true)
-    }
-
-    fun textAndTileColour(): Boolean {
-        //This fucntion is to say if the user has both tileColour and text color the same
-        return getTileTextColour() == gettileColour()
-    }
-
-    fun tileAndBackground(): Boolean {
-        //This fucntion is to say if the user has both tileColour and backgorund color the same
-        return getBackGroundColour() == gettileColour()
-    }
-
-    fun colourCheckFunction() {
-        if (colourWarning()) { //If the user wants this wanrning
-            if (textAndTileColour() && tileAndBackground()) {
+    fun colourCheck() {
+        if (warnColourClash) { //If the user wants this warning
+            val dialogText = if (textAndTileColoursClash && tileAndBackgroundColoursClash) {
                 //Warn the user that they are using the same colour for background, textColour and tileColour
-                alertDialogPopUo(1)
-            } else if (textAndTileColour()) {
+                "You are using the same colours for your the background, tiles and text \n"
+            } else if (textAndTileColoursClash) {
                 //Warn the user if they are using same tile and text colour
-                alertDialogPopUo(2)
-            } else if (tileAndBackground()) {
+                "You are using the same colours for your the tiles and text \n"
+            } else if (tileAndBackgroundColoursClash) {
                 //Warn the user if they are using the same background and tile colour
-                alertDialogPopUo(3)
+                "You are using the same colours for your the background and tiles \n"
             } else {
                 //Do nothing, the colours are fine
+                null
+            }
+            dialogText?.let {
+                alert("You can disable this warning in settings") {
+                    title = it
+                    positiveButton("Change settings") {
+                        startActivity<SettingsActivity>()
+                    }
+                }.show()
             }
         }
     }
 
-    fun alertDialogPopUo(dialogVersion: Int) {
-        //This function shows dialogs dependent on the use as per colourCheckFunction
-        val dialogText: String = when (dialogVersion) {
-            1 -> {
-                "You are using the same colours for your the background, tiles and text \n"
-            }
-            2 -> {
-                "You are using the same colours for your the tiles and text \n"
-            }
-            else -> {
-                "You are using the same colours for your the background and tiles \n"
-            }
-        }
-        alert("You can disable this warning in settings") {
-            title = dialogText
-            positiveButton("Change settings") {
-                startActivity<SettingsActivity>()
-            }
-        }.show()
-
-    }
-
-    override fun onResume() {
-        //Setting the action bar colour
-        super.onResume()
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-    }
-
-    fun changeActionBarColour() {
-
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        println(getActionBarColour())
-        super.onCreate(savedInstanceState, persistentState)
-    }
-
-    open fun vibrateBool(): Boolean {
-        return settings.getBoolean("Vibrate", false)
-    }
-
-    open fun doubleCheckBool(): Boolean {
-        return settings.getBoolean("DoubleCheck", false)
-    }
-
-    open fun getActionBarColour(): String {
-        return settings.getString("actionbarcolour", "#303F9F")
-    }
-
-    open fun gettileColour(): String {
-        return settings.getString("tilecolour", "#ffffff")
-    }
-
+    // Adhoc inheritance for menus
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         if (excludedActivities.contains(this::class.simpleName)) {
             return true

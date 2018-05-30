@@ -42,12 +42,12 @@ class LogActivity : BaseActivity() {
         if (a && allLogs.size > 0) {
             //If the returnAll function was successful we shall launch the UI
             allLogsLocal = allLogs
-            UIcreator(getBackGroundColour(), getTileTextColour())
+            UIcreator(backgroundColour, tileTextColour)
         } else {
             println(">>>>> in the iff condition")
             //If their is no logs, we need to display to the user this so they arent confused
             allLogsLocal = allLogs
-            noLogsToDisplay(getBackGroundColour(), getTileTextColour())
+            noLogsToDisplay(backgroundColour, tileTextColour)
         }
     }
 

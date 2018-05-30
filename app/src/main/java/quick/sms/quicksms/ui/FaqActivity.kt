@@ -16,7 +16,7 @@ class FaqActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setActionBarColour()
         setContentView(R.layout.activity_faq_actovoty)
-        colourCheckFunction()
+        colourCheck()
         val faq = mutableMapOf<String, String>()
         faq["If I delete a user from a tile, do the messages get deleted?"] = "No, the messages will remain, so if you change your mind you can pick up where you left off!"
         faq["Can I customise the app?"] = "Yes, you can customize many aspects of the app in the settings"
