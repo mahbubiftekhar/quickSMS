@@ -46,7 +46,7 @@ class App : Application() {
     // (Application's onCreate is only called once before anything else)
     override fun onCreate() {
         super.onCreate();
-        context = getApplicationContext();
+        context = applicationContext
         // Setup a global uncaught exception handler (Adapted from: https://stackoverflow.com/questions/19897628/need-to-handle-uncaught-exceptions-and-send-to-log-file)
         Thread.setDefaultUncaughtExceptionHandler { _, exception ->
             println("Caught")
