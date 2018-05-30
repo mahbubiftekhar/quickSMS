@@ -134,12 +134,6 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun noneSet(){
-        relativeLayout(){
-
-        }
-    }
-
     @SuppressLint("ApplySharedPref")
     private fun resetApp() {
         /*This is a very dangerous function, hence why its wrapped around two alerts for security*/
@@ -246,19 +240,27 @@ class MainActivity : BaseActivity() {
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
             relativeLayout {
-                scrollView {
-                    backgroundColor = Color.parseColor(backgroundColour)
-
-                    verticalLayout {
-                        for (i in 1..rows) {
-                            row(i)
+                backgroundColor = Color.parseColor(backgroundColour)
+                if (nTiles == 0) {
+                    textView(R.string.add_tile_prompt) {
+                        gravity = Gravity.CENTER
+                        textAlignment = View.TEXT_ALIGNMENT_CENTER
+                        includeFontPadding = false
+                        textSize = sp(10).toFloat()
+                    }.lparams(width = matchParent, height = matchParent)
+                } else {
+                    scrollView {
+                        verticalLayout {
+                            for (i in 1..rows) {
+                                row(i)
+                            }
                         }
+                    }.lparams {
+                        alignParentTop()
+                        alignParentBottom()
+                        alignParentLeft()
+                        alignParentRight()
                     }
-                }.lparams {
-                    alignParentTop()
-                    alignParentBottom()
-                    alignParentLeft()
-                    alignParentRight()
                 }
                 floatingActionButton {
                     imageResource = android.R.drawable.ic_input_add
@@ -274,7 +276,6 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        @SuppressLint("SetTextI18n")
         fun _LinearLayout.row(row: Int) {
             verticalLayout {
                 linearLayout {
@@ -314,7 +315,7 @@ class MainActivity : BaseActivity() {
                     backgroundResource = R.drawable.rounded_corners
                     (background as GradientDrawable).setColor(Color.parseColor(tileColour))
                     text = name
-                    if(text=="+"){
+                    if(text == "+"){
                         textSize=60.toFloat()
                     }
                 } else {
@@ -345,3 +346,38 @@ class MainActivity : BaseActivity() {
             ankoView({ FloatingActionButton(it) }, theme = 0, init = init)
     }
 }
+
+
+/*
+when (getBackGroundColour()) {
+                "#ffff33" -> {
+                    //Whie background, black text
+                    textview.setTextColor(Color.BLACK)
+                }
+                "#217ca3" -> {
+                    //blue background, black text
+                    textview.setTextColor(Color.BLACK)
+                }
+                "#f22ee8<" -> {
+                    //Blue background, black text
+                    textview.setTextColor(Color.BLACK)
+
+                }
+                "#f22ee8" -> {
+                    //Pink background black text
+                    textview.setTextColor(Color.BLACK)
+                }
+                "#f1992e" -> {
+                    //Oange
+                    textview.setTextColor(Color.BLACK)
+                }
+                "#008000" -> {
+                    //Green background black text
+                    textview.setTextColor(Color.BLACK)
+                }
+                else -> {
+                    //Text is white
+                    textview.setTextColor(Color.WHITE)
+
+                }
+ */
