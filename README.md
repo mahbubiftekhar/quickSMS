@@ -1,6 +1,7 @@
 # quickSMS
 
-<img alt="Logo" src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" width="80" />
+
+![xhdpi](https://user-images.githubusercontent.com/37498811/40734231-a47ec39e-6459-11e8-8beb-1bfc5500b87a.png)
 
 Ever found yourself sending the same SMS messages often to the same recipient? quickSMS is designed so it should be easy to send these messages. You can quickly tap on their photo and pick the message you wish to send. You can add, modify or delete these pre-set messages at any time!
 
@@ -10,7 +11,7 @@ Ever found yourself sending the same SMS messages often to the same recipient? q
 <img alt="App image" src="/APPIMAGES/textMessageActivity.png" width="30%">
 <img alt="App image" src="/APPIMAGES/setting.png" width="30%">
 <img alt="App image" src="/APPIMAGES/settings2.png" width="30%">
-<img alt="App image" src="/APPIMAGES/splash.png" width="30%">
+
 
 </div>
 
