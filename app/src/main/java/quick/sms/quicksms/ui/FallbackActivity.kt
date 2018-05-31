@@ -28,18 +28,6 @@ class FallbackActivity : BaseActivity() {
         startActivity(i)
     }
 
-    @SuppressLint("ApplySharedPref")
-    private fun resetApp() {
-        val contactDB = DatabaseMessages(this)
-        val tilesDB = DatabaseTiles(this)
-        val log = DatabaseLog(this)
-        contactDB.deleteEntireDB()
-        tilesDB.deleteEntireDB()
-        log.deleteEntireDB()
-        PreferenceManager.getDefaultSharedPreferences(context).edit().clear().commit() //Resetting shared preferences
-        restart()
-    }
-
     private fun sendReport(exception: Throwable) {
         startActivity<BugReportActivity>("exception" to exception)
     }

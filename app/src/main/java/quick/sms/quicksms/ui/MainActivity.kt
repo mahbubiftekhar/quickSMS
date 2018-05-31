@@ -1,13 +1,11 @@
 package quick.sms.quicksms.ui
 
-import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.*
@@ -19,17 +17,8 @@ import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.backend.DatabaseTiles
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
-import quick.sms.quicksms.backend.DatabaseLog
-import quick.sms.quicksms.backend.DatabaseMessages
-import quick.sms.quicksms.context
 import java.io.FileNotFoundException
 import java.lang.Math.ceil
-import android.text.method.TextKeyListener.clear
-import android.R.id.edit
-import android.content.Context
-import android.content.SharedPreferences
-import android.content.Context.MODE_PRIVATE
-
 
 
 class MainActivity : BaseActivity() {
@@ -141,32 +130,6 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    @SuppressLint("ApplySharedPref")
-    private fun resetApp() {
-        /*This is a very dangerous function, hence why its wrapped around two alerts for security*/
-        val contactDB = DatabaseMessages(this)
-        val tilesDB = DatabaseTiles(this)
-        val log = DatabaseLog(this)
-        contactDB.deleteEntireDB()
-        tilesDB.deleteEntireDB()
-        log.deleteEntireDB()
-        try{
-            //Resetting shared preferences
-            PreferenceManager.getDefaultSharedPreferences(context).edit().clear().commit() 
-
-        } catch (e:Exception){
-
-        }
-        runOnUiThread {
-            //Restart the app programatically
-            val i = baseContext.packageManager
-                    .getLaunchIntentForPackage(baseContext.packageName)
-            i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(i)
-        }
-
-    }
-
     private fun onClick(tileNumber: Int) {
         val contact = contacts[tileNumber]
         if (contact != null) {
@@ -253,13 +216,14 @@ class MainActivity : BaseActivity() {
             relativeLayout {
                 backgroundColor = Color.parseColor(backgroundColour)
                 if (nTiles == 0) {
+                    //If no tiles are set, we should give the user a little prompt to encourage them to add some
                     textView(R.string.add_tile_prompt) {
                         gravity = Gravity.CENTER
                         textAlignment = View.TEXT_ALIGNMENT_CENTER
                         includeFontPadding = false
                         textSize = sp(10).toFloat()
                         textColor = when (backgroundColour) {
-                            // White, light blue, blue, pink, orange, green
+                        // White, light blue, blue, pink, orange, green
                             "#ffffff", "#217ca3", "#0000FF", "#f22ee8", "#f1992e", "#008000" -> {
                                 Color.BLACK
                             }
@@ -335,8 +299,8 @@ class MainActivity : BaseActivity() {
                     backgroundResource = R.drawable.rounded_corners
                     (background as GradientDrawable).setColor(Color.parseColor(tileColour))
                     text = name
-                    if(text == "+"){
-                        textSize=60.toFloat()
+                    if (text == "+") {
+                        textSize = 60.toFloat()
                     }
                 } else {
                     background = image
@@ -363,6 +327,6 @@ class MainActivity : BaseActivity() {
 
         // From https://stackoverflow.com/questions/34215129/convert-mainactivity-with-actionbar-toolbar-and-floatingaction-button-to-anko
         fun ViewGroup.floatingActionButton(init: FloatingActionButton.() -> Unit) =
-            ankoView({ FloatingActionButton(it) }, theme = 0, init = init)
+                ankoView({ FloatingActionButton(it) }, theme = 0, init = init)
     }
 }

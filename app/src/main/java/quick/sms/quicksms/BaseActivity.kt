@@ -1,20 +1,49 @@
 package quick.sms.quicksms
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.preference.PreferenceManager
 
-import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
+import quick.sms.quicksms.backend.DatabaseLog
+import quick.sms.quicksms.backend.DatabaseMessages
+import quick.sms.quicksms.backend.DatabaseTiles
 import quick.sms.quicksms.backend.putIntAndCommit
 import quick.sms.quicksms.ui.SettingsActivity
 
 open class BaseActivity : AppCompatActivity() {
+    @SuppressLint("ApplySharedPref")
+    protected fun resetApp() {
+        /*This is a very dangerous function, hence why its wrapped around two alerts for security*/
+        val contactDB = DatabaseMessages(this)
+        val tilesDB = DatabaseTiles(this)
+        val log = DatabaseLog(this)
+        contactDB.deleteEntireDB()
+        tilesDB.deleteEntireDB()
+        log.deleteEntireDB()
+        try {
+            //Resetting shared preferences
+            nTilesReset()
+            PreferenceManager.getDefaultSharedPreferences(context).edit().clear().commit()
+        } catch (e: Exception) {
+
+        }
+        runOnUiThread {
+            //Restart the app programatically
+            val i = baseContext.packageManager
+                    .getLaunchIntentForPackage(baseContext.packageName)
+            i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(i)
+        }
+
+    }
+
 
     // Activities that shouldn't automatically inherit a menu
     private val excludedActivities = setOf("SettingsActivity", "SplashActivity", "MainActivity",
@@ -25,16 +54,25 @@ open class BaseActivity : AppCompatActivity() {
         get() = prefs.getInt("nTiles", 0)
         set(value) = editor.putIntAndCommit("nTiles", value)
 
+    @SuppressLint("ApplySharedPref")
+    protected fun nTilesReset() {
+        //This function will set the value of the shared preference "nTiles" as 0
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor = sharedPreferences.edit()
+        editor.putInt("nTiles", 0)
+        editor.commit()
+    }
+
     protected val showName
         get() = settings.getBoolean("ShowName", false)
 
-    protected val actionBarColour
+    private val actionBarColour
         get() = settings.getString("actionbarcolour", "#303F9F")
 
-    protected val backgroundColour
+    protected val backgroundColour: String
         get() = settings.getString("backgroundcolour", "#217ca3")
 
-    protected val tileTextColour
+    protected val tileTextColour: String
         get() = settings.getString("TileTextColour", "#000000")
 
     protected val shouldVibrate
@@ -43,20 +81,20 @@ open class BaseActivity : AppCompatActivity() {
     protected val shouldDoubleCheck
         get() = settings.getBoolean("DoubleCheck", false)
 
-    protected val tileColour
+    protected val tileColour: String
         get() = settings.getString("tilecolour", "#ffffff")
 
     protected val shouldMakeSound
         get() = settings.getBoolean("Sound", true)
 
-    protected val warnColourClash
+    private val warnColourClash
         get() = settings.getBoolean("ColourCombination", true)
 
 
-    protected val textAndTileColoursClash
+    private val textAndTileColoursClash
         get() = tileTextColour == tileColour
 
-    protected val tileAndBackgroundColoursClash
+    private val tileAndBackgroundColoursClash
         get() = backgroundColour == tileColour
 
     @SuppressLint("ObsoleteSdkInt")
@@ -66,6 +104,19 @@ open class BaseActivity : AppCompatActivity() {
         } else {
             startActivity(intent)
             finish()
+        }
+    }
+
+    protected fun getTextColour(backgroundColour: String): Int {
+        //This function dependent on what the background color is, returns a color for the text so the user can see the text
+        return when (backgroundColour) {
+        // White, light blue, blue, pink, orange, green
+            "#ffffff", "#217ca3", "#0000FF", "#f22ee8", "#f1992e", "#008000" -> {
+                Color.BLACK
+            }
+            else -> {
+                Color.WHITE
+            }
         }
     }
 
@@ -99,6 +150,7 @@ open class BaseActivity : AppCompatActivity() {
             }
         }
     }
+
 
     // Adhoc inheritance for menus
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
