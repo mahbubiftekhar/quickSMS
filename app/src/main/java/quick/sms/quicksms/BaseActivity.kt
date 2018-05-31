@@ -8,33 +8,66 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import org.jetbrains.anko.alert
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.startActivity
-import quick.sms.quicksms.backend.DatabaseLog
-import quick.sms.quicksms.backend.DatabaseMessages
-import quick.sms.quicksms.backend.DatabaseTiles
-import quick.sms.quicksms.backend.putIntAndCommit
+import org.jetbrains.anko.uiThread
+import quick.sms.quicksms.backend.*
 import quick.sms.quicksms.ui.SettingsActivity
 
 open class BaseActivity : AppCompatActivity() {
+
+    /*
+    alert("Are you sure you wish to reset the app?") {
+                positiveButton("Yes") {
+                    alert("Do you wish to proceed?") {
+                        title = "NOTE: This action is IRREVERSIBLE"
+                        positiveButton("Yes proceed, RESET APP") {
+                            doAsync {
+                                resetApp()
+                            }
+                        }
+                        negativeButton("No, cancel") {
+
+                        }
+
+                    }.show()
+                }
+                negativeButton("No") {
+
+                }
+
+            }.show()
+            true
+     */
+
     @SuppressLint("ApplySharedPref")
     protected fun resetApp() {
-        /*This is a very dangerous function, hence why its wrapped around two alerts for security*/
-        val contactDB = DatabaseMessages(this)
-        val tilesDB = DatabaseTiles(this)
-        val log = DatabaseLog(this)
-        contactDB.deleteEntireDB() //Clear the text message database
-        tilesDB.deleteEntireDB() //Clear the tiles database
-        log.deleteEntireDB() //Clear the logs DataBase
-
-        nTilesReset = 0 //Rest the shared preference
-        runOnUiThread {
-            //Restart the app programmatically
-            val i = baseContext.packageManager
-                    .getLaunchIntentForPackage(baseContext.packageName)
-            i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(i)
-        }
-
+        // Prompt before actually resetting
+        alert("Are you sure you wish to reset the app?") {
+            positiveButton("Yes") {
+                alert("Do you wish to proceed?") {
+                    title = "NOTE: This action is IRREVERSIBLE"
+                    positiveButton("Yes proceed, RESET APP") {
+                        doAsync {
+                            // Clear all databases
+                            val contactDB = DatabaseMessages(this@BaseActivity).deleteEntireDB()
+                            val tilesDB = DatabaseTiles(this@BaseActivity).deleteEntireDB()
+                            val log = DatabaseLog(this@BaseActivity).deleteEntireDB()
+                            editor.clearAndCommit() // Clear all shared preferences
+                            uiThread {
+                                // Restart the app programmatically
+                                val i = baseContext.packageManager
+                                        .getLaunchIntentForPackage(baseContext.packageName)
+                                i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                startActivity(i)
+                            }
+                        }
+                    }
+                    negativeButton("No, cancel") {}
+                }.show()
+            }
+            negativeButton("No") {}
+        }.show()
     }
 
     // Activities that shouldn't automatically inherit a menu
@@ -45,10 +78,6 @@ open class BaseActivity : AppCompatActivity() {
     protected var nTiles
         get() = prefs.getInt("nTiles", 0)
         set(value) = editor.putIntAndCommit("nTiles", value)
-
-    private var nTilesReset
-        get() = 0
-        set(value) = editor.putIntAndCommit("nTiles", 0)
 
     protected val showName
         get() = settings.getBoolean("ShowName", false)

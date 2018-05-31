@@ -100,26 +100,7 @@ class MainActivity : BaseActivity() {
             true
         }
         R.id.resetApp -> {
-            alert("Are you sure you wish to reset the app?") {
-                positiveButton("Yes") {
-                    alert("Do you wish to proceed?") {
-                        title = "NOTE: This action is IRREVERSIBLE"
-                        positiveButton("Yes proceed, RESET APP") {
-                            doAsync {
-                                resetApp()
-                            }
-                        }
-                        negativeButton("No, cancel") {
-
-                        }
-
-                    }.show()
-                }
-                negativeButton("No") {
-
-                }
-
-            }.show()
+            resetApp()
             true
         }
 
