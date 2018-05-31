@@ -1,7 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="quick.SMS.contacts">
+    xmlns:tools="http://schemas.android.com/tools" >
 
 
     <item
@@ -9,8 +8,7 @@
         android:icon="@drawable/default_image"
         android:orderInCategory="100"
         android:title="@string/phone_call"
-        app:showAsAction="ifRoom" />
-
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/empty"
@@ -24,7 +22,7 @@
                 android:orderInCategory="100"
                 android:icon="@android:drawable/ic_menu_add"
                 android:title="@string/add_message"
-                app:showAsAction="always" />
+                app:showAsAction="ifRoom" />
             <item
                 android:id="@+id/selectNumber"
                 android:icon="@android:drawable/ic_input_get"
@@ -38,7 +36,6 @@
                 tools:ignore="HardcodedText" />
 
         </menu>
-
     </item>
 </menu>
 

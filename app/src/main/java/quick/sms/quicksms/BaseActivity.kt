@@ -12,7 +12,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.uiThread
 import quick.sms.quicksms.backend.*
-import quick.sms.quicksms.ui.SettingsActivity
+import quick.sms.quicksms.ui.*
 
 open class BaseActivity : AppCompatActivity() {
 
@@ -47,8 +47,8 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     // Activities that shouldn't automatically inherit a menu
-    private val excludedActivities = setOf("SettingsActivity", "SplashActivity", "MainActivity",
-            "FallbackActivity")
+    private val excludedActivities = setOf("SettingsActivity", "SplashActivity", "FallbackActivity",
+            "BugReportActivity", "LogActivity")
 
     // Shared Preference Accessors
     protected var nTiles
@@ -151,25 +151,67 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-
     // Adhoc inheritance for menus
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if (excludedActivities.contains(this::class.simpleName)) {
-            return true
-        }
+    final override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         return menu?.let {
             menuPrepend(it)
-            menuInflater.inflate(R.menu.menu, it)
+            if (!excludedActivities.contains(this::class.simpleName)) {
+                menuInflater.inflate(R.menu.menu, it)
+            }
             menuAppend(it)
             true
         } ?: false
     }
 
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+    final override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.menu_item_share -> {
+            //Allow the users to share the app to their friends/family
+            val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+            sharingIntent.type = "text/plain"
+            val shareBodyText = "Check it out, quickSMS saves me so much time! Download it for FREE from the Google Play store! https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch"
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check it out! quickSMS")
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
+            startActivity(Intent.createChooser(sharingIntent, "Sharing Options"))
+            true
+        }
+
         R.id.action_settings -> {
             startActivity<SettingsActivity>()
             true
         }
+
+        R.id.faqButton -> {
+            startActivity<FaqActivity>()
+            true
+        }
+
+        R.id.contactLog -> {
+            startActivity<LogActivity>()
+            true
+        }
+
+        R.id.about -> {
+            startActivity<AboutDevelopersActivity>()
+            true
+        }
+
+        R.id.contactButton -> {
+            startActivity<ContactUsActivity>()
+            true
+        }
+
+        R.id.sync -> {
+            // Restart splash and let the app do the rest
+            finish()
+            startActivity<SplashActivity>()
+            true
+        }
+
+        R.id.resetApp -> {
+            resetApp()
+            true
+        }
+
         else -> extendedOptions(item)
     }
 
