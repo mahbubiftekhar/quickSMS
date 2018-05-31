@@ -11,59 +11,52 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/empty"
-        android:orderInCategory="101"
-        android:title="@string/options"
-        app:showAsAction="always">
+        android:id="@+id/action_settings"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/settings2"
+        app:showAsAction="never" />
 
-        <menu>
+    <item
+        android:id="@+id/faqButton"
+        android:icon="@android:drawable/ic_dialog_info"
+        android:title="@string/faq_s"
+        android:titleCondensed="About"
+        app:showAsAction="never" />
 
-            <item
-                android:id="@+id/action_settings"
-                android:icon="@android:drawable/ic_menu_preferences"
-                android:title="@string/settings2"
-                app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/contactLog"
+        android:icon="@android:drawable/ic_input_get"
+        android:title="@string/sms_log"
+        android:titleCondensed="About"
+        app:showAsAction="never" />
 
-            <item
-                android:id="@+id/faqButton"
-                android:icon="@android:drawable/ic_dialog_info"
-                android:title="@string/faq_s"
-                android:titleCondensed="About"
-                app:showAsAction="ifRoom" />
-            <item
-                android:id="@+id/contactLog"
-                android:icon="@android:drawable/ic_input_get"
-                android:title="@string/sms_log"
-                android:titleCondensed="About"
-                app:showAsAction="ifRoom" />
-            <item
-                android:id="@+id/about"
-                android:title="@string/about"
-                android:icon="@android:drawable/ic_menu_info_details"
-                android:titleCondensed="About App"
-                app:showAsAction="ifRoom" />
-            <item
-                android:id="@+id/contactButton"
-                android:icon="@android:drawable/ic_dialog_email"
-                android:title="@string/contact4"
-                android:titleCondensed="About"
-                app:showAsAction="ifRoom" />
-            <item
-                android:id="@+id/sync"
-                android:icon="@android:drawable/ic_popup_sync"
-                android:title="@string/sync_contacts"
-                android:titleCondensed="About"
-                app:showAsAction="ifRoom" />
-            <item
-                android:id="@+id/resetApp"
-                android:icon="@android:drawable/ic_delete"
-                android:title="@string/reset_app"
-                android:titleCondensed="About"
-                app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/about"
+        android:title="@string/about"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:titleCondensed="About App"
+        app:showAsAction="never" />
 
-        </menu>
+    <item
+        android:id="@+id/contactButton"
+        android:icon="@android:drawable/ic_dialog_email"
+        android:title="@string/contact4"
+        android:titleCondensed="About"
+        app:showAsAction="never" />
 
-    </item>
+    <item
+        android:id="@+id/sync"
+        android:icon="@android:drawable/ic_popup_sync"
+        android:title="@string/sync_contacts"
+        android:titleCondensed="About"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/resetApp"
+        android:icon="@android:drawable/ic_delete"
+        android:title="@string/reset_app"
+        android:titleCondensed="About"
+        app:showAsAction="never" />
 </menu>
 
 
