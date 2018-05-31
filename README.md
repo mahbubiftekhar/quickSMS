@@ -19,7 +19,7 @@ Ever found yourself sending the same SMS messages often to the same recipient? q
 Although the app requries to access your contacts, we will NEVER transmit any of these outwidth the app. If you send emails to us with suggestions or bug report we will NEVER store you email or do any marketing. We will NEVER share any of your details to anyone. 
 
 ## Technologies Used 
-The app has been developed using [Koltin](https://kotlinlang.org/) a modern programmer friendly language primarily used for Android Development. It was decided to create the app using Kotlin due to many helper features such as variable interpretation, higher-order functions and null safety. As Kotlin is compiled to JVM byte-code it is also 100% inter opterable with Java! [Android Studio](https://developer.android.com/studio/) 3.1.2 was used throughout development.
+The app has been developed using [Koltin](https://kotlinlang.org/) a modern programmer friendly language primarily used for Android Development. It was decided to create the app using Kotlin due to many helper features such as variable interpolation, higher-order functions and null safety. As Kotlin is compiled to JVM byte-code it is also 100% inter opterable with Java! [Android Studio](https://developer.android.com/studio/) 3.1.2 was used throughout development.
 
 ## Developers
 
