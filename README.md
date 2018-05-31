@@ -36,6 +36,5 @@ The app has been developed using [Koltin](https://kotlinlang.org/) a modern prog
 
 * App Logo - Designed and created by [Imrul Kayes](https://github.com/saifulfrank)
 
-## Licese for App Logo
-Creative Commons License
+## Licese for App Logo - Creative Commons License
 This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/)
