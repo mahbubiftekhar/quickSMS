@@ -41,7 +41,7 @@ class MainActivity : BaseActivity() {
     private fun draw() {
         setActionBarColour()
         MainLayout(contentResolver, nTiles, contacts, backgroundColour, tileColour, tileTextColour,
-                showName, ::onClick, ::assignTile, ::createTile, ::deleteTile).setContentView(this)
+                showName, ::onClick, ::assignTile, ::createTile, ::deleteTile, getTextColour(backgroundColour)).setContentView(this)
         colourCheck()
     }
 
@@ -207,9 +207,10 @@ class MainActivity : BaseActivity() {
                              val alreadyAssigned: Map<Int, Contact>, val backgroundColour: String,
                              val tileColour: String, val textColour: String, val showName: Boolean,
                              val tileCallBack: (Int) -> Unit, val assignCallBack: (Int) -> Unit,
-                             val createCallback: () -> Unit, val deleteCallback: (Int) -> Unit)
+                             val createCallback: () -> Unit, val deleteCallback: (Int) -> Unit, promptTextColour: Any)
         : AnkoComponent<MainActivity> {
         val rows = ceil(nTiles / 2.0).toInt()
+        val promptTextColour = promptTextColour as Int
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
             relativeLayout {
@@ -221,15 +222,7 @@ class MainActivity : BaseActivity() {
                         textAlignment = View.TEXT_ALIGNMENT_CENTER
                         includeFontPadding = false
                         textSize = sp(10).toFloat()
-                        textColor = when (backgroundColour) {
-                        // White, light blue, blue, pink, orange, green
-                            "#ffffff", "#217ca3", "#0000FF", "#f22ee8", "#f1992e", "#008000" -> {
-                                Color.BLACK
-                            }
-                            else -> {
-                                Color.WHITE
-                            }
-                        }
+                        textColor = promptTextColour
                     }.lparams(width = matchParent, height = matchParent)
                 } else {
                     scrollView {
