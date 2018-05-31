@@ -73,7 +73,7 @@ class MainActivity : BaseActivity() {
             //Allow the users to share the app to their friends/family
             val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
             sharingIntent.type = "text/plain"
-            val shareBodyText = "Check it out, quickSMS saves me so much time! Download it foir FREE from the Google Play store! https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch"
+            val shareBodyText = "Check it out, quickSMS saves me so much time! Download it for FREE from the Google Play store! https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch"
             sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check it out! quickSMS")
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
             startActivity(Intent.createChooser(sharingIntent, "Sharing Options"))
@@ -105,7 +105,6 @@ class MainActivity : BaseActivity() {
                     alert("Do you wish to proceed?") {
                         title = "NOTE: This action is IRREVERSIBLE"
                         positiveButton("Yes proceed, RESET APP") {
-                            println(">>>WE ARE GETTING HERE")
                             doAsync {
                                 resetApp()
                             }
@@ -134,7 +133,7 @@ class MainActivity : BaseActivity() {
         if (contact != null) {
             startActivity<TextMessageActivity>("contact" to contact, "tileID" to tileNumber) //Passing in contact info and tileNumber
         } else {
-            println("No Contact found")
+            println("Sorry - No Contact found")
         }
     }
 
@@ -160,7 +159,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun deleteTile(tileNumber: Int) {
-        alert("NOTE: This is irreversible") {
+        alert("") {
             title = "Are you sure you want to delete this tile?"
             positiveButton("Yes, Delete") {
                 val contact = contacts[tileNumber]
