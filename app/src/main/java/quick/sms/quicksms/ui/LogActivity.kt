@@ -49,13 +49,9 @@ class LogActivity : BaseActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        // Inflate your main_menu into the menu
-        menuInflater.inflate(R.menu.logactivity, menu)
-        // Locate MenuItem with ShareActionProvider
-        return true
+    override fun menuPrepend(menu: Menu) {
+        menuInflater.inflate(R.menu.log_extras, menu)
     }
-
 
     private fun clearLog() {
         //This function will delete the entire log database
@@ -65,7 +61,6 @@ class LogActivity : BaseActivity() {
     }
 
     override fun extendedOptions(item: MenuItem) = when (item.itemId) {
-
         R.id.clearLogButton -> {
             //Button to allow the user to clear the log
             alert("This action is irreversible") {

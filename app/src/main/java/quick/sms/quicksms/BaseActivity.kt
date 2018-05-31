@@ -8,47 +8,52 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import org.jetbrains.anko.alert
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.startActivity
-import quick.sms.quicksms.backend.DatabaseLog
-import quick.sms.quicksms.backend.DatabaseMessages
-import quick.sms.quicksms.backend.DatabaseTiles
-import quick.sms.quicksms.backend.putIntAndCommit
-import quick.sms.quicksms.ui.SettingsActivity
+import org.jetbrains.anko.uiThread
+import quick.sms.quicksms.backend.*
+import quick.sms.quicksms.ui.*
 
 open class BaseActivity : AppCompatActivity() {
+
     @SuppressLint("ApplySharedPref")
     protected fun resetApp() {
-        /*This is a very dangerous function, hence why its wrapped around two alerts for security*/
-        val contactDB = DatabaseMessages(this)
-        val tilesDB = DatabaseTiles(this)
-        val log = DatabaseLog(this)
-        contactDB.deleteEntireDB() //Clear the text message database
-        tilesDB.deleteEntireDB() //Clear the tiles database
-        log.deleteEntireDB() //Clear the logs DataBase
-
-        nTilesReset = 0 //Rest the shared preference
-        runOnUiThread {
-            //Restart the app programmatically
-            val i = baseContext.packageManager
-                    .getLaunchIntentForPackage(baseContext.packageName)
-            i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(i)
-        }
-
+        // Prompt before actually resetting
+        alert("Are you sure you wish to reset the app?") {
+            positiveButton("Yes") {
+                alert("Do you wish to proceed?") {
+                    title = "NOTE: This action is IRREVERSIBLE"
+                    positiveButton("Yes proceed, RESET APP") {
+                        doAsync {
+                            // Clear all databases
+                            DatabaseMessages(this@BaseActivity).deleteEntireDB()
+                            DatabaseTiles(this@BaseActivity).deleteEntireDB()
+                            DatabaseLog(this@BaseActivity).deleteEntireDB()
+                            editor.clearAndCommit() // Clear all shared preferences
+                            uiThread {
+                                // Restart the app programmatically
+                                val i = baseContext.packageManager
+                                        .getLaunchIntentForPackage(baseContext.packageName)
+                                i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                startActivity(i)
+                            }
+                        }
+                    }
+                    negativeButton("No, cancel") {}
+                }.show()
+            }
+            negativeButton("No") {}
+        }.show()
     }
 
     // Activities that shouldn't automatically inherit a menu
-    private val excludedActivities = setOf("SettingsActivity", "SplashActivity", "MainActivity",
-            "FallbackActivity")
+    private val excludedActivities = setOf("SettingsActivity", "SplashActivity", "FallbackActivity",
+            "BugReportActivity", "LogActivity")
 
     // Shared Preference Accessors
     protected var nTiles
         get() = prefs.getInt("nTiles", 0)
         set(value) = editor.putIntAndCommit("nTiles", value)
-
-    private var nTilesReset
-        get() = 0
-        set(value) = editor.putIntAndCommit("nTiles", 0)
 
     protected val showName
         get() = settings.getBoolean("ShowName", false)
@@ -146,25 +151,67 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-
     // Adhoc inheritance for menus
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if (excludedActivities.contains(this::class.simpleName)) {
-            return true
-        }
+    final override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         return menu?.let {
             menuPrepend(it)
-            menuInflater.inflate(R.menu.menu, it)
+            if (!excludedActivities.contains(this::class.simpleName)) {
+                menuInflater.inflate(R.menu.menu, it)
+            }
             menuAppend(it)
             true
         } ?: false
     }
 
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+    final override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.menu_item_share -> {
+            //Allow the users to share the app to their friends/family
+            val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+            sharingIntent.type = "text/plain"
+            val shareBodyText = "Check it out, quickSMS saves me so much time! Download it for FREE from the Google Play store! https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch"
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check it out! quickSMS")
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
+            startActivity(Intent.createChooser(sharingIntent, "Sharing Options"))
+            true
+        }
+
         R.id.action_settings -> {
             startActivity<SettingsActivity>()
             true
         }
+
+        R.id.faqButton -> {
+            startActivity<FaqActivity>()
+            true
+        }
+
+        R.id.contactLog -> {
+            startActivity<LogActivity>()
+            true
+        }
+
+        R.id.about -> {
+            startActivity<AboutDevelopersActivity>()
+            true
+        }
+
+        R.id.contactButton -> {
+            startActivity<ContactUsActivity>()
+            true
+        }
+
+        R.id.sync -> {
+            // Restart splash and let the app do the rest
+            finish()
+            startActivity<SplashActivity>()
+            true
+        }
+
+        R.id.resetApp -> {
+            resetApp()
+            true
+        }
+
         else -> extendedOptions(item)
     }
 

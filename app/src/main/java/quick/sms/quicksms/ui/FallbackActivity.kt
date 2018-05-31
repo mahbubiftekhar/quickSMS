@@ -37,18 +37,7 @@ private class FallbackLayout(val restart: () -> Unit, val reset: () -> Unit, val
                 onClick { restart() }
             }
             button(R.string.reset_app) {
-                onClick {
-                    alert("This will remove all data such as textMessages and settings") {
-                        title = "Are you sure?"
-                        positiveButton("Yes") {
-                            reset()
-
-                        }
-                        negativeButton("No, Cancel") {
-
-                        }
-                    }
-                }
+                onClick { reset() }
             }
             button(R.string.send_bug_report) {
                 onClick { send() }
