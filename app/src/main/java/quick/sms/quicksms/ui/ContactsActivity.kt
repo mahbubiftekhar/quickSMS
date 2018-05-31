@@ -1,7 +1,6 @@
 package quick.sms.quicksms.ui
 
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
@@ -15,7 +14,7 @@ import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.Contact
 
-@Suppress("DEPRECATION")
+@Suppress("DEPRECATION", "UNCHECKED_CAST")
 class ContactsActivity : BaseActivity() {
 
     private var tileNumber = 0
@@ -25,7 +24,7 @@ class ContactsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         val contacts = (intent.extras.get("contacts") as List<Contact>).sortedBy { it.name }
         tileNumber = intent.getIntExtra("tile_number", 0)
-        ContactsLayout(contentResolver, contacts) { selectContact(it) }.setContentView(this)
+        ContactsLayout(contacts) { selectContact(it) }.setContentView(this)
 
         doAsync {
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
@@ -45,8 +44,7 @@ class ContactsActivity : BaseActivity() {
         finish()
     }
 
-    private class ContactsLayout(val cr: ContentResolver, val contacts: List<Contact>,
-                                 val selectContact: (Contact) -> Unit)
+    private class ContactsLayout(val contacts: List<Contact>, val selectContact: (Contact) -> Unit)
         : AnkoComponent<ContactsActivity> {
 
         override fun createView(ui: AnkoContext<ContactsActivity>) = with(ui) {

@@ -38,11 +38,11 @@ class TextMessageActivity : BaseActivity() {
     private var receipientID: Long = 1L
     private lateinit var recipientName: String
     private lateinit var phoneNumber: String
-    private val SENT = "SMS_SENT"
-    private val DELIVERED = "SMS_DELIVERED"
-    private val MAX_SMS_MESSAGE_LENGTH = 160
+    private val sent = "SMS_SENT"
+    private val delivered = "SMS_DELIVERED"
+    private val smsMaxLength = 160
     private var tileID = -1
-    lateinit var contact: Contact
+    private lateinit var contact: Contact
 
     private var mAdView: AdView? = null
 
@@ -75,20 +75,18 @@ class TextMessageActivity : BaseActivity() {
 
             }
         }
-        if (contact is Contact) {
-            recipientName = contact.name
-            receipientID = contact.id
-            if (phoneNumber == "") {
-                //If no prefered number is set, set it as the first number
-                phoneNumber = contact.numbers[0]
-            }
-            updateTitle() //updates the users name on the action bar
-            doAsync {
-                val result = contactDB.returnAllHashMap(receipientID)
-                uiThread {
-                    addButtons(result)
-                    messages = result
-                }
+        recipientName = contact.name
+        receipientID = contact.id
+        if (phoneNumber == "") {
+            //If no prefered number is set, set it as the first number
+            phoneNumber = contact.numbers[0]
+        }
+        updateTitle() //updates the users name on the action bar
+        doAsync {
+            val result = contactDB.returnAllHashMap(receipientID)
+            uiThread {
+                addButtons(result)
+                messages = result
             }
         }
         doAsync {
@@ -198,11 +196,11 @@ class TextMessageActivity : BaseActivity() {
 
     private fun loadID() = prefs.getInt("DBHELPERID", 0)
 
-    fun incrementID() {
+    private fun incrementID() {
         editor.putIntAndCommit("DBHELPERID", loadID() + 1)
     }
 
-    fun addButtons(textMessages: LinkedHashMap<Int, String>) {
+    private fun addButtons(textMessages: LinkedHashMap<Int, String>) {
 
         val llMain = findViewById<LinearLayout>(R.id.ll_main_layout)
         llMain.removeAllViews()
@@ -211,16 +209,7 @@ class TextMessageActivity : BaseActivity() {
         params.setMargins(1, 35, 1, 0)
         if (textMessages.size == 0) {
             val textview = findViewById<View>(R.id.text2) as TextView
-            when (backgroundColour) {
-            // White, light blue, blue, pink, orange, green
-                "#ffffff", "#217ca3", "#0000FF", "#f22ee8", "#f1992e", "#008000" -> {
-                    textview.setTextColor(Color.BLACK)
-                }
-                else -> {
-                    textview.setTextColor(Color.WHITE)
-                }
-
-            }
+            textview.setTextColor(getTextColour(backgroundColour))
             textview.setTypeface(null, Typeface.BOLD) // Setting it as bold
             textview.visibility = View.VISIBLE
         } else {
@@ -239,8 +228,8 @@ class TextMessageActivity : BaseActivity() {
                     fun sendMessage() {
                         try {
                             val sent = "SMS_SENT"
-                            val piSent = PendingIntent.getBroadcast(applicationContext, 0, Intent(SENT), 0)
-                            val piDelivered = PendingIntent.getBroadcast(applicationContext, 0, Intent(DELIVERED), 0)
+                            val piSent = PendingIntent.getBroadcast(applicationContext, 0, Intent(this.sent), 0)
+                            val piDelivered = PendingIntent.getBroadcast(applicationContext, 0, Intent(delivered), 0)
                             registerReceiver(object : BroadcastReceiver() {
                                 override fun onReceive(arg0: Context, arg1: Intent) {
                                     if (resultCode === Activity.RESULT_OK) {
@@ -255,7 +244,7 @@ class TextMessageActivity : BaseActivity() {
                             }, IntentFilter(sent))
                             val smsManager = SmsManager.getDefault()
                             val length = (buttonDynamic.text as String).length
-                            return if (length > MAX_SMS_MESSAGE_LENGTH) {
+                            return if (length > smsMaxLength) {
                                 val messagelist = smsManager.divideMessage(buttonDynamic.text as String)
                                 smsManager.sendMultipartTextMessage(phoneNumber, null, messagelist, null, null)
 

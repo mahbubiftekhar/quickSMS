@@ -37,7 +37,7 @@ class AboutDevelopersActivity : BaseActivity() {
             verticalLayout {
                 textView {
                     text = "About quickSMS"
-                    textSize=30f
+                    textSize = 30f
                     textColor = Color.RED
                     textAlignment = View.TEXT_ALIGNMENT_CENTER //CENTER can be INHERIT GRAVITY TEXT_START TEXT_END VIEW_START VIEW_END
                 }
@@ -48,7 +48,7 @@ class AboutDevelopersActivity : BaseActivity() {
                 }
                 textView {
                     text = "quickSMS has been designed to make sending text messages quicker and easier. \n It was developed by two students whilst at the University of Edinburgh"
-                    textSize= 25f
+                    textSize = 25f
                     textColor = Color.RED
                     textAlignment = View.TEXT_ALIGNMENT_CENTER //CENTER can be INHERIT GRAVITY TEXT_START TEXT_END VIEW_START VIEW_END
                 }

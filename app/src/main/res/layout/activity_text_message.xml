@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#2072A4">
@@ -20,7 +21,8 @@
             android:text="@string/why_not_add_some_messages_n_n_just_click_the_symbol_on_the_bottom_right"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/activity_horizontal_margin" />
+            android:textSize="@dimen/activity_horizontal_margin"
+            tools:ignore="SpUsage" />
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -45,9 +47,9 @@
                 <View
                     android:id="@+id/spacerView"
                     android:layout_width="match_parent"
-                    android:layout_height="10dp"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="PADDING HERE" />
+                    android:text="@string/padding_here" />
 
 
             </LinearLayout>
@@ -63,7 +65,8 @@
             android:layout_marginBottom="60dp"
             android:layout_marginEnd="16dp"
             android:paddingBottom="30dp"
-            android:src="@android:drawable/ic_input_add" />
+            android:src="@android:drawable/ic_input_add"
+            tools:ignore="RelativeOverlap" />
 
         <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/adView"

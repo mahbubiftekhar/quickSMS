@@ -11,28 +11,26 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/logoImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/logo"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:id="@+id/logoImage"
-            />
+            android:src="@drawable/logo" />
 
         <Button
+            android:id="@+id/continueButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/logoImage"
-            android:text="CONTINUE"
-            android:id="@+id/continueButton"/>
+            android:text="CONTINUE" />
 
-        <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/adView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             ads:adSize="BANNER"
             ads:adUnitId="ca-app-pub-2206499302575732/2755153561">
         </com.google.android.gms.ads.AdView>

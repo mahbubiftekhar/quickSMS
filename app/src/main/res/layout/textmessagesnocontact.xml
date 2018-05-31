@@ -11,9 +11,9 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:textColor="@color/colorPrimary"
         android:text="@string/why_not_add_some_messages_n_n_just_click_the_symbol_on_the_bottom_right"
         android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
         android:textSize="@dimen/activity_horizontal_margin"
         tools:ignore="SpUsage" />
 

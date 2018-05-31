@@ -1,13 +1,11 @@
 package quick.sms.quicksms.ui
 
-import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.*
@@ -19,25 +17,16 @@ import quick.sms.quicksms.backend.Contact
 import quick.sms.quicksms.backend.DatabaseTiles
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
-import quick.sms.quicksms.backend.DatabaseLog
-import quick.sms.quicksms.backend.DatabaseMessages
-import quick.sms.quicksms.context
 import java.io.FileNotFoundException
 import java.lang.Math.ceil
-import android.text.method.TextKeyListener.clear
-import android.R.id.edit
-import android.content.Context
-import android.content.SharedPreferences
-import android.content.Context.MODE_PRIVATE
 
-
+@Suppress("UNCHECKED_CAST") //Suppresses the unchcked casted on contactsList = bundle.get("contacts") as List<Contact>
 
 class MainActivity : BaseActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
     private lateinit var contactsList: List<Contact>
     private lateinit var unassigned: List<Contact>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         val bundle: Bundle = savedInstanceState ?: intent.extras
         window.requestFeature(Window.FEATURE_ACTION_BAR)
@@ -52,13 +41,12 @@ class MainActivity : BaseActivity() {
     private fun draw() {
         setActionBarColour()
         MainLayout(contentResolver, nTiles, contacts, backgroundColour, tileColour, tileTextColour,
-                showName, ::onClick, ::assignTile, ::createTile, ::deleteTile).setContentView(this)
+                showName, ::onClick, ::assignTile, ::createTile, ::deleteTile, getTextColour(backgroundColour)).setContentView(this)
         colourCheck()
     }
 
-    fun createTile() {
+    private fun createTile() {
         nTiles++
-        println(nTiles)
         draw()
     }
 
@@ -85,7 +73,7 @@ class MainActivity : BaseActivity() {
             //Allow the users to share the app to their friends/family
             val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
             sharingIntent.type = "text/plain"
-            val shareBodyText = "Check it out, quickSMS saves me so much time! Download it from the Google Play store!"
+            val shareBodyText = "Check it out, quickSMS saves me so much time! Download it for FREE from the Google Play store! https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch"
             sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check it out! quickSMS")
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
             startActivity(Intent.createChooser(sharingIntent, "Sharing Options"))
@@ -117,7 +105,6 @@ class MainActivity : BaseActivity() {
                     alert("Do you wish to proceed?") {
                         title = "NOTE: This action is IRREVERSIBLE"
                         positiveButton("Yes proceed, RESET APP") {
-                            println(">>>WE ARE GETTING HERE")
                             doAsync {
                                 resetApp()
                             }
@@ -141,38 +128,12 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    @SuppressLint("ApplySharedPref")
-    private fun resetApp() {
-        /*This is a very dangerous function, hence why its wrapped around two alerts for security*/
-        val contactDB = DatabaseMessages(this)
-        val tilesDB = DatabaseTiles(this)
-        val log = DatabaseLog(this)
-        contactDB.deleteEntireDB()
-        tilesDB.deleteEntireDB()
-        log.deleteEntireDB()
-        try{
-            //Resetting shared preferences
-            PreferenceManager.getDefaultSharedPreferences(context).edit().clear().commit() 
-
-        } catch (e:Exception){
-
-        }
-        runOnUiThread {
-            //Restart the app programatically
-            val i = baseContext.packageManager
-                    .getLaunchIntentForPackage(baseContext.packageName)
-            i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(i)
-        }
-
-    }
-
     private fun onClick(tileNumber: Int) {
         val contact = contacts[tileNumber]
         if (contact != null) {
             startActivity<TextMessageActivity>("contact" to contact, "tileID" to tileNumber) //Passing in contact info and tileNumber
         } else {
-            println("No Contact found")
+            println("Sorry - No Contact found")
         }
     }
 
@@ -198,7 +159,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun deleteTile(tileNumber: Int) {
-        alert("NOTE: This is irreversible") {
+        alert("") {
             title = "Are you sure you want to delete this tile?"
             positiveButton("Yes, Delete") {
                 val contact = contacts[tileNumber]
@@ -245,28 +206,22 @@ class MainActivity : BaseActivity() {
                              val alreadyAssigned: Map<Int, Contact>, val backgroundColour: String,
                              val tileColour: String, val textColour: String, val showName: Boolean,
                              val tileCallBack: (Int) -> Unit, val assignCallBack: (Int) -> Unit,
-                             val createCallback: () -> Unit, val deleteCallback: (Int) -> Unit)
+                             val createCallback: () -> Unit, val deleteCallback: (Int) -> Unit, promptTextColour: Any)
         : AnkoComponent<MainActivity> {
         val rows = ceil(nTiles / 2.0).toInt()
+        val promptTextColour = promptTextColour as Int
 
         override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
             relativeLayout {
                 backgroundColor = Color.parseColor(backgroundColour)
                 if (nTiles == 0) {
+                    //If no tiles are set, we should give the user a little prompt to encourage them to add some
                     textView(R.string.add_tile_prompt) {
                         gravity = Gravity.CENTER
                         textAlignment = View.TEXT_ALIGNMENT_CENTER
                         includeFontPadding = false
                         textSize = sp(10).toFloat()
-                        textColor = when (backgroundColour) {
-                            // White, light blue, blue, pink, orange, green
-                            "#ffffff", "#217ca3", "#0000FF", "#f22ee8", "#f1992e", "#008000" -> {
-                                Color.BLACK
-                            }
-                            else -> {
-                                Color.WHITE
-                            }
-                        }
+                        textColor = promptTextColour
                     }.lparams(width = matchParent, height = matchParent)
                 } else {
                     scrollView {
@@ -335,8 +290,8 @@ class MainActivity : BaseActivity() {
                     backgroundResource = R.drawable.rounded_corners
                     (background as GradientDrawable).setColor(Color.parseColor(tileColour))
                     text = name
-                    if(text == "+"){
-                        textSize=60.toFloat()
+                    if (text == "+") {
+                        textSize = 60.toFloat()
                     }
                 } else {
                     background = image
@@ -363,6 +318,6 @@ class MainActivity : BaseActivity() {
 
         // From https://stackoverflow.com/questions/34215129/convert-mainactivity-with-actionbar-toolbar-and-floatingaction-button-to-anko
         fun ViewGroup.floatingActionButton(init: FloatingActionButton.() -> Unit) =
-            ankoView({ FloatingActionButton(it) }, theme = 0, init = init)
+                ankoView({ FloatingActionButton(it) }, theme = 0, init = init)
     }
 }

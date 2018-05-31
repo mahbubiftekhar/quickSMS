@@ -13,6 +13,7 @@ import com.google.android.gms.ads.MobileAds
 import quick.sms.quicksms.R
 import org.jetbrains.anko.*
 import quick.sms.quicksms.BaseActivity
+import quick.sms.quicksms.R.layout.activity_log
 import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.allLogs
 
@@ -24,7 +25,7 @@ class LogActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setActionBarColour()
-        setContentView(R.layout.activity_log)
+        setContentView(activity_log)
 
         val tilesDB = DatabaseLog(this)
         val a = tilesDB.returnAll()
@@ -39,7 +40,7 @@ class LogActivity : BaseActivity() {
         if (a && allLogs.size > 0) {
             //If the returnAll function was successful we shall launch the UI
             allLogsLocal = allLogs
-            UIcreator(backgroundColour, tileTextColour)
+            createUI(backgroundColour, tileTextColour)
         } else {
             println(">>>>> in the iff condition")
             //If their is no logs, we need to display to the user this so they arent confused
@@ -76,7 +77,7 @@ class LogActivity : BaseActivity() {
                         clearLog()
                         uiThread {
                             //redraw the activity layout
-                            setContentView(R.layout.activity_log)
+                            setContentView(activity_log)
                         }
                     }
                 }
@@ -108,7 +109,7 @@ class LogActivity : BaseActivity() {
 
 
     @SuppressLint("SetTextI18n")
-    private fun UIcreator(backgroundColour: String, textColour: String): View {
+    private fun createUI(backgroundColour: String, textColour: String): View {
         return scrollView {
             backgroundColor = Color.parseColor(backgroundColour) //Setting the background colour
             verticalLayout {

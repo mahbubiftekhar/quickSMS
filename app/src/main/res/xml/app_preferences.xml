@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <SwitchPreference
+        android:defaultValue="true"
         android:key="Sound"
-        android:title="Sound"
         android:summary="Sound when sending SMS"
-        android:defaultValue="true"/>
+        android:title="Sound" />
     <SwitchPreference
+        android:defaultValue="false"
         android:key="Vibrate"
-        android:title="Vibrate"
         android:summary="Vibrate when sending SMS"
-        android:defaultValue="false"/>
+        android:title="Vibrate" />
     <SwitchPreference
+        android:defaultValue="false"
         android:key="DoubleCheck"
-        android:title="Confirm before sending"
         android:summary="Confirm before sending SMS"
-        android:defaultValue="false"/>
+        android:title="Confirm before sending" />
     <SwitchPreference
+        android:defaultValue="true"
         android:key="ColourCombination"
-        android:title="Warn if colour combinations conflict"
         android:summary="Warn if colour combinations conflict"
-        android:defaultValue="true"/>
+        android:title="Warn if colour combinations conflict" />
     <SwitchPreference
+        android:defaultValue="false"
         android:key="ShowName"
-        android:title="Show name for contacts with photos?"
         android:summary="All tiles will have their name in the middle on top of the image"
-        android:defaultValue="false"/>
+        android:title="Show name for contacts with photos?" />
     <ListPreference
         android:dialogTitle="Action bar colour"
         android:entries="@array/settings_list_preference_titles"
