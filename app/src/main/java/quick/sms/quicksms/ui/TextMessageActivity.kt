@@ -209,16 +209,7 @@ class TextMessageActivity : BaseActivity() {
         params.setMargins(1, 35, 1, 0)
         if (textMessages.size == 0) {
             val textview = findViewById<View>(R.id.text2) as TextView
-            when (backgroundColour) {
-            // White, light blue, blue, pink, orange, green
-                "#ffffff", "#217ca3", "#0000FF", "#f22ee8", "#f1992e", "#008000" -> {
-                    textview.setTextColor(Color.BLACK)
-                }
-                else -> {
-                    textview.setTextColor(Color.WHITE)
-                }
-
-            }
+            textview.setTextColor(getTextColour(backgroundColour))
             textview.setTypeface(null, Typeface.BOLD) // Setting it as bold
             textview.visibility = View.VISIBLE
         } else {

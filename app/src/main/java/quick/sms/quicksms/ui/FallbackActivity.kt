@@ -1,17 +1,11 @@
 package quick.sms.quicksms.ui
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.preference.PreferenceManager
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import quick.sms.quicksms.BaseActivity
 import quick.sms.quicksms.R
-import quick.sms.quicksms.backend.DatabaseLog
-import quick.sms.quicksms.backend.DatabaseMessages
-import quick.sms.quicksms.backend.DatabaseTiles
-import quick.sms.quicksms.context
 
 class FallbackActivity : BaseActivity() {
 

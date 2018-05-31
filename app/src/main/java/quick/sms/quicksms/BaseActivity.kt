@@ -2,6 +2,7 @@ package quick.sms.quicksms
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.preference.PreferenceManager
@@ -27,13 +28,8 @@ open class BaseActivity : AppCompatActivity() {
         contactDB.deleteEntireDB()
         tilesDB.deleteEntireDB()
         log.deleteEntireDB()
-        try {
-            //Resetting shared preferences
-            nTilesReset()
-            PreferenceManager.getDefaultSharedPreferences(context).edit().clear().commit()
-        } catch (e: Exception) {
 
-        }
+        nTilesReset = 0 //Rest the shared preference
         runOnUiThread {
             //Restart the app programatically
             val i = baseContext.packageManager
@@ -44,7 +40,6 @@ open class BaseActivity : AppCompatActivity() {
 
     }
 
-
     // Activities that shouldn't automatically inherit a menu
     private val excludedActivities = setOf("SettingsActivity", "SplashActivity", "MainActivity",
             "FallbackActivity")
@@ -54,13 +49,14 @@ open class BaseActivity : AppCompatActivity() {
         get() = prefs.getInt("nTiles", 0)
         set(value) = editor.putIntAndCommit("nTiles", value)
 
-    @SuppressLint("ApplySharedPref")
-    protected fun nTilesReset() {
-        //This function will set the value of the shared preference "nTiles" as 0
+    private var nTilesReset
+        get() = 0
+        set(value) = editor.putIntAndCommit("nTiles", 0)
+
+    private fun loadInt(key: String): Int {
+        /*Function to load an SharedPreference value which holds an Int*/
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val editor = sharedPreferences.edit()
-        editor.putInt("nTiles", 0)
-        editor.commit()
+        return sharedPreferences.getInt(key, 1)
     }
 
     protected val showName

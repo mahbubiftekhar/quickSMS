@@ -11,6 +11,8 @@ import java.util.*
 
 val allLogs = ArrayList<DatabaseLog.Log>()
 
+@Suppress("unused")
+
 class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
     data class Log(val message: String, val id: Int, val phoneNumber: String, val receipientName: String, val timeStamp: String)
 
@@ -53,9 +55,8 @@ class DatabaseLog(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
             allLogs.clear()
             while (it.moveToNext()) {
                 allLogs.run {
-                    //TODO: Here we shall add to the dataclass
                     add(Log(it.getString(it.getColumnIndex("message")),
-                            it.getInt(it.getColumnIndex("id")).toInt(),
+                            it.getInt(it.getColumnIndex("id")),
                             it.getString(it.getColumnIndex("phoneNumber")),
                             it.getString(it.getColumnIndex("receipientName")),
                             it.getString(it.getColumnIndex("timeStamp"))

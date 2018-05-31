@@ -20,13 +20,13 @@ import quick.sms.quicksms.R
 import java.io.FileNotFoundException
 import java.lang.Math.ceil
 
+@Suppress("UNCHECKED_CAST") //Suppresses the unchcked casted on contactsList = bundle.get("contacts") as List<Contact>
 
 class MainActivity : BaseActivity() {
 
     private lateinit var contacts: Map<Int, Contact>
     private lateinit var contactsList: List<Contact>
     private lateinit var unassigned: List<Contact>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         val bundle: Bundle = savedInstanceState ?: intent.extras
         window.requestFeature(Window.FEATURE_ACTION_BAR)
@@ -45,9 +45,8 @@ class MainActivity : BaseActivity() {
         colourCheck()
     }
 
-    fun createTile() {
+    private fun createTile() {
         nTiles++
-        println(nTiles)
         draw()
     }
 

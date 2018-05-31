@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package quick.sms.quicksms.backend
 
 import android.content.ContentValues

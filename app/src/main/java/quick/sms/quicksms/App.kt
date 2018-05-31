@@ -1,5 +1,8 @@
+@file:Suppress("HasPlatformType")
+
 package quick.sms.quicksms
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.Intent
@@ -16,14 +19,17 @@ val context by lazy { App.context }
 val prefs by lazy { App.prefs }
 val editor by lazy { App.editor }
 val settings by lazy { App.settings }
+@Suppress("CommitPrefEdits", "HasPlatformType", "unused")
 
 class App : Application() {
 
+    @SuppressLint("")
     companion object {
-        private val PREF_FILE = "shared_prefs"
-        lateinit var context : Context
+        private const val prefFile = "shared_prefs"
+        @SuppressLint("StaticFieldLeak")
+        lateinit var context: Context
             private set
-        val prefs by lazy { context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE) }
+        val prefs by lazy { context.getSharedPreferences(prefFile, Context.MODE_PRIVATE) }
         val editor by lazy { prefs.edit() }
         val settings by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
         val connectivityManager by lazy {
@@ -45,7 +51,7 @@ class App : Application() {
     // Get a static reference to the Application Context
     // (Application's onCreate is only called once before anything else)
     override fun onCreate() {
-        super.onCreate();
+        super.onCreate()
         context = applicationContext
         // Setup a global uncaught exception handler (Adapted from: https://stackoverflow.com/questions/19897628/need-to-handle-uncaught-exceptions-and-send-to-log-file)
         Thread.setDefaultUncaughtExceptionHandler { _, exception ->
