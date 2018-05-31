@@ -2,11 +2,8 @@ package quick.sms.quicksms
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.preference.PreferenceManager
-
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -25,13 +22,13 @@ open class BaseActivity : AppCompatActivity() {
         val contactDB = DatabaseMessages(this)
         val tilesDB = DatabaseTiles(this)
         val log = DatabaseLog(this)
-        contactDB.deleteEntireDB()
-        tilesDB.deleteEntireDB()
-        log.deleteEntireDB()
+        contactDB.deleteEntireDB() //Clear the text message database
+        tilesDB.deleteEntireDB() //Clear the tiles database
+        log.deleteEntireDB() //Clear the logs DataBase
 
         nTilesReset = 0 //Rest the shared preference
         runOnUiThread {
-            //Restart the app programatically
+            //Restart the app programmatically
             val i = baseContext.packageManager
                     .getLaunchIntentForPackage(baseContext.packageName)
             i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -53,36 +50,38 @@ open class BaseActivity : AppCompatActivity() {
         get() = 0
         set(value) = editor.putIntAndCommit("nTiles", 0)
 
-    private fun loadInt(key: String): Int {
-        /*Function to load an SharedPreference value which holds an Int*/
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        return sharedPreferences.getInt(key, 1)
-    }
-
     protected val showName
         get() = settings.getBoolean("ShowName", false)
 
+    //get the action bar colour
     private val actionBarColour
         get() = settings.getString("actionbarcolour", "#303F9F")
 
+    //get the background colour
     protected val backgroundColour: String
         get() = settings.getString("backgroundcolour", "#217ca3")
 
+    //get the tile text colour
     protected val tileTextColour: String
         get() = settings.getString("TileTextColour", "#000000")
 
+    //get boolean about weather the phone should vibrate
     protected val shouldVibrate
         get() = settings.getBoolean("Vibrate", false)
 
+    //get boolean about weather the user wants a double check before sending SMS's
     protected val shouldDoubleCheck
         get() = settings.getBoolean("DoubleCheck", false)
 
+    //get tileColour the user wants
     protected val tileColour: String
         get() = settings.getString("tilecolour", "#ffffff")
 
+    //get bool about weather the use wants sound when they send a message, add a message or update a message
     protected val shouldMakeSound
         get() = settings.getBoolean("Sound", true)
 
+    //get bool weather the user wants to be warned if the colour combination is bad
     private val warnColourClash
         get() = settings.getBoolean("ColourCombination", true)
 
