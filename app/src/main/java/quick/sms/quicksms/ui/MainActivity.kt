@@ -73,7 +73,7 @@ class MainActivity : BaseActivity() {
             //Allow the users to share the app to their friends/family
             val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
             sharingIntent.type = "text/plain"
-            val shareBodyText = "Check it out, quickSMS saves me so much time! Download it from the Google Play store!"
+            val shareBodyText = "Check it out, quickSMS saves me so much time! Download it foir FREE from the Google Play store! https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch"
             sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check it out! quickSMS")
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
             startActivity(Intent.createChooser(sharingIntent, "Sharing Options"))
