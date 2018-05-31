@@ -15,6 +15,9 @@ Ever found yourself sending the same SMS messages often to the same recipient? q
 
 </div>
 
+## Play Store
+The Adroid app is available for download from the [Play Store](https://play.google.com/store/apps/detailsid=quick.sms.quicksmsLaunch) The App is comptable with Android devices running [API 19 or above](https://source.android.com/setup/start/build-numbers). 
+
 ## Privacy Policy - quickSMS
 Although the app requries to access your contacts, we will NEVER transmit any of these outwidth the app. If you send emails to us with suggestions or bug report we will NEVER store you email or do any marketing. We will NEVER share any of your details to anyone. 
 
@@ -33,3 +36,6 @@ The app has been developed using [Koltin](https://kotlinlang.org/) a modern prog
 
 * App Logo - Designed and created by [Imrul Kayes](https://github.com/saifulfrank)
 
+## Licese for App Logo
+Creative Commons License
+This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/)
