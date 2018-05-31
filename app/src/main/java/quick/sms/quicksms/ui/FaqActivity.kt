@@ -15,7 +15,7 @@ class FaqActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setActionBarColour()
-        setContentView(R.layout.activity_faq_actovoty)
+        setContentView(R.layout.activity_faq)
         colourCheck()
         val faq = mutableMapOf<String, String>()
         faq["If I delete a user from a tile, do the messages get deleted?"] = "No, the messages will remain, so if you change your mind you can pick up where you left off!"

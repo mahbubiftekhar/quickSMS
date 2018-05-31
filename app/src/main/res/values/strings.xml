@@ -63,4 +63,5 @@
     <string name="why_not_add_some_messages_n_n_just_click_the_symbol_on_the_bottom_right">Why not add some messages?    Just click the \'+\' symbol on the bottom right</string>
     <string name="sync_contacts">Sync Contacts</string>
     <string name="add_tile_prompt">Press the + button to add new tiles.</string>
+    <string name="padding_here">PADDING HERE</string>
 </resources>
