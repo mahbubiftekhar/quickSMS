@@ -15,7 +15,7 @@ import quick.sms.quicksms.backend.*
 import quick.sms.quicksms.ui.SettingsActivity
 
 open class BaseActivity : AppCompatActivity() {
-    
+
     @SuppressLint("ApplySharedPref")
     protected fun resetApp() {
         // Prompt before actually resetting
@@ -26,9 +26,9 @@ open class BaseActivity : AppCompatActivity() {
                     positiveButton("Yes proceed, RESET APP") {
                         doAsync {
                             // Clear all databases
-                            val contactDB = DatabaseMessages(this@BaseActivity).deleteEntireDB()
-                            val tilesDB = DatabaseTiles(this@BaseActivity).deleteEntireDB()
-                            val log = DatabaseLog(this@BaseActivity).deleteEntireDB()
+                            DatabaseMessages(this@BaseActivity).deleteEntireDB()
+                            DatabaseTiles(this@BaseActivity).deleteEntireDB()
+                            DatabaseLog(this@BaseActivity).deleteEntireDB()
                             editor.clearAndCommit() // Clear all shared preferences
                             uiThread {
                                 // Restart the app programmatically
