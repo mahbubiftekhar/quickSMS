@@ -15,31 +15,7 @@ import quick.sms.quicksms.backend.*
 import quick.sms.quicksms.ui.SettingsActivity
 
 open class BaseActivity : AppCompatActivity() {
-
-    /*
-    alert("Are you sure you wish to reset the app?") {
-                positiveButton("Yes") {
-                    alert("Do you wish to proceed?") {
-                        title = "NOTE: This action is IRREVERSIBLE"
-                        positiveButton("Yes proceed, RESET APP") {
-                            doAsync {
-                                resetApp()
-                            }
-                        }
-                        negativeButton("No, cancel") {
-
-                        }
-
-                    }.show()
-                }
-                negativeButton("No") {
-
-                }
-
-            }.show()
-            true
-     */
-
+    
     @SuppressLint("ApplySharedPref")
     protected fun resetApp() {
         // Prompt before actually resetting
