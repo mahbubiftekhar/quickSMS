@@ -212,7 +212,7 @@ class TextMessageActivity : BaseActivity() {
         if (textMessages.size == 0) {
             val textview = findViewById<View>(R.id.text2) as TextView
             when (backgroundColour) {
-                // White, light blue, blue, pink, orange, green
+            // White, light blue, blue, pink, orange, green
                 "#ffffff", "#217ca3", "#0000FF", "#f22ee8", "#f1992e", "#008000" -> {
                     textview.setTextColor(Color.BLACK)
                 }
@@ -277,13 +277,13 @@ class TextMessageActivity : BaseActivity() {
                     if (shouldDoubleCheck) {
                         //User wishes for double check
                         alert(value) {
-                            title = "Are you sure you want to send the message"
-                            positiveButton("Send") {
+                            title = "Are you sure you want to send the the following SMS?"
+                            positiveButton("Yes, Send") {
                                 vibrateAndSound()
                                 sendMessage()
                             }
-                            negativeButton("Cancel") {
-
+                            negativeButton("No, Cancel") {
+                                //Do nothing, the user has changed their mind
                             }
                         }.show()
                     } else {

@@ -25,10 +25,7 @@ class LogActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setActionBarColour()
         setContentView(R.layout.activity_log)
-        /*
-        getSupportActionBar()?.setBackgroundDrawable(ColorDrawable(getResources()
-                .getColor(R.color.abc_background_cache_hint_selector_material_dark)))
-                */
+
         val tilesDB = DatabaseLog(this)
         val a = tilesDB.returnAll()
         doAsync {
