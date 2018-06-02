@@ -205,10 +205,10 @@ class TextMessageActivity : BaseActivity() {
         val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         params.setMargins(1, 35, 1, 0)
         if (textMessages.size == 0) {
-            val textview = findViewById<View>(R.id.text2) as TextView
-            textview.setTextColor(getTextColour(backgroundColour))
-            textview.setTypeface(null, Typeface.BOLD) // Setting it as bold
-            textview.visibility = View.VISIBLE
+            val textView = findViewById<View>(R.id.text2) as TextView
+            textView.setTextColor(textColour)
+            textView.setTypeface(null, Typeface.BOLD) // Setting it as bold
+            textView.visibility = View.VISIBLE
         } else {
             val textview = findViewById<View>(R.id.text2) as TextView
             textview.visibility = View.INVISIBLE

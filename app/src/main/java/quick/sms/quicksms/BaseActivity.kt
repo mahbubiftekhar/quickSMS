@@ -16,7 +16,68 @@ import quick.sms.quicksms.ui.*
 
 open class BaseActivity : AppCompatActivity() {
 
-    @SuppressLint("ApplySharedPref")
+    // Activities that shouldn't automatically inherit a menu
+    private val excludedActivities = setOf("SettingsActivity", "SplashActivity", "FallbackActivity",
+            "BugReportActivity", "LogActivity")
+
+    // Shared Preference Accessors
+
+    // Number of tiles currently on screen
+    protected var nTiles
+        get() = prefs.getInt("nTiles", 0)
+        set(value) = editor.putIntAndCommit("nTiles", value)
+
+    // Should a contacts name be displayed on top of their picture
+    protected val showName
+        get() = settings.getBoolean("ShowName", false)
+
+    // Action bar colour
+    private val actionBarColour
+        get() = settings.getString("actionbarcolour", "#303F9F")
+
+    // Background colour
+    protected val backgroundColour: String
+        get() = settings.getString("backgroundcolour", "#217ca3")
+
+    /* Text colour on the tiles (Always on the ones without pictures, on the ones with pictures when
+     * showName is true) */
+    protected val tileTextColour: String
+        get() = settings.getString("TileTextColour", "#000000")
+
+    // Colour of the tiles without pictures
+    protected val tileColour: String
+        get() = settings.getString("tilecolour", "#ffffff")
+
+    // Should we warn the user if the colours chosen would make text unreadable
+    private val warnColourClash
+        get() = settings.getBoolean("ColourCombination", true)
+
+    // Should we vibrate when the user sends, adds or updates a message
+    protected val shouldVibrate
+        get() = settings.getBoolean("Vibrate", false)
+
+    // Should we make a sound when the user sends, adds or updates a message
+    protected val shouldMakeSound
+        get() = settings.getBoolean("Sound", true)
+
+    // Should we prompt before sending an SMS
+    protected val shouldDoubleCheck
+        get() = settings.getBoolean("DoubleCheck", false)
+
+    private val textAndTileColoursClash
+        get() = tileTextColour == tileColour
+
+    private val tileAndBackgroundColoursClash
+        get() = backgroundColour == tileColour
+
+    // Text colour directly on the background, not configurable by the user
+    protected val textColour
+        get() = when (backgroundColour) {
+            // White, light blue, blue, pink, orange, green
+            "#ffffff", "#217ca3", "#0000FF", "#f22ee8", "#f1992e", "#008000" -> Color.BLACK
+            else -> Color.WHITE
+        }
+
     protected fun resetApp() {
         // Prompt before actually resetting
         alert("Are you sure you wish to reset the app?") {
@@ -46,59 +107,9 @@ open class BaseActivity : AppCompatActivity() {
         }.show()
     }
 
-    // Activities that shouldn't automatically inherit a menu
-    private val excludedActivities = setOf("SettingsActivity", "SplashActivity", "FallbackActivity",
-            "BugReportActivity", "LogActivity")
-
-    // Shared Preference Accessors
-    protected var nTiles
-        get() = prefs.getInt("nTiles", 0)
-        set(value) = editor.putIntAndCommit("nTiles", value)
-
-    protected val showName
-        get() = settings.getBoolean("ShowName", false)
-
-    //get the action bar colour
-    private val actionBarColour
-        get() = settings.getString("actionbarcolour", "#303F9F")
-
-    //get the background colour
-    protected val backgroundColour: String
-        get() = settings.getString("backgroundcolour", "#217ca3")
-
-    //get the tile text colour
-    protected val tileTextColour: String
-        get() = settings.getString("TileTextColour", "#000000")
-
-    //get boolean about weather the phone should vibrate
-    protected val shouldVibrate
-        get() = settings.getBoolean("Vibrate", false)
-
-    //get boolean about weather the user wants a double check before sending SMS's
-    protected val shouldDoubleCheck
-        get() = settings.getBoolean("DoubleCheck", false)
-
-    //get tileColour the user wants
-    protected val tileColour: String
-        get() = settings.getString("tilecolour", "#ffffff")
-
-    //get bool about weather the use wants sound when they send a message, add a message or update a message
-    protected val shouldMakeSound
-        get() = settings.getBoolean("Sound", true)
-
-    //get bool weather the user wants to be warned if the colour combination is bad
-    private val warnColourClash
-        get() = settings.getBoolean("ColourCombination", true)
-
-
-    private val textAndTileColoursClash
-        get() = tileTextColour == tileColour
-
-    private val tileAndBackgroundColoursClash
-        get() = backgroundColour == tileColour
-
     @SuppressLint("ObsoleteSdkInt")
     override fun recreate() {
+        // TODO: This must always be false
         if (android.os.Build.VERSION.SDK_INT >= 11) {
             super.recreate()
         } else {
@@ -107,37 +118,22 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    protected fun getTextColour(backgroundColour: String): Int {
-        //This function dependent on what the background color is, returns a color for the text so the user can see the text
-        return when (backgroundColour) {
-        // White, light blue, blue, pink, orange, green
-            "#ffffff", "#217ca3", "#0000FF", "#f22ee8", "#f1992e", "#008000" -> {
-                Color.BLACK
-            }
-            else -> {
-                Color.WHITE
-            }
-        }
-    }
-
     fun setActionBarColour() {
-        //gets the users selected actionbar colour
+        // Set the action bar colour
         supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(actionBarColour)))
     }
 
     fun colourCheck() {
-        if (warnColourClash) { //If the user wants this warning
+        // Only warn if the warning hasn't been turned off
+        if (warnColourClash) {
+            // Generate the correct warning based on the combination of clashes
             val dialogText = if (textAndTileColoursClash && tileAndBackgroundColoursClash) {
-                //Warn the user that they are using the same colour for background, textColour and tileColour
-                "You are using the same colours for your the background, tiles and text \n"
+                "You are using the same colours for your the background, tiles and text\n"
             } else if (textAndTileColoursClash) {
-                //Warn the user if they are using same tile and text colour
-                "You are using the same colours for your the tiles and text \n"
+                "You are using the same colours for your the tiles and text\n"
             } else if (tileAndBackgroundColoursClash) {
-                //Warn the user if they are using the same background and tile colour
-                "You are using the same colours for your the background and tiles \n"
+                "You are using the same colours for your the background and tiles\n"
             } else {
-                //Do nothing, the colours are fine
                 null
             }
             dialogText?.let {
@@ -154,16 +150,22 @@ open class BaseActivity : AppCompatActivity() {
     // Adhoc inheritance for menus
     final override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         return menu?.let {
+            // Inflate anything that should be prepended to the common menu
             menuPrepend(it)
+            // For excluded classes the common menu is empty
             if (!excludedActivities.contains(this::class.simpleName)) {
                 menuInflater.inflate(R.menu.menu, it)
             }
+            // Inflate anything that should be appended to the common menu
             menuAppend(it)
             true
         } ?: false
     }
 
     final override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        /* Actions for the common menu. None of the extension menus should have id's that clash
+         * with these as there is no namespacing, if the common menu isn't inflated these have no
+         * adverse effects */
         R.id.menu_item_share -> {
             //Allow the users to share the app to their friends/family
             val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
@@ -212,6 +214,8 @@ open class BaseActivity : AppCompatActivity() {
             true
         }
 
+        /* Extended options is the method subclasses should override to add actions to their menu
+         * extensions */
         else -> extendedOptions(item)
     }
 

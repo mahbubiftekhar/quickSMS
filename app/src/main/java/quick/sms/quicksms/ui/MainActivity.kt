@@ -41,7 +41,8 @@ class MainActivity : BaseActivity() {
     private fun draw() {
         setActionBarColour()
         MainLayout(contentResolver, nTiles, contacts, backgroundColour, tileColour, tileTextColour,
-                showName, ::onClick, ::assignTile, ::createTile, ::deleteTile, getTextColour(backgroundColour)).setContentView(this)
+                showName, ::onClick, ::assignTile, ::createTile, ::deleteTile, textColour)
+                .setContentView(this)
         colourCheck()
     }
 
