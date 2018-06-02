@@ -25,7 +25,7 @@ Ever found yourself sending the same SMS messages often to the same recipient? q
 </div>
 
 ## Download the app 
-The Adroid app is available for download from the [Play Store](https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch) The App is comptable with Android devices running [API 19 or above](https://source.android.com/setup/start/build-numbers). 
+The Adroid app is available for download from the [Play Store](https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch) The App is comptable with Android devices running [API Level](https://source.android.com/setup/start/build-numbers) 19 or above. 
 <br>
 <br>
 <a href='https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch'><img src='https://github.com/mahbubiftekhar/quickSMS/blob/mahbubiftekhar-patch-2/APPIMAGES/playStoreImage.png' alt='Get it on Google Play' height='90' /></a>
@@ -36,17 +36,18 @@ Although the app requries to access your contacts, we will NEVER transmit any of
 ## Technologies Used 
 The app has been developed using [Koltin](https://kotlinlang.org/) a modern programmer friendly language primarily used for Android Development. It was decided to create the app using Kotlin due to many helper features such as variable interpolation, higher-order functions and null safety. As Kotlin is compiled to JVM byte-code it is also 100% inter opterable with Java! [Android Studio](https://developer.android.com/studio/) 3.1.2 was used throughout development.
 
-## Developers
+## Software Developers
 
 * **[Alex Shand](https://github.com/Alex-Shand)** - *Android Developer* 
 * **[Mahbub Iftekhar](https://www.mahbubiftekhar.co.uk/)** - *Android Developer*
 
+## App Logo (Artwork) 
+* [App Logo](https://github.com/mahbubiftekhar/quickSMS/blob/mahbubiftekhar-patch-2/Logo/play_store.png) - Designed and created by [Imrul Kayes](https://github.com/saifulfrank) under Creative Commons License. 
 
 ## References
 
 * GitHub. (2018). Kotlin/anko. [online] Available at: https://github.com/Kotlin/anko [Accessed 9 Apr. 2018].
 
-* App Logo - Designed and created by [Imrul Kayes](https://github.com/saifulfrank)
 
 ## CODE LICESNSE - MIT
 
@@ -72,5 +73,5 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-## Licese for App Logo - Creative Commons License
+## Licese for [APP logo](https://github.com/saifulfrank) - Creative Commons License
 This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/)
