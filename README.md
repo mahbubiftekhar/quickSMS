@@ -25,10 +25,9 @@ Ever found yourself sending the same SMS messages often to the same recipient? q
 </div>
 
 ## Download the app 
-The Adroid app is available for download from the [Play Store](https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch) The App is comptable with Android devices running [API 19 or above]
+The Adroid app is available for download from the [Play Store](https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch) The App is comptable with Android devices running [API 19 or above](https://source.android.com/setup/start/build-numbers). 
 <br>
 <br>
-(https://source.android.com/setup/start/build-numbers). 
 <a href='https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch'><img src='https://github.com/mahbubiftekhar/quickSMS/blob/mahbubiftekhar-patch-2/APPIMAGES/playStoreImage.png' alt='Get it on Google Play' height='90' /></a>
 
 ## Privacy Policy - quickSMS
