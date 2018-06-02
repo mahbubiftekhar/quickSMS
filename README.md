@@ -3,6 +3,23 @@
 
 ![Logo created and designed by Imrul Kayes](https://user-images.githubusercontent.com/37498811/40734231-a47ec39e-6459-11e8-8beb-1bfc5500b87a.png)
 
+<p align="center">
+    <a href="https://travis-ci.org/steverichey/google-play-badge-svg">
+        <img src="https://travis-ci.org/steverichey/google-play-badge-svg.svg?branch=master" alt="Build status">
+    </a>
+    <a href="./license.md">
+        <img src="https://img.shields.io/badge/License-MIT-lightgrey.svg" alt="License: MIT">
+    </a>
+</p>
+<p>
+    <h1 align="center">
+        <a href="//steverichey.github.io/google-play-badge-svg">
+            google-play-badge-svg
+        </a>
+    </h1>
+</p>
+
+
 Ever found yourself sending the same SMS messages often to the same recipient? quickSMS is designed so it should be easy to send these messages. You can quickly tap on their photo and pick the message you wish to send. You can add, modify or delete these pre-set messages at any time!
 
 
@@ -15,8 +32,8 @@ Ever found yourself sending the same SMS messages often to the same recipient? q
 
 </div>
 
-## Play Store
-The Adroid app is available for download from the [Play Store](https://play.google.com/store/apps/detailsid=quick.sms.quicksmsLaunch) The App is comptable with Android devices running [API 19 or above](https://source.android.com/setup/start/build-numbers). 
+## Download the app 
+The Adroid app is available for download from the [Play Store](https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch) The App is comptable with Android devices running [API 19 or above](https://source.android.com/setup/start/build-numbers). 
 
 ## Privacy Policy - quickSMS
 Although the app requries to access your contacts, we will NEVER transmit any of these outwidth the app. If you send emails to us with suggestions or bug report we will NEVER store you email or do any marketing. We will NEVER share any of your details to anyone. 
