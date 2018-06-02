@@ -11,14 +11,6 @@
         <img src="https://img.shields.io/badge/License-MIT-lightgrey.svg" alt="License: MIT">
     </a>
 </p>
-<p>
-    <h1 align="center">
-        <a href="//steverichey.github.io/google-play-badge-svg">
-            google-play-badge-svg
-        </a>
-    </h1>
-</p>
-
 
 Ever found yourself sending the same SMS messages often to the same recipient? quickSMS is designed so it should be easy to send these messages. You can quickly tap on their photo and pick the message you wish to send. You can add, modify or delete these pre-set messages at any time!
 
