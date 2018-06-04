@@ -19,6 +19,8 @@ Ever found yourself sending the same SMS messages often to the same recipient? q
 <img alt="App image - textMessageActivity" src="/APPIMAGES/textMessageActivity.png" width="30%">
 <img alt="App image - SettingsActivity" src="/APPIMAGES/setting.png" width="30%">
 <img alt="App image - SettingsActivity" src="/APPIMAGES/settings2.png" width="30%">
+<img alt="App image - Splash" src="/APPIMAGES/SPLASH.png" width="30%">
+<img alt="App image - Contact" src="/APPIMAGES/CONTACT.png" width="30%">
 
 
 </div>
