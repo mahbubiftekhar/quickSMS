@@ -1,6 +1,9 @@
+<p align="center">
 # quickSMS
-
+    </p>
+<p align="center">
 ![Logo created and designed by Imrul Kayes](https://user-images.githubusercontent.com/37498811/40734231-a47ec39e-6459-11e8-8beb-1bfc5500b87a.png)
+    </p>
 
 <p align="center">
     <a href="https://travis-ci.org/steverichey/google-play-badge-svg">
