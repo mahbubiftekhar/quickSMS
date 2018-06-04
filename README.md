@@ -50,7 +50,7 @@ The app has been developed using [Koltin](https://kotlinlang.org/) a modern prog
 
 ## CODE LICESNSE - MIT
 
-MIT License
+MIT Licence
 
 Copyright (c) 2018 [Alex Shand](https://github.com/alex-shand) & [Mahbub Iftekhar](https://www.mahbubiftekhar.co.uk/) 
 
