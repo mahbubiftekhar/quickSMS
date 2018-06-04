@@ -1,10 +1,8 @@
-<p align="center">
 # quickSMS
-    </p>
-<p align="center">
-![Logo created and designed by Imrul Kayes](https://user-images.githubusercontent.com/37498811/40734231-a47ec39e-6459-11e8-8beb-1bfc5500b87a.png)
-    </p>
-
+<p align="center"><img src="/Logo/play_store.png" title="Logo created and designed by Imrul Kayes" width="245" height="170" align="center" /></p>
+<h1  align="center" style="text-align: center;"><span  align="center" style="color: #ff0000;"><strong><span align="center" style="color: #000000;"> quickSMS - Android App
+</span> </strong></span></h1>
+<p style="text-align: center;">&nbsp;</p>
 <p align="center">
     <a href="https://travis-ci.org/steverichey/google-play-badge-svg">
         <img src="https://travis-ci.org/steverichey/google-play-badge-svg.svg?branch=master" alt="Build status">
