@@ -24,16 +24,16 @@ Ever found yourself sending the same SMS messages often to the same recipient? q
 </div>
 
 ## Download the app 
-The Adroid app is available for download from the [Play Store](https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch) The App is comptable with Android devices running [API Level](https://source.android.com/setup/start/build-numbers) 19 or above. 
+The Android app is available for download from the [Play Store](https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch) The App is compatible with Android devices running [API Level](https://source.android.com/setup/start/build-numbers) 19 or above. 
 <br>
 <br>
 <a href='https://play.google.com/store/apps/details?id=quick.sms.quicksmsLaunch'><img src='https://github.com/mahbubiftekhar/quickSMS/blob/master/APPIMAGES/playStoreImage.png' alt='Get it on Google Play' height='90' /></a>
 
 ## Privacy Policy - quickSMS
-Although the app requries to access your contacts, we will NEVER transmit any of these outwidth the app. If you send emails to us with suggestions or bug report we will NEVER store you email or do any marketing. We will NEVER share any of your details to anyone. 
+Although the app requires to access your contacts, we will NEVER transmit any of these out with the app. If you send emails to us with suggestions or bug report, we will NEVER store your email or do any marketing. We will NEVER share any of your details with anyone. 
 
 ## Technologies Used 
-The app has been developed using [Koltin](https://kotlinlang.org/) a modern programmer friendly language primarily used for Android Development. It was decided to create the app using Kotlin due to many helper features such as variable interpolation, higher-order functions and null safety. As Kotlin is compiled to JVM byte-code it is also 100% inter opterable with Java! [Android Studio](https://developer.android.com/studio/) 3.1.2 was used throughout development.
+The app has been developed using [Koltin](https://kotlinlang.org/) a modern programmer friendly language used mainly for Android Development. It was decided to create the app using Kotlin due to many helper features such as variable interpolation, higher-order functions and null safety. As Kotlin is compiled to JVM byte-code, it is also 100% inter-operable with Java! [Android Studio](https://developer.android.com/studio/) 3.1.2 was used throughout development.
 
 ## Software Developers
 
