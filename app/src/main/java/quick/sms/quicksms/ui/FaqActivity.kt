@@ -14,10 +14,10 @@ class FaqActivity : BaseActivity() {
     private var mAdView: AdView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setActionBarColour()
-        setContentView(R.layout.activity_faq)
-        colourCheck()
-        val faq = mutableMapOf<String, String>()
+        setActionBarColour() //Set action bar colour based on user preference
+        setContentView(R.layout.activity_faq) //link xml to kotlin
+        colourCheck() //check colours don't interfere
+        val faq = mutableMapOf<String, String>() //map to store a list of questions and answers
         faq["If I delete a user from a tile, do the messages get deleted?"] = "No, the messages will remain, so if you change your mind you can pick up where you left off!"
         faq["Can I customise the app?"] = "Yes, you can customize many aspects of the app in the settings"
         faq["I keep accidentally sending messages"] = "You can turn on 'Confirm before sending' and you will be prompted to double confirm before sending"
@@ -33,6 +33,7 @@ class FaqActivity : BaseActivity() {
         faq["Can I delete a pre-set message"] = "Yes, press on that message for 3-4 seconds, hit 'delete' and that's it!"
         faq["Is their an advert free version?"] = "Not currently, although if we get enough interest or get bored we will make an paid advert free version"
 
+        //Adverts
         doAsync {
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
             mAdView = findViewById<View>(R.id.adView) as AdView
@@ -44,6 +45,8 @@ class FaqActivity : BaseActivity() {
 
         scrollView {
             verticalLayout {
+                /*programmatically adding buttons based on the number of faq's, this method was
+                adopted to reduce the amount of code and make adding more faq's easy */
                 for (f in faq) {
                     button {
                         text = f.key

@@ -27,6 +27,7 @@ class MainActivity : BaseActivity() {
     private lateinit var contacts: Map<Int, Contact>
     private lateinit var contactsList: List<Contact>
     private lateinit var unassigned: List<Contact>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val bundle: Bundle = savedInstanceState ?: intent.extras
         window.requestFeature(Window.FEATURE_ACTION_BAR)

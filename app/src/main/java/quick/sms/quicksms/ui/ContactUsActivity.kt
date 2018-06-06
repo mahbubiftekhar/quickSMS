@@ -48,17 +48,19 @@ class ContactUsActivity : BaseActivity() {
                 return@OnClickListener
             }
 
+            if (TextUtils.isEmpty(message)) {
+                yourMessage.error = "Enter Your Message"
+                yourMessage.requestFocus()
+                return@OnClickListener
+            }
+
             if (TextUtils.isEmpty(subject)) {
                 yourSubject.error = "Enter Your Subject"
                 yourSubject.requestFocus()
                 return@OnClickListener
             }
 
-            if (TextUtils.isEmpty(message)) {
-                yourMessage.error = "Enter Your Message"
-                yourMessage.requestFocus()
-                return@OnClickListener
-            }
+
 
             val sendEmail = Intent(android.content.Intent.ACTION_SEND)
 
@@ -70,7 +72,7 @@ class ContactUsActivity : BaseActivity() {
                     "name:" + name + '\n'.toString() + "Email ID:" + email2 + '\n'.toString() + "Message:" + '\n'.toString() + message)
 
             /* Send it off to the Activity-Chooser */
-            startActivity(Intent.createChooser(sendEmail, "Send mail..."))
+            startActivity(Intent.createChooser(sendEmail, "Send mail...")) //Starts the activity to send an email to us
         })
     }
 

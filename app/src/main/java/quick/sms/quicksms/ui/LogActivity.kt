@@ -18,17 +18,19 @@ import quick.sms.quicksms.backend.DatabaseLog
 import quick.sms.quicksms.backend.allLogs
 
 
-var allLogsLocal = ArrayList<DatabaseLog.Log>()
+var allLogsLocal = ArrayList<DatabaseLog.Log>() //Store a local copy of the log
 private var mAdView: AdView? = null
 
 class LogActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setActionBarColour()
+        setActionBarColour() //set action bar colour
         setContentView(activity_log)
 
         val tilesDB = DatabaseLog(this)
-        val a = tilesDB.returnAll()
+        val a = tilesDB.returnAll() //get the log
+
+        //adverts
         doAsync {
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
             mAdView = findViewById<View>(R.id.adView) as AdView
@@ -37,13 +39,13 @@ class LogActivity : BaseActivity() {
                 mAdView!!.loadAd(adRequest)
             }
         }
+
         if (a && allLogs.size > 0) {
             //If the returnAll function was successful we shall launch the UI
             allLogsLocal = allLogs
             createUI(backgroundColour, tileTextColour)
         } else {
-            println(">>>>> in the iff condition")
-            //If their is no logs, we need to display to the user this so they arent confused
+            //If their is no logs, we need to display to the user this so they aren't confused
             allLogsLocal = allLogs
             noLogsToDisplay(backgroundColour, tileTextColour)
         }
