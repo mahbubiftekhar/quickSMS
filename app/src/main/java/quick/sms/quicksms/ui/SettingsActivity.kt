@@ -18,6 +18,8 @@ class SettingsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setActionBarColour()
         fragmentManager.beginTransaction().replace(android.R.id.content, SettingsFragment()).commit()
+
+        //adverts
         doAsync {
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
             mAdView = findViewById<View>(R.id.adView) as AdView

@@ -9,6 +9,23 @@ import java.sql.SQLException
 @Suppress("unused")
 
 class DatabaseMessages(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
+    /*
+
+       This is a short global explanation how the db functions have been made atomic - the reason atomicity is important is to
+       maintain the integrity of the app - no database, the app will become a waste of space :-)
+       try {
+           db.beginTransaction() //Start the databaseTransaction
+           //Does the database work whatever it may be
+           db.setTransactionSuccessful() //Set the transaction as successful, hence when db.endTransaction() is called, the changes will be applied
+
+       } catch(e :Exception){
+           /*If we get into this block something has happened, finally will be cancelled, but as we didn't call
+           db.setTransactionSuccessful() changes will not be made, hence atomic operation */
+       } finally {
+          db.endTransaction() // End the database transaction, make changes iff db.setTransactionSuccessful()
+
+       }
+        */
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL("create table $TABLE_NAME (id INTEGER PRIMARY KEY UNIQUE,recipient_id LONG,message TEXT)")

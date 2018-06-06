@@ -15,6 +15,7 @@ import quick.sms.quicksms.R
 import quick.sms.quicksms.backend.Contact
 
 class SplashActivity : BaseActivity() {
+    //permissions we require for the app to function
     private val requiredPermissions = arrayOf(
             Manifest.permission.SEND_SMS,
             Manifest.permission.CALL_PHONE,
@@ -44,20 +45,23 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun requestPermissions() {
+        //check if we have the requested permissions
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
                 != PackageManager.PERMISSION_GRANTED && android.os.Build.VERSION.SDK_INT >= 23
         ) {
+            //we do not have all the permissions, lets request them
             getPermissions(this, requiredPermissions)
         } else {
+            //we have the permissions required,all's good,  lets keep going!
             sendContactsToMain()
         }
     }
 
     private fun sendContactsToMain() {
         Contact.getContacts(this) {
-            startActivity<MainActivity>("contacts" to it)
+            startActivity<MainActivity>("contacts" to it) //pass the contacts as an intent
             finish() //This will prevent the user getting back into this activity
         }
     }
@@ -65,12 +69,9 @@ class SplashActivity : BaseActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         val grantResultsBool = grantResults.asSequence().map { it == PackageManager.PERMISSION_GRANTED }.toList()
         if (grantResultsBool.all { it }) {
-            println(6)
             sendContactsToMain()
         } else {
-            println(7)
             if (android.os.Build.VERSION.SDK_INT >= 23) {
-                println(8)
                 // Infinite looping from auto-denied permissions isn't a problem before api 23
                 if (!grantResultsBool.zip(permissions)
                                 .filter { !it.first }.map { it.second }
@@ -82,8 +83,7 @@ class SplashActivity : BaseActivity() {
                     return
                 }
             }
-            println(9)
-            toast("You must accept all permissions to use quickSMS")
+            toast("You must accept all permissions to use quickSMS") //tell the user they need to accept the permissions to continue
             getPermissions(this, requiredPermissions)
         }
     }

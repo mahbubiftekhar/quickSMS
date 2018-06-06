@@ -9,7 +9,23 @@ import android.database.sqlite.SQLiteOpenHelper
 import java.sql.SQLException
 
 class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
+     /*
 
+       This is a short global explanation how the db functions have been made atomic - the reason atomicity is important is to
+       maintain the integrity of the app - no database, the app will become a waste of space :-)
+       try {
+           db.beginTransaction() //Start the databaseTransaction
+           //Does the database work whatever it may be
+           db.setTransactionSuccessful() //Set the transaction as successful, hence when db.endTransaction() is called, the changes will be applied
+
+       } catch(e :Exception){
+           /*If we get into this block something has happened, finally will be cancelled, but as we didn't call
+           db.setTransactionSuccessful() changes will not be made, hence atomic operation */
+       } finally {
+          db.endTransaction() // End the database transaction, make changes iff db.setTransactionSuccessful()
+
+       }
+        */
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL("create table $TABLE_NAME (recipient_id LONG,tileid INTEGER PRIMARY KEY, prefered_number TEXT)")
     }
@@ -36,6 +52,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     }
 
     fun insertData(recipient_id: Long, tileid: Int, prefered_number: String) {
+        /*WIll insert the data regardless of whether that field already has something in it, this exception is handledd*/
         val db = this.writableDatabase
         try {
             db.beginTransaction()
@@ -43,8 +60,9 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             contentValues.put(COL_1, recipient_id)
             contentValues.put(COL_2, tileid)
             contentValues.put(COL_3, prefered_number)
-            val a = db.insertWithOnConflict(TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE)
-            if (a == (-1).toLong()) {
+            val a = db.insertWithOnConflict(TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE) //1 if already exists
+            if (a == (-1).toLong()){
+                //If an entry already exists we notice this, and we simply update the database entry instead
                 contentValues.put(COL_1, recipient_id)
                 contentValues.put(COL_2, tileid)
                 contentValues.put(COL_3, prefered_number)
@@ -60,10 +78,30 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
 
     fun tileDefragmentator(deletedTile: Int) {
+        /*This function will act as a sort of defragmentation
+
+         E.g.
+
+         1 2 3 4 5
+         A B C D E
+
+         If we delete tile 4, then this function will update the database to the following.
+
+         It handles the deletion and shifting, this is to ensure atomicity
+
+         Step one  - Delete
+         1 2 3     4      5
+         A B C {Deleted} {E}
+
+         Step two - defrag by moving position 5 to position 4
+         1 2 3 4 5
+         A B C E {Empty}
+
+         It's as simple as that!
+         */
         val db = this.writableDatabase
         try {
             db.beginTransaction()
-            //Code to do the deed
             db.delete(TABLE_NAME, "tileid = ?", arrayOf(deletedTile.toString()))
             db.rawQuery("select * from $TABLE_NAME", null).use {
                 while (it.moveToNext()) {
@@ -92,14 +130,14 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     }
 
     fun getAllTiles(): Map<Long, Int> {
-        //Returns all tile mappings to reccipient_id's
+        //Returns all tile mappings to recipient_id's
         val db = this.writableDatabase
         db.rawQuery("select * from $TABLE_NAME", null).use {
             val tiles = linkedMapOf<Long, Int>()
             while (it.moveToNext()) {
-                tiles[it.getLong(it.getColumnIndex("recipient_id"))] = it.getInt(it.getColumnIndex("tileid"))
+                tiles[it.getLong(it.getColumnIndex("recipient_id"))] = it.getInt(it.getColumnIndex("tileid")) //Add to tiles linkedMap
             }
-            return tiles
+            return tiles //return map of <receiptId, tileID>
         }
     }
 
@@ -108,7 +146,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         val db = this.writableDatabase
         try {
             db.beginTransaction()
-            db.delete(TABLE_NAME, "tileid = ?", arrayOf(tileid.toString()))
+            db.delete(TABLE_NAME, "tileid = ?", arrayOf(tileid.toString())) //Delete the tile with that specific tileID
             db.setTransactionSuccessful()
         } catch (e: SQLException) {
             // do some error handling
@@ -118,7 +156,7 @@ class DatabaseTiles(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     }
 
     fun deleteEntireDB() {
-        //This function will delete the entire database
+        //This function will delete the entire database simply, this is used to reset the app
         val db = this.writableDatabase
         try {
             db.beginTransaction()

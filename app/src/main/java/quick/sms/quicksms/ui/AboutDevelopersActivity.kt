@@ -21,10 +21,11 @@ class AboutDevelopersActivity : BaseActivity() {
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setActionBarColour()
-        setContentView(R.layout.activity_about_developers)
+        setActionBarColour() //Set the action bar color based on users preferences
+        setContentView(R.layout.activity_about_developers) //Linking xml to the kotlin code
         this.supportActionBar?.title = "About quickSMS" //Adding the action bar title programmatically
 
+        //Adverts
         doAsync {
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107")
             mAdView = findViewById<View>(R.id.adView) as AdView
@@ -119,6 +120,7 @@ class AboutDevelopersActivity : BaseActivity() {
     }
 
     private fun launchWeb(url: String) {
+        //This function will open a web browser with the url provided
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         startActivity(browserIntent)
     }

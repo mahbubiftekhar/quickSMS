@@ -82,6 +82,7 @@ class TextMessageActivity : BaseActivity() {
             phoneNumber = contact.numbers[0]
         }
         updateTitle() //updates the users name on the action bar
+        //get all the text messages for this recipient asynchronously
         doAsync {
             val result = contactDB.returnAllHashMap(receipientID)
             uiThread {
@@ -89,6 +90,7 @@ class TextMessageActivity : BaseActivity() {
                 messages = result
             }
         }
+        //adverts
         doAsync {
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
             mAdView = findViewById<View>(R.id.adView) as AdView
@@ -188,6 +190,7 @@ class TextMessageActivity : BaseActivity() {
     }
 
     private fun addToLog(recipient_id: Long, message: String, receipientName: String, phoneNumber: String) {
+        //handle insertions into the log database
         logDB.insertData(recipient_id, message, receipientName, phoneNumber)
     }
 
