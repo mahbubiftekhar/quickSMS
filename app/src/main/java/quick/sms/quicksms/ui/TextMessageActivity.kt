@@ -47,7 +47,7 @@ class TextMessageActivity : BaseActivity() {
     private var mAdView: AdView? = null
 
     private fun returnNoSpaces(input: String): String {
-        //This function should return the input with all the spaces
+        //This function should return the input without all the spaces
         return input.replace("\\s".toRegex(), "")
     }
 
@@ -64,6 +64,7 @@ class TextMessageActivity : BaseActivity() {
         tileID = intent.getIntExtra("tileID", 0)
         phoneNumber = tilesDB.getPreferedNum(tileID)
         if (phoneNumber.length > 1) {
+            //Get the phone number from the database instance
             phoneNumber = phoneNumber.removeRange(0, 1) //Remove the leading p
         }
         val fab = findViewById<FloatingActionButton>(R.id.fab)
@@ -78,11 +79,12 @@ class TextMessageActivity : BaseActivity() {
         recipientName = contact.name
         receipientID = contact.id
         if (phoneNumber == "") {
-            //If no prefered number is set, set it as the first number
+            //If no preferred number is set, set it as the first number
             phoneNumber = contact.numbers[0]
         }
         updateTitle() //updates the users name on the action bar
-        //get all the text messages for this recipient asynchronously
+
+        //Adding buttons on the UI asynchronously
         doAsync {
             val result = contactDB.returnAllHashMap(receipientID)
             uiThread {
@@ -90,6 +92,7 @@ class TextMessageActivity : BaseActivity() {
                 messages = result
             }
         }
+
         //adverts
         doAsync {
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
@@ -99,6 +102,7 @@ class TextMessageActivity : BaseActivity() {
                 mAdView!!.loadAd(adRequest)
             }
         }
+
     }
 
     override fun menuPrepend(menu: Menu) {
@@ -108,6 +112,7 @@ class TextMessageActivity : BaseActivity() {
     override fun extendedOptions(item: MenuItem) = when (item.itemId) {
         R.id.make_call -> {
             try {
+                //Make call to the users preffered phone
                 makeCall(returnNoSpaces(phoneNumber))
             } catch (e: Exception) {
 
@@ -116,6 +121,7 @@ class TextMessageActivity : BaseActivity() {
         }
         R.id.add_message -> {
             try {
+                //Show a dialog to allow the user to add messages to the database
                 popUpAddMessage()
             } catch (e: Exception) {
 
@@ -128,6 +134,7 @@ class TextMessageActivity : BaseActivity() {
             true
         }
         R.id.selectNumber -> {
+            //Allow the user to select the phone number they wish to set as the prefered number for the user
             val phoneNumbers = mutableListOf<String>()
             phoneNumbers.add(returnNoSpaces(phoneNumber))
             for (i in 0 until contact.numbers.size) {
@@ -153,12 +160,14 @@ class TextMessageActivity : BaseActivity() {
     }
 
     private fun updatePreferedNum(PreferedNumber: String) {
+        //This function will update the prefered number in the databaseTiles
         phoneNumber = PreferedNumber.removeRange(0, 1)
         val tiles = DatabaseTiles(this)
         tiles.insertData(receipientID, tileID, PreferedNumber)
     }
 
     private fun updateTitle() {
+        //Function to update the action bar title with the receipientsName
         this.supportActionBar?.title = recipientName
     }
 
@@ -316,7 +325,8 @@ class TextMessageActivity : BaseActivity() {
         }
     }
 
-    private fun vibrateAndSound() {
+    private fun vibrateAndSound(){
+    //Will vibrate the phone and make sound dependent on the users settings
         if (shouldVibrate) {
             vibrate()
         }
@@ -326,7 +336,7 @@ class TextMessageActivity : BaseActivity() {
 
     }
 
-    fun editDataBuilder(text: String, buttonID: String) {
+    private fun editDataBuilder(text: String, buttonID: String) {
         val builder = AlertDialog.Builder(this)
         val input = EditText(this)
         input.setText(text, TextView.BufferType.EDITABLE)
@@ -341,35 +351,40 @@ class TextMessageActivity : BaseActivity() {
         builder.show()
     }
 
-    fun addData(recipientId: Long, message: String) {
+    private fun addData(recipientId: Long, message: String) {
+        //Add data locally, update the UI and
         vibrateAndSound()
         val databaseID = loadID()
-        incrementID()
-        messages[databaseID] = message
-        addButtons(messages)
+        incrementID() //Increment ID
+        messages[databaseID] = message //Update message locally
+        addButtons(messages) //redraw the UI
         doAsync {
+            //Update the database asynchronously
             contactDB.insertData(databaseID, recipientId, message)
         }
     }
 
-    fun updateData(id: String, recipientId: Long, message: String) {
+    private fun updateData(id: String, recipientId: Long, message: String) {
+        //update a text message locally, update the UI and the database asynchronously
         vibrateAndSound()
         messages[id.toInt()] = message
         addButtons(messages)
         doAsync {
+            //Update the database asynchronously
             contactDB.updateData(id, recipientId, message)
         }
     }
 
     private fun deleteData(id: String) {
-        vibrateAndSound()
+        //This function will asynchronously data from the textMessaegeDatabase
+        vibrateAndSound() //Vibrate and sound if applicable
         doAsync {
             contactDB.deleteData(id)
         }
     }
 
     private fun makeSound() {
-        if (shouldMakeSound) {
+        //This function will make the default notification sound
             try {
                 val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
                 val r = RingtoneManager.getRingtone(applicationContext, notification)
@@ -377,10 +392,10 @@ class TextMessageActivity : BaseActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }
     }
 
     private fun vibrate() {
+        //This function will vibrate the phone
         try {
             val v = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
