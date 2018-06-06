@@ -109,7 +109,6 @@ open class BaseActivity : AppCompatActivity() {
 
     @SuppressLint("ObsoleteSdkInt")
     override fun recreate() {
-        // TODO: This must always be false
         if (android.os.Build.VERSION.SDK_INT >= 11) {
             super.recreate()
         } else {

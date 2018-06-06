@@ -1,4 +1,4 @@
-@file:Suppress("HasPlatformType")
+@file:Suppress("HasPlatformType", "unused")
 
 package quick.sms.quicksms
 

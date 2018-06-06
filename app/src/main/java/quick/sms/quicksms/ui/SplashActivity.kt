@@ -32,8 +32,8 @@ class SplashActivity : BaseActivity() {
         doAsync {
             requestPermissions()
         }
-        //This part makes the add programatically
         doAsync {
+            //Adverts
             MobileAds.initialize(applicationContext, "ca-app-pub-2206499302575732~5712613107\n")
             mAdView = findViewById<View>(R.id.adView) as AdView
             val adRequest = AdRequest.Builder().build()
