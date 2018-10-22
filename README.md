@@ -35,7 +35,7 @@ The Android app is available for download from the [Play Store](https://play.goo
 Although the app requires to access your contacts, we will NEVER transmit any of these out with the app. If you send emails to us with suggestions or bug report, we will NEVER store your email or do any marketing. We will NEVER share any of your details with anyone. 
 
 ## Technologies Used 
-The app has been developed using [Koltin](https://kotlinlang.org/) a modern programmer friendly language used mainly for Android Development. It was decided to create the app using Kotlin due to many helper features such as variable interpolation, higher-order functions and null safety. As Kotlin is compiled to JVM byte-code, it is also 100% inter-operable with Java! [Android Studio](https://developer.android.com/studio/) 3.1.2 was used throughout development.
+The app has been developed using [Kotlin](https://kotlinlang.org/) a modern programmer friendly language used mainly for Android Development. It was decided to create the app using Kotlin due to many helper features such as variable interpolation, higher-order functions and null safety. As Kotlin is compiled to JVM byte-code, it is also 100% inter-operable with Java! [Android Studio](https://developer.android.com/studio/) 3.1.2 was used throughout development.
 
 ## Software Developers
 
